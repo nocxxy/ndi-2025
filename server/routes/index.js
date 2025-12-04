@@ -5,6 +5,39 @@ var router = express.Router();
 router.get("/", function (req, res, next) {
 	res.render("index", {
 		basePath: res.locals.basePath || "/ndi",
+		page: "accueil",
+	});
+});
+
+/* GET page NIRD. */
+router.get("/nird", function (req, res, next) {
+	res.render("nird", {
+		basePath: res.locals.basePath || "/ndi",
+		page: "nird",
+	});
+});
+
+/* GET page Solutions. */
+router.get("/solutions", function (req, res, next) {
+	res.render("solutions", {
+		basePath: res.locals.basePath || "/ndi",
+		page: "solutions",
+	});
+});
+
+/* GET page Simulateur. */
+router.get("/simulateur", function (req, res, next) {
+	res.render("simulateur", {
+		basePath: res.locals.basePath || "/ndi",
+		page: "simulateur",
+	});
+});
+
+/* GET page Ressources. */
+router.get("/ressources", function (req, res, next) {
+	res.render("ressources", {
+		basePath: res.locals.basePath || "/ndi",
+		page: "ressources",
 	});
 });
 

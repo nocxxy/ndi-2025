@@ -11,22 +11,7 @@
 	</head>
 
 	<body class="min-h-screen bg-base-100">
-		<!-- Navigation -->
-		<nav class="navbar bg-base-200 shadow-lg sticky top-0 z-50">
-			<div class="container mx-auto px-4">
-				<div class="flex-1">
-					<a class="btn btn-ghost text-xl font-bold">NDI 2025</a>
-				</div>
-				<div class="flex-none">
-					<ul class="menu menu-horizontal px-1">
-						<li><a href="#accueil" class="btn btn-ghost">Accueil</a></li>
-						<li><a href="#nird" class="btn btn-ghost">NIRD</a></li>
-						<li><a href="#sujet" class="btn btn-ghost">Le Sujet</a></li>
-						<li><a href="#ressources" class="btn btn-ghost">Ressources</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
+		<%- include('partials/navbar', { basePath, page }) %>
 
 		<!-- Hero Section -->
 		<section id="accueil" class="hero min-h-[70vh] bg-gradient-to-br from-primary/10 via-base-200 to-secondary/10">
@@ -42,8 +27,8 @@
 						David contre Goliath, Astérix contre l'Empire numérique
 					</p>
 					<div class="flex flex-col sm:flex-row gap-4 justify-center">
-						<a href="#sujet" class="btn btn-primary btn-lg">Découvrir le sujet</a>
-						<a href="#nird" class="btn btn-outline btn-lg">En savoir plus sur NIRD</a>
+						<a href="<%= basePath %>/simulateur" class="btn btn-primary btn-lg animate-pulse">🎮 Essayer le Simulateur</a>
+						<a href="<%= basePath %>/nird" class="btn btn-outline btn-lg">Découvrir NIRD</a>
 					</div>
 				</div>
 			</div>
@@ -428,17 +413,6 @@
 			</div>
 		</section>
 
-		<!-- Footer -->
-		<footer class="footer footer-center bg-base-200 text-base-content p-10">
-			<div>
-				<p class="font-bold text-lg">Nuit de l'Info 2025</p>
-				<p class="text-sm opacity-70">
-					Le Village Numérique Résistant - NIRD
-				</p>
-				<p class="text-xs opacity-50 mt-2">
-					Porté par le collectif enseignant NIRD et le Bureau de la Nuit de l'Info 2025
-				</p>
-			</div>
-		</footer>
+		<%- include('partials/footer', { basePath }) %>
 	</body>
 </html>

@@ -1,0 +1,54 @@
+<nav class="navbar bg-base-200 shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-90">
+	<div class="container mx-auto px-4">
+		<div class="flex-1">
+			<a href="<%= basePath %>/" class="btn btn-ghost text-xl font-bold">
+				<span class="text-primary">NDI</span> 2025
+			</a>
+		</div>
+		<div class="flex-none">
+			<ul class="menu menu-horizontal px-1 gap-2">
+				<li>
+					<a 
+						href="<%= basePath %>/" 
+						class="btn btn-ghost <%= page === 'accueil' ? 'btn-active' : '' %>"
+					>
+						Accueil
+					</a>
+				</li>
+				<li>
+					<a 
+						href="<%= basePath %>/nird" 
+						class="btn btn-ghost <%= page === 'nird' ? 'btn-active' : '' %>"
+					>
+						NIRD
+					</a>
+				</li>
+				<li>
+					<a 
+						href="<%= basePath %>/solutions" 
+						class="btn btn-ghost <%= page === 'solutions' ? 'btn-active' : '' %>"
+					>
+						Solutions
+					</a>
+				</li>
+				<li>
+					<a 
+						href="<%= basePath %>/simulateur" 
+						class="btn btn-ghost <%= page === 'simulateur' ? 'btn-active' : '' %>"
+					>
+						Simulateur
+					</a>
+				</li>
+				<li>
+					<a 
+						href="<%= basePath %>/ressources" 
+						class="btn btn-ghost <%= page === 'ressources' ? 'btn-active' : '' %>"
+					>
+						Ressources
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
