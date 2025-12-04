@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Express</title>
+		<!-- Tailwind CSS + DaisyUI (compilé localement) -->
+		<link rel="stylesheet" href="<%= basePath %>/stylesheets/style.css" />
+		<!-- Alpine.js (depuis node_modules) -->
+		<script defer src="<%= basePath %>/javascripts/alpine.js"></script>
+	</head>
+
+	<body class="min-h-screen bg-base-100">
+		<div class="container mx-auto px-4 py-8">
+			<h1 class="text-4xl font-bold mb-4">Express</h1>
+			<p class="text-lg mb-6">Welcome to Express</p>
+
+			<!-- Exemple d'utilisation d'Alpine.js avec DaisyUI -->
+			<div x-data="{ count: 0 }" class="card bg-base-200 shadow-xl p-6">
+				<div class="card-body">
+					<h2 class="card-title">Compteur interactif</h2>
+					<p class="text-lg">
+						Compteur:
+						<span
+							x-text="count"
+							class="font-bold text-primary"
+						></span>
+					</p>
+					<div class="card-actions justify-end mt-4">
+						<button @click="count++" class="btn btn-primary">
+							Cliquez-moi
+						</button>
+						<button @click="count = 0" class="btn btn-outline">
+							Réinitialiser
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+
