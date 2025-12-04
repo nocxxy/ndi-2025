@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="fr" data-theme="light">
+<html lang="fr" data-theme="ndi">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Express</title>
+		<title>NDI 2025 - Le Village Numérique Résistant | NIRD</title>
 		<!-- Tailwind CSS + DaisyUI (compilé localement) -->
 		<link rel="stylesheet" href="<%= basePath %>/stylesheets/style.css" />
 		<!-- Alpine.js (depuis node_modules) -->
@@ -11,32 +11,434 @@
 	</head>
 
 	<body class="min-h-screen bg-base-100">
-		<div class="container mx-auto px-4 py-8">
-			<h1 class="text-4xl font-bold mb-4">Express</h1>
-			<p class="text-lg mb-6">Welcome to Express</p>
+		<!-- Navigation -->
+		<nav class="navbar bg-base-200 shadow-lg sticky top-0 z-50">
+			<div class="container mx-auto px-4">
+				<div class="flex-1">
+					<a class="btn btn-ghost text-xl font-bold">NDI 2025</a>
+				</div>
+				<div class="flex-none">
+					<ul class="menu menu-horizontal px-1">
+						<li><a href="#accueil" class="btn btn-ghost">Accueil</a></li>
+						<li><a href="#nird" class="btn btn-ghost">NIRD</a></li>
+						<li><a href="#sujet" class="btn btn-ghost">Le Sujet</a></li>
+						<li><a href="#ressources" class="btn btn-ghost">Ressources</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
 
-			<!-- Exemple d'utilisation d'Alpine.js avec DaisyUI -->
-			<div x-data="{ count: 0 }" class="card bg-base-200 shadow-xl p-6">
-				<div class="card-body">
-					<h2 class="card-title">Compteur interactif</h2>
-					<p class="text-lg">
-						Compteur:
-						<span
-							x-text="count"
-							class="font-bold text-primary"
-						></span>
+		<!-- Hero Section -->
+		<section id="accueil" class="hero min-h-[70vh] bg-gradient-to-br from-primary/10 via-base-200 to-secondary/10">
+			<div class="hero-content text-center">
+				<div class="max-w-4xl">
+					<h1 class="text-5xl md:text-6xl font-bold mb-6">
+						Le Village Numérique Résistant
+					</h1>
+					<p class="text-2xl mb-4 font-semibold text-primary">
+						Comment les établissements scolaires peuvent tenir tête aux Big Tech ?
 					</p>
-					<div class="card-actions justify-end mt-4">
-						<button @click="count++" class="btn btn-primary">
-							Cliquez-moi
-						</button>
-						<button @click="count = 0" class="btn btn-outline">
-							Réinitialiser
-						</button>
+					<p class="text-lg mb-8 opacity-80">
+						David contre Goliath, Astérix contre l'Empire numérique
+					</p>
+					<div class="flex flex-col sm:flex-row gap-4 justify-center">
+						<a href="#sujet" class="btn btn-primary btn-lg">Découvrir le sujet</a>
+						<a href="#nird" class="btn btn-outline btn-lg">En savoir plus sur NIRD</a>
 					</div>
 				</div>
 			</div>
-		</div>
+		</section>
+
+		<!-- Section Problématique -->
+		<section class="py-16 bg-base-200">
+			<div class="container mx-auto px-4">
+				<div class="text-center mb-12">
+					<h2 class="text-4xl font-bold mb-4">Le Défi Actuel</h2>
+					<p class="text-xl max-w-3xl mx-auto">
+						À l'heure où la fin du support de Windows 10 met en évidence la dépendance structurelle aux Big Tech
+					</p>
+				</div>
+				
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+					<div class="card bg-error/10 border border-error/20 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-error">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+								</svg>
+								Matériel obsolète
+							</h3>
+							<p>Ordinateurs rendus inutilisables alors qu'ils fonctionnent encore</p>
+						</div>
+					</div>
+
+					<div class="card bg-warning/10 border border-warning/20 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-warning">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+								</svg>
+								Licences coûteuses
+							</h3>
+							<p>Abonnements et licences qui pèsent sur les budgets</p>
+						</div>
+					</div>
+
+					<div class="card bg-error/10 border border-error/20 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-error">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+								</svg>
+								Données hors UE
+							</h3>
+							<p>Stockage de données sensibles hors de l'Union Européenne</p>
+						</div>
+					</div>
+
+					<div class="card bg-warning/10 border border-warning/20 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-warning">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+								</svg>
+								Écosystèmes fermés
+							</h3>
+							<p>Vendor lock-in et dépendance à des solutions propriétaires</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Section NIRD -->
+		<section id="nird" class="py-16">
+			<div class="container mx-auto px-4">
+				<div class="text-center mb-12">
+					<h2 class="text-4xl font-bold mb-4">La Démarche NIRD</h2>
+					<p class="text-xl max-w-3xl mx-auto">
+						Numérique <span class="text-primary font-bold">Inclusif</span>, 
+						<span class="text-secondary font-bold">Responsable</span> et 
+						<span class="text-accent font-bold">Durable</span>
+					</p>
+				</div>
+
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+					<!-- Inclusion -->
+					<div class="card bg-primary/10 border border-primary/20 shadow-xl">
+						<div class="card-body text-center">
+							<div class="text-6xl mb-4">🤝</div>
+							<h3 class="card-title justify-center text-primary text-2xl">Inclusion</h3>
+							<p class="text-center">
+								Un numérique accessible à tous, sans barrières techniques ou financières
+							</p>
+						</div>
+					</div>
+
+					<!-- Responsabilité -->
+					<div class="card bg-secondary/10 border border-secondary/20 shadow-xl">
+						<div class="card-body text-center">
+							<div class="text-6xl mb-4">🌍</div>
+							<h3 class="card-title justify-center text-secondary text-2xl">Responsabilité</h3>
+							<p class="text-center">
+								Un numérique éthique, respectueux de la vie privée et des données
+							</p>
+						</div>
+					</div>
+
+					<!-- Durabilité -->
+					<div class="card bg-accent/10 border border-accent/20 shadow-xl">
+						<div class="card-body text-center">
+							<div class="text-6xl mb-4">♻️</div>
+							<h3 class="card-title justify-center text-accent text-2xl">Durabilité</h3>
+							<p class="text-center">
+								Un numérique qui lutte contre l'obsolescence et favorise le réemploi
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Activités NIRD -->
+				<div class="card bg-base-200 shadow-xl">
+					<div class="card-body">
+						<h3 class="card-title text-2xl mb-6">Les Activités de NIRD</h3>
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div class="flex items-start gap-3">
+								<div class="badge badge-primary badge-lg">1</div>
+								<div>
+									<h4 class="font-semibold mb-1">Sensibilisation</h4>
+									<p class="text-sm opacity-80">Sensibiliser les équipes éducatives et les élèves à la sobriété numérique</p>
+								</div>
+							</div>
+							<div class="flex items-start gap-3">
+								<div class="badge badge-secondary badge-lg">2</div>
+								<div>
+									<h4 class="font-semibold mb-1">Réemploi</h4>
+									<p class="text-sm opacity-80">Encourager le réemploi et le reconditionnement du matériel</p>
+								</div>
+							</div>
+							<div class="flex items-start gap-3">
+								<div class="badge badge-accent badge-lg">3</div>
+								<div>
+									<h4 class="font-semibold mb-1">Linux</h4>
+									<p class="text-sm opacity-80">Promouvoir l'usage de Linux pour lutter contre l'obsolescence programmée</p>
+								</div>
+							</div>
+							<div class="flex items-start gap-3">
+								<div class="badge badge-primary badge-lg">4</div>
+								<div>
+									<h4 class="font-semibold mb-1">Mutualisation</h4>
+									<p class="text-sm opacity-80">Mutualiser les ressources et outils libres via la Forge</p>
+								</div>
+							</div>
+							<div class="flex items-start gap-3">
+								<div class="badge badge-secondary badge-lg">5</div>
+								<div>
+									<h4 class="font-semibold mb-1">Accompagnement</h4>
+									<p class="text-sm opacity-80">Accompagner les établissements dans une transition écoresponsable</p>
+								</div>
+							</div>
+							<div class="flex items-start gap-3">
+								<div class="badge badge-accent badge-lg">6</div>
+								<div>
+									<h4 class="font-semibold mb-1">Co-construction</h4>
+									<p class="text-sm opacity-80">Favoriser la co-construction de solutions locales et ouvertes</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Section Sujet 2025 -->
+		<section id="sujet" class="py-16 bg-base-200">
+			<div class="container mx-auto px-4">
+				<div class="text-center mb-12">
+					<h2 class="text-4xl font-bold mb-4">Le Sujet NDI 2025</h2>
+					<p class="text-xl max-w-3xl mx-auto">
+						Créez une application Web qui aide à comprendre comment un établissement peut réduire ses dépendances numériques
+					</p>
+				</div>
+
+				<div class="max-w-4xl mx-auto space-y-6">
+					<div class="card bg-base-100 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-primary">🎯 L'Objectif</h3>
+							<p>
+								Développer une plateforme qui permet d'animer la communauté NIRD, 
+								d'encourager la contribution, de faire la promotion de NIRD sous toutes ses formes, 
+								de faciliter la contribution au sein de la communauté et à l'extérieur, 
+								et de mettre en valeur les solutions proposées par la démarche NIRD.
+							</p>
+						</div>
+					</div>
+
+					<div class="card bg-base-100 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-secondary">🎮 L'Expérience</h3>
+							<p>
+								L'application doit proposer une expérience <strong>ludique, attractive et engageante</strong>. 
+								Il peut s'agir d'interactivité, d'illustrations, de mécaniques de choix, de petites énigmes, 
+								de défis, de scénarios, d'une ambiance humoristique... 
+								L'objectif : donner envie d'apprendre, de comprendre et d'agir.
+							</p>
+						</div>
+					</div>
+
+					<div class="card bg-base-100 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-accent">💡 Format Libre</h3>
+							<p>
+								Vous êtes libres du format : outil interactif, mini-site narratif, parcours visuel, 
+								plateforme explicative, tableau de simulation, interface gamifiée, ou toute autre forme créative. 
+								L'important est de transmettre l'esprit de résistance numérique propre à NIRD.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Compteur interactif - Exemple de gamification -->
+				<div class="mt-12 card bg-gradient-to-br from-primary/20 to-secondary/20 shadow-2xl">
+					<div class="card-body text-center">
+						<h3 class="text-2xl font-bold mb-4">💪 Le Village Résistant</h3>
+						<div x-data="{ resistance: 0, maxResistance: 100 }" class="space-y-4">
+							<div class="stat">
+								<div class="stat-value text-primary">
+									<span x-text="resistance"></span>%
+								</div>
+								<div class="stat-desc">Niveau de résistance numérique</div>
+							</div>
+							<div class="progress progress-primary w-full" :style="`--value: ${resistance}`"></div>
+							<div class="flex flex-wrap gap-2 justify-center">
+								<button @click="resistance = Math.min(resistance + 10, maxResistance)" class="btn btn-primary btn-sm">
+									+ Adopter Linux
+								</button>
+								<button @click="resistance = Math.min(resistance + 15, maxResistance)" class="btn btn-secondary btn-sm">
+									+ Réutiliser le matériel
+								</button>
+								<button @click="resistance = Math.min(resistance + 20, maxResistance)" class="btn btn-accent btn-sm">
+									+ Utiliser des logiciels libres
+								</button>
+								<button @click="resistance = 0" class="btn btn-outline btn-sm">
+									Réinitialiser
+								</button>
+							</div>
+							<div x-show="resistance >= maxResistance" x-transition class="alert alert-success mt-4">
+								<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+								</svg>
+								<span>🎉 Félicitations ! Votre établissement est maintenant un Village Numérique Résistant !</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Section Acteurs -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<div class="text-center mb-12">
+					<h2 class="text-4xl font-bold mb-4">Les Acteurs du Projet</h2>
+					<p class="text-xl max-w-3xl mx-auto">
+						Un collectif d'acteurs engagés pour un numérique éducatif plus autonome
+					</p>
+				</div>
+
+				<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+					<div class="card bg-base-200 shadow">
+						<div class="card-body text-center">
+							<div class="text-3xl mb-2">👨‍🎓</div>
+							<p class="font-semibold">Élèves</p>
+						</div>
+					</div>
+					<div class="card bg-base-200 shadow">
+						<div class="card-body text-center">
+							<div class="text-3xl mb-2">👩‍🏫</div>
+							<p class="font-semibold">Enseignants</p>
+						</div>
+					</div>
+					<div class="card bg-base-200 shadow">
+						<div class="card-body text-center">
+							<div class="text-3xl mb-2">🏫</div>
+							<p class="font-semibold">Directions</p>
+						</div>
+					</div>
+					<div class="card bg-base-200 shadow">
+						<div class="card-body text-center">
+							<div class="text-3xl mb-2">💻</div>
+							<p class="font-semibold">Techniciens</p>
+						</div>
+					</div>
+					<div class="card bg-base-200 shadow">
+						<div class="card-body text-center">
+							<div class="text-3xl mb-2">🤝</div>
+							<p class="font-semibold">Associations</p>
+						</div>
+					</div>
+					<div class="card bg-base-200 shadow">
+						<div class="card-body text-center">
+							<div class="text-3xl mb-2">🏛️</div>
+							<p class="font-semibold">Collectivités</p>
+						</div>
+					</div>
+					<div class="card bg-base-200 shadow">
+						<div class="card-body text-center">
+							<div class="text-3xl mb-2">🎓</div>
+							<p class="font-semibold">Services académiques</p>
+						</div>
+					</div>
+					<div class="card bg-base-200 shadow">
+						<div class="card-body text-center">
+							<div class="text-3xl mb-2">🏛️</div>
+							<p class="font-semibold">Ministère</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Section Ressources -->
+		<section id="ressources" class="py-16 bg-base-200">
+			<div class="container mx-auto px-4">
+				<div class="text-center mb-12">
+					<h2 class="text-4xl font-bold mb-4">Ressources & Liens</h2>
+				</div>
+
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+					<div class="card bg-base-100 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-primary">🌐 Site Officiel</h3>
+							<p class="mb-4">Découvrez la démarche NIRD sur la Forge des communs numériques éducatifs</p>
+							<a href="https://nird.forge.apps.education.fr/" target="_blank" class="btn btn-primary btn-sm">
+								Visiter le site NIRD
+							</a>
+						</div>
+					</div>
+
+					<div class="card bg-base-100 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-secondary">📺 Vidéos & Médias</h3>
+							<p class="mb-4">Reportages et témoignages sur la résistance numérique</p>
+							<div class="space-y-2 text-sm">
+								<p>• Windows 11 : l'alternative des logiciels libres (France 3)</p>
+								<p>• Logiciel obsolète : l'État obligé de jeter des milliers d'ordinateurs ? (France Info)</p>
+								<p>• "Linux, c'est facile !" (Lycée Carnot)</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="card bg-base-100 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-accent">📚 Articles</h3>
+							<p class="mb-4">En savoir plus sur le projet NIRD au lycée Carnot</p>
+							<a href="https://www.cafepedagogique.net/2025/04/27/bruay-labuissiere-voyage-au-centre-du-libre-educatif/" target="_blank" class="btn btn-accent btn-sm">
+								Lire l'article
+							</a>
+						</div>
+					</div>
+
+					<div class="card bg-base-100 shadow-xl">
+						<div class="card-body">
+							<h3 class="card-title text-primary">🎯 Objectifs Importants</h3>
+							<div class="space-y-2">
+								<div class="alert alert-info">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+									</svg>
+									<span class="text-sm">L'application devra être en ligne à la fin de la Nuit</span>
+								</div>
+								<div class="alert alert-success">
+									<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+									</svg>
+									<span class="text-sm">Utiliser des ressources libres de droit</span>
+								</div>
+								<div class="alert alert-warning">
+									<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+									</svg>
+									<span class="text-sm">Production sous licence libre</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Footer -->
+		<footer class="footer footer-center bg-base-200 text-base-content p-10">
+			<div>
+				<p class="font-bold text-lg">Nuit de l'Info 2025</p>
+				<p class="text-sm opacity-70">
+					Le Village Numérique Résistant - NIRD
+				</p>
+				<p class="text-xs opacity-50 mt-2">
+					Porté par le collectif enseignant NIRD et le Bureau de la Nuit de l'Info 2025
+				</p>
+			</div>
+		</footer>
 	</body>
 </html>
-

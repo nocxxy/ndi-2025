@@ -2,16 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Styles personnalisés si nécessaire */
-body {
-	padding: 50px;
-	font:
-		14px "Lucida Grande",
-		Helvetica,
-		Arial,
-		sans-serif;
-}
+/* Variables CSS personnalisées - Modifiez ces valeurs pour changer la charte graphique */
+@layer base {
+	:root {
+		/* Couleurs principales - Modifiez ici pour changer les couleurs globales */
+		--color-primary: #3b82f6;
+		--color-secondary: #8b5cf6;
+		--color-accent: #10b981;
+		--color-neutral: #6b7280;
 
-a {
-	color: #00b7ff;
+		/* Espacements */
+		--spacing-xs: 0.5rem;
+		--spacing-sm: 1rem;
+		--spacing-md: 1.5rem;
+		--spacing-lg: 2rem;
+		--spacing-xl: 3rem;
+
+		/* Bordures */
+		--radius-sm: 0.25rem;
+		--radius-md: 0.5rem;
+		--radius-lg: 0.75rem;
+		--radius-xl: 1rem;
+
+		/* Transitions */
+		--transition-fast: 150ms;
+		--transition-normal: 300ms;
+		--transition-slow: 500ms;
+	}
+
+	/* Styles de base */
+	body {
+		@apply font-sans antialiased;
+		font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+			"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	}
+
+	/* Classes utilitaires personnalisées */
+	.text-primary {
+		color: var(--color-primary);
+	}
+
+	.text-secondary {
+		color: var(--color-secondary);
+	}
+
+	.text-accent {
+		color: var(--color-accent);
+	}
+
+	.bg-primary {
+		background-color: var(--color-primary);
+	}
+
+	.bg-secondary {
+		background-color: var(--color-secondary);
+	}
+
+	.bg-accent {
+		background-color: var(--color-accent);
+	}
+
+	.border-primary {
+		border-color: var(--color-primary);
+	}
+
+	.border-secondary {
+		border-color: var(--color-secondary);
+	}
 }
