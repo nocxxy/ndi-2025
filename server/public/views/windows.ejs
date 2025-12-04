@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="fr" data-theme="ndi">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Windows 10 - Émulation | NDI 2025</title>
+		<link rel="stylesheet" href="<%= basePath %>/stylesheets/style.css" />
+		<script defer src="<%= basePath %>/javascripts/alpine.js"></script>
+	</head>
+
+	<body class="h-screen bg-base-100 overflow-hidden">
+		<!-- Interface Windows 10 -->
+		<div 
+			x-data="{
+				searchQuery: '',
+				searchResults: [],
+				showStartMenu: false,
+				showSearch: false,
+				apps: [
+					{name: 'Explorateur de fichiers', icon: '📁', category: 'Système'},
+					{name: 'Microsoft Edge', icon: '🌐', category: 'Internet'},
+					{name: 'Paramètres', icon: '⚙️', category: 'Système'},
+					{name: 'Store', icon: '🏪', category: 'Applications'},
+					{name: 'Photos', icon: '🖼️', category: 'Multimédia'},
+					{name: 'Musique', icon: '🎵', category: 'Multimédia'},
+					{name: 'Calculatrice', icon: '🔢', category: 'Accessoires'},
+					{name: 'Paint', icon: '🎨', category: 'Accessoires'},
+					{name: 'Bloc-notes', icon: '📝', category: 'Accessoires'},
+					{name: 'Word', icon: '📄', category: 'Bureautique'},
+					{name: 'Excel', icon: '📊', category: 'Bureautique'},
+					{name: 'PowerPoint', icon: '📽️', category: 'Bureautique'}
+				],
+				search() {
+					if (!this.searchQuery.trim()) {
+						this.searchResults = [];
+						return;
+					}
+					const query = this.searchQuery.toLowerCase();
+					this.searchResults = this.apps.filter(app => 
+						app.name.toLowerCase().includes(query) || 
+						app.category.toLowerCase().includes(query)
+					);
+				},
+				openApp(app) {
+					// Simuler l'ouverture d'une application
+					const message = app.name === 'Paramètres' 
+						? 'Les paramètres Windows nécessitent une licence Microsoft'
+						: app.name === 'Microsoft Edge'
+						? 'Edge nécessite Windows 10/11 et une connexion aux serveurs Microsoft'
+						: 'Application ' + app.name + ' nécessite Windows 10/11 et des licences Microsoft';
+					
+					alert('⚠️ ' + message + '\n\n💡 Avec Linux et les logiciels libres, ces applications sont gratuites et fonctionnent sans dépendance !');
+					this.showSearch = false;
+					this.showStartMenu = false;
+					this.searchQuery = '';
+					this.searchResults = [];
+				}
+			}"
+			class="h-screen flex flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden"
+		>
+			<!-- Fond d'écran -->
+			<div class="absolute inset-0 opacity-20">
+				<div class="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/20 to-secondary/30"></div>
+				<div class="absolute top-10 left-10 w-96 h-96 bg-primary rounded-full blur-3xl opacity-30"></div>
+				<div class="absolute bottom-10 right-10 w-96 h-96 bg-accent rounded-full blur-3xl opacity-30"></div>
+			</div>
+
+			<!-- Zone de bureau -->
+			<div class="flex-1 relative z-10 p-8 overflow-auto">
+				<div class="max-w-7xl mx-auto">
+					<!-- Icônes du bureau -->
+					<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+						<template x-for="app in apps.slice(0, 6)" :key="app.name">
+							<div 
+								@dblclick="openApp(app)"
+								class="flex flex-col items-center gap-2 p-4 rounded-lg cursor-pointer transform transition-all hover:bg-white/10 active:scale-95 select-none"
+							>
+								<div class="text-6xl drop-shadow-2xl filter" x-text="app.icon"></div>
+								<p class="text-white text-sm text-center font-medium drop-shadow-lg bg-black/30 px-2 py-1 rounded" x-text="app.name"></p>
+							</div>
+						</template>
+					</div>
+					
+					<!-- Message d'accueil -->
+					<div class="mt-12 text-center">
+						<div class="card bg-white/10 backdrop-blur-sm border border-white/20 shadow-xl inline-block">
+							<div class="card-body p-8">
+								<h2 class="text-3xl font-bold text-white mb-4">Windows 10 - Émulation</h2>
+								<p class="text-white/90 text-lg mb-4">
+									Cette interface démontre la dépendance aux Big Tech
+								</p>
+								<p class="text-white/80">
+									Double-cliquez sur les icônes ou utilisez la barre de recherche pour explorer
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Barre de recherche Cortana -->
+			<div 
+				x-show="showSearch"
+				x-transition
+				class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-2xl px-4"
+			>
+				<div class="card bg-base-100 shadow-2xl border-2 border-primary/30">
+					<div class="card-body p-6">
+						<div class="flex items-center gap-4 mb-4">
+							<div class="text-4xl">🔍</div>
+							<input 
+								type="text"
+								x-model="searchQuery"
+								@input="search()"
+								@keydown.escape="showSearch = false; searchQuery = ''; searchResults = []"
+								@keydown.enter="if(searchResults.length > 0) openApp(searchResults[0])"
+								placeholder="Tapez ici pour rechercher..."
+								class="input input-bordered input-primary w-full text-lg focus:outline-none focus:ring-2 focus:ring-primary"
+								autofocus
+							/>
+						</div>
+						
+						<!-- Résultats de recherche -->
+						<div x-show="searchResults.length > 0" x-transition class="space-y-2 max-h-96 overflow-y-auto">
+							<template x-for="result in searchResults" :key="result.name">
+								<button 
+									@click="openApp(result)"
+									class="w-full flex items-center gap-4 p-4 rounded-lg hover:bg-base-200 transform transition-all text-left"
+								>
+									<div class="text-3xl" x-text="result.icon"></div>
+									<div class="flex-1">
+										<p class="font-semibold" x-text="result.name"></p>
+										<p class="text-sm opacity-70" x-text="result.category"></p>
+									</div>
+								</button>
+							</template>
+						</div>
+						
+						<!-- Message si aucun résultat -->
+						<div 
+							x-show="searchQuery && searchResults.length === 0" 
+							x-transition
+							class="text-center py-8 text-opacity-70"
+						>
+							<p>Aucun résultat trouvé pour "<span x-text="searchQuery" class="font-semibold"></span>"</p>
+						</div>
+						
+						<!-- Suggestions si recherche vide -->
+						<div 
+							x-show="!searchQuery" 
+							class="space-y-2"
+						>
+							<p class="text-sm opacity-70 mb-3">Suggestions :</p>
+							<div class="grid grid-cols-2 gap-2">
+								<template x-for="app in apps.slice(0, 4)" :key="app.name">
+									<button 
+										@click="openApp(app)"
+										class="flex items-center gap-3 p-3 rounded-lg hover:bg-base-200 transform transition-all text-left"
+									>
+										<div class="text-2xl" x-text="app.icon"></div>
+										<p class="text-sm font-medium" x-text="app.name"></p>
+									</button>
+								</template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Barre des tâches -->
+			<div class="h-14 bg-gray-800/90 backdrop-blur-md border-t border-gray-700 relative z-20 flex items-center px-4 gap-2">
+				<!-- Bouton Démarrer -->
+				<button 
+					@click="showStartMenu = !showStartMenu; showSearch = false"
+					class="btn btn-ghost btn-circle text-white hover:bg-white/20"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+						<path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>
+					</svg>
+				</button>
+
+				<!-- Barre de recherche Cortana -->
+				<button 
+					@click="showSearch = !showSearch; showStartMenu = false"
+					class="flex-1 max-w-xl flex items-center gap-3 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-left transition-all"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+					</svg>
+					<span class="text-sm opacity-80">Rechercher sur le Web et dans Windows</span>
+				</button>
+
+				<!-- Icônes de la barre des tâches -->
+				<div class="flex items-center gap-2 ml-auto">
+					<button class="btn btn-ghost btn-circle text-white hover:bg-white/20">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+						</svg>
+					</button>
+					<button class="btn btn-ghost btn-circle text-white hover:bg-white/20">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+						</svg>
+					</button>
+					<div class="w-px h-6 bg-gray-600 mx-2"></div>
+					<div class="text-white text-xs text-right">
+						<div x-data="{ 
+							time: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'}),
+							date: new Date().toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'})
+						}" 
+						x-init="setInterval(() => { time = new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'}); date = new Date().toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'}) }, 1000)">
+							<div x-text="time"></div>
+							<div class="text-[10px] opacity-80" x-text="date"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Menu Démarrer -->
+			<div 
+				x-show="showStartMenu"
+				x-transition
+				@click.away="showStartMenu = false"
+				class="absolute bottom-16 left-4 w-80 bg-gray-800/95 backdrop-blur-md rounded-lg shadow-2xl border border-gray-700 z-30"
+			>
+				<div class="p-4">
+					<div class="grid grid-cols-4 gap-4 mb-4">
+						<template x-for="app in apps.slice(0, 8)" :key="app.name">
+							<button 
+								@click="openApp(app); showStartMenu = false"
+								class="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-white/10 transform transition-all"
+							>
+								<div class="text-4xl" x-text="app.icon"></div>
+								<p class="text-white text-xs text-center" x-text="app.name"></p>
+							</button>
+						</template>
+					</div>
+					<div class="divider my-2"></div>
+					<div class="space-y-1">
+						<button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 text-white text-left">
+							<div class="text-2xl">⚙️</div>
+							<span>Paramètres</span>
+						</button>
+						<button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 text-white text-left">
+							<div class="text-2xl">🔌</div>
+							<span>Arrêter</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Overlay pour fermer la recherche -->
+		<div 
+			x-show="showSearch"
+			@click="showSearch = false; searchQuery = ''; searchResults = []"
+			class="fixed inset-0 bg-black/50 z-40"
+			x-transition
+		></div>
+	</body>
+</html>
+

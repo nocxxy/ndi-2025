@@ -49,4 +49,12 @@ router.get("/jeu", function (req, res, next) {
 	});
 });
 
+/* GET page Windows 10. */
+router.get("/windows", function (req, res, next) {
+	res.render("windows", {
+		basePath: res.locals.basePath || "/ndi",
+		page: "windows",
+	});
+});
+
 module.exports = router;
