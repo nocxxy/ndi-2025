@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Express</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body>
+  <h1>Express</h1>
+  <p>Welcome to Express</p>
+  
+  <!-- Exemple d'utilisation d'Alpine.js -->
+  <div x-data="{ count: 0 }">
+    <button @click="count++" class="btn">Cliquez-moi</button>
+    <p>Compteur: <span x-text="count"></span></p>
+  </div>
+</body>
+
+</html>
+
