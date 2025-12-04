@@ -50,11 +50,4 @@ app.use(
 // Monter les routes avec le base path
 app.use(BASE_PATH, indexRouter);
 
-// Redirection de la racine vers le base path si nécessaire
-if (BASE_PATH !== "/") {
-	app.get("/", function (req, res) {
-		res.redirect(BASE_PATH);
-	});
-}
-
 module.exports = app;
