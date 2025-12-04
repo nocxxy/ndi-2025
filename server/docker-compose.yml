@@ -9,6 +9,7 @@ services:
         environment:
             - NODE_ENV=production
             - PORT=3000
+            - BASE_PATH=/
         restart: unless-stopped
         networks:
             - ndi-network

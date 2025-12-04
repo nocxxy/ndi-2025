@@ -5,9 +5,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>NDI 2025 - Le Village Numérique Résistant | NIRD</title>
 		<!-- Tailwind CSS + DaisyUI (compilé localement) -->
-		<link rel="stylesheet" href="<%= basePath %>/stylesheets/style.css" />
+		<link rel="stylesheet" href="/stylesheets/style.css" />
 		<!-- Alpine.js (depuis node_modules) -->
-		<script defer src="<%= basePath %>/javascripts/alpine.js"></script>
+		<script defer src="/javascripts/alpine.js"></script>
 	</head>
 
 	<body class="min-h-screen bg-base-100">
@@ -32,8 +32,8 @@
 						David contre Goliath, Astérix contre l'Empire numérique
 					</p>
 					<div class="flex flex-col sm:flex-row gap-4 justify-center">
-						<a href="<%= basePath %>/simulateur" class="btn btn-primary btn-lg shadow-lg transform transition-all hover:scale-105">🎮 Essayer le Simulateur</a>
-						<a href="<%= basePath %>/nird" class="btn btn-outline btn-lg shadow-lg transform transition-all hover:scale-105">Découvrir NIRD</a>
+						<a href="<%= url('/simulateur') %>" class="btn btn-primary btn-lg shadow-lg transform transition-all hover:scale-105">🎮 Essayer le Simulateur</a>
+						<a href="<%= url('/nird') %>" class="btn btn-outline btn-lg shadow-lg transform transition-all hover:scale-105">Découvrir NIRD</a>
 					</div>
 				</div>
 			</div>
@@ -409,7 +409,7 @@
 						<div class="card-body p-6">
 							<h3 class="card-title text-secondary text-xl mb-4">📺 Vidéos & Médias</h3>
 							<p class="mb-4 opacity-80">Reportages et témoignages sur la résistance numérique</p>
-							<a href="<%= basePath %>/ressources" class="btn btn-secondary shadow-lg">
+							<a href="<%= url('/ressources') %>" class="btn btn-secondary shadow-lg">
 								Voir toutes les vidéos
 							</a>
 						</div>

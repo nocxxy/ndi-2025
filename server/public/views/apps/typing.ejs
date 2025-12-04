@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="fr" data-theme="ndi">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Typing Speed Test</title>
+		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<script src="/javascripts/message-bus.js"></script>
+		<script defer src="/javascripts/alpine.js"></script>
+		<script src="/javascripts/typing-test.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+			.correct { color: #10b981; }
+			.incorrect { color: #ef4444; background-color: #fee2e2; }
+			.current { background-color: #dbeafe; border-left: 3px solid #3b82f6; }
+		</style>
+	</head>
+
+	<body class="h-screen bg-base-100 overflow-hidden">
+		<div 
+			x-data="typingTest()"
+			class="h-full flex flex-col p-4"
+		>
+			<!-- Statistiques -->
+			<div class="grid grid-cols-3 gap-4 mb-4">
+				<div class="card bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/30 shadow-lg">
+					<div class="card-body text-center p-4">
+						<div class="text-2xl mb-1">⚡</div>
+						<div class="stat-value text-primary text-2xl" x-text="wpm"></div>
+						<div class="stat-desc text-xs">Mots/min</div>
+					</div>
+				</div>
+				
+				<div class="card bg-gradient-to-br from-accent/20 to-accent/5 border-2 border-accent/30 shadow-lg">
+					<div class="card-body text-center p-4">
+						<div class="text-2xl mb-1">🎯</div>
+						<div class="stat-value text-accent text-2xl" x-text="accuracy + '%'"></div>
+						<div class="stat-desc text-xs">Précision</div>
+					</div>
+				</div>
+				
+				<div class="card bg-gradient-to-br from-error/20 to-error/5 border-2 border-error/30 shadow-lg">
+					<div class="card-body text-center p-4">
+						<div class="text-2xl mb-1">❌</div>
+						<div class="stat-value text-error text-2xl" x-text="errors"></div>
+						<div class="stat-desc text-xs">Erreurs</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Texte à taper -->
+			<div class="flex-1 flex flex-col">
+				<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-primary/20 shadow-xl mb-4">
+					<div class="card-body p-6">
+						<div class="text-base leading-relaxed font-mono" x-show="!isFinished">
+							<template x-for="(char, index) in currentText.split('')" :key="index">
+								<span 
+									:class="getCharClass(index)"
+									class="transition-colors"
+								>
+									<span x-text="char === ' ' ? ' ' : char"></span>
+								</span>
+							</template>
+						</div>
+						
+						<!-- Message de fin -->
+						<div 
+							x-show="isFinished"
+							x-transition
+							class="alert alert-success shadow-lg"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+							</svg>
+							<div>
+								<h3 class="font-bold">Terminé !</h3>
+								<div class="text-sm">
+									<span x-text="wpm"></span> mots/min - 
+									<span x-text="accuracy"></span>% de précision
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Zone de saisie -->
+				<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-secondary/20 shadow-xl">
+					<div class="card-body p-4">
+						<textarea 
+							x-model="userInput"
+							@input="handleInput()"
+							@keydown.enter.prevent
+							:disabled="isFinished"
+							placeholder="Commencez à taper le texte ci-dessus..."
+							class="textarea textarea-bordered textarea-primary w-full h-24 font-mono text-base resize-none"
+							:class="isFinished ? 'opacity-50' : ''"
+						></textarea>
+						
+						<div class="flex gap-2 mt-4">
+							<button 
+								@click="reset()"
+								class="btn btn-primary flex-1"
+							>
+								Nouveau texte
+							</button>
+							<button 
+								@click="loadNewText()"
+								class="btn btn-secondary"
+							>
+								Changer
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+

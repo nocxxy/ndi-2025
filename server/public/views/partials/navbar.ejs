@@ -1,7 +1,7 @@
 <nav class="navbar bg-base-200 shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-90">
 	<div class="container mx-auto px-4">
 		<div class="flex-1">
-			<a href="<%= basePath %>/" class="btn btn-ghost text-xl font-bold">
+			<a href="<%= url('/') %>" class="btn btn-ghost text-xl font-bold">
 				<span class="text-primary">NDI</span> 2025
 			</a>
 		</div>
@@ -9,7 +9,7 @@
 			<ul class="menu menu-horizontal px-1 gap-2">
 				<li>
 					<a 
-						href="<%= basePath %>/" 
+						href="<%= url('/') %>" 
 						class="btn btn-ghost <%= page === 'accueil' ? 'btn-active' : '' %>"
 					>
 						Accueil
@@ -17,7 +17,7 @@
 				</li>
 				<li>
 					<a 
-						href="<%= basePath %>/nird" 
+						href="<%= url('/nird') %>" 
 						class="btn btn-ghost <%= page === 'nird' ? 'btn-active' : '' %>"
 					>
 						NIRD
@@ -25,7 +25,7 @@
 				</li>
 				<li>
 					<a 
-						href="<%= basePath %>/solutions" 
+						href="<%= url('/solutions') %>" 
 						class="btn btn-ghost <%= page === 'solutions' ? 'btn-active' : '' %>"
 					>
 						Solutions
@@ -33,7 +33,7 @@
 				</li>
 				<li>
 					<a 
-						href="<%= basePath %>/simulateur" 
+						href="<%= url('/simulateur') %>" 
 						class="btn btn-ghost <%= page === 'simulateur' ? 'btn-active' : '' %>"
 					>
 						Simulateur
@@ -41,7 +41,7 @@
 				</li>
 				<li>
 					<a 
-						href="<%= basePath %>/ressources" 
+						href="<%= url('/ressources') %>" 
 						class="btn btn-ghost <%= page === 'ressources' ? 'btn-active' : '' %>"
 					>
 						Ressources
@@ -49,15 +49,7 @@
 				</li>
 				<li>
 					<a 
-						href="<%= basePath %>/jeu" 
-						class="btn btn-ghost <%= page === 'jeu' ? 'btn-active' : '' %>"
-					>
-						🎮 Jeu
-					</a>
-				</li>
-				<li>
-					<a 
-						href="<%= basePath %>/windows" 
+						href="<%= url('/windows') %>" 
 						class="btn btn-ghost <%= page === 'windows' ? 'btn-active' : '' %>"
 					>
 						🪟 Windows

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="fr" data-theme="ndi">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Snake Game</title>
+		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<script src="/javascripts/message-bus.js"></script>
+		<script defer src="/javascripts/alpine.js"></script>
+		<script src="/javascripts/snake-game.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body class="h-screen bg-base-100 overflow-hidden">
+		<div 
+			x-data="snakeGame()"
+			class="h-full flex flex-col p-4"
+		>
+			<!-- Score et Contrôles -->
+			<div class="grid grid-cols-3 gap-4 mb-4">
+				<div class="card bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/30 shadow-lg">
+					<div class="card-body text-center p-4">
+						<div class="text-2xl mb-1">🎯</div>
+						<div class="stat-value text-primary text-2xl" x-text="score"></div>
+						<div class="stat-desc text-xs">Score</div>
+					</div>
+				</div>
+				
+				<div class="card bg-gradient-to-br from-accent/20 to-accent/5 border-2 border-accent/30 shadow-lg">
+					<div class="card-body text-center p-4">
+						<div class="text-2xl mb-1">🏆</div>
+						<div class="stat-value text-accent text-2xl" x-text="highScore"></div>
+						<div class="stat-desc text-xs">Meilleur</div>
+					</div>
+				</div>
+				
+				<div class="card bg-gradient-to-br from-secondary/20 to-secondary/5 border-2 border-secondary/30 shadow-lg">
+					<div class="card-body text-center p-4">
+						<div class="text-2xl mb-1">📏</div>
+						<div class="stat-value text-secondary text-2xl" x-text="snake.length"></div>
+						<div class="stat-desc text-xs">Longueur</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Canvas du jeu -->
+			<div class="flex-1 flex flex-col items-center justify-center">
+				<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-primary/20 shadow-xl">
+					<div class="card-body p-6">
+						<div class="flex flex-col items-center gap-4">
+							<!-- Grille du jeu -->
+							<div 
+								class="grid gap-0 bg-base-100 rounded-lg p-2 shadow-inner"
+								:style="`grid-template-columns: repeat(${gridSize}, ${cellSize}px); grid-template-rows: repeat(${gridSize}, ${cellSize}px);`"
+							>
+								<template x-for="y in rows" :key="'row-' + y">
+									<template x-for="x in cells" :key="'cell-' + x + '-' + y">
+										<div 
+											class="border border-base-300"
+											:class="{
+												'bg-primary rounded-full': isSnakeHead(x, y),
+												'bg-primary/70 rounded': isSnakeBody(x, y),
+												'bg-accent rounded-full animate-pulse': isFood(x, y),
+												'bg-base-200': !isSnakeHead(x, y) && !isSnakeBody(x, y) && !isFood(x, y)
+											}"
+										></div>
+									</template>
+								</template>
+							</div>
+
+							<!-- Message de fin de jeu -->
+							<div 
+								x-show="gameOver"
+								x-transition
+								class="alert alert-error shadow-lg border-2 border-error/30"
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+								</svg>
+								<div>
+									<h3 class="font-bold">Game Over !</h3>
+									<div class="text-sm">Score : <span x-text="score" class="font-bold"></span></div>
+								</div>
+							</div>
+
+							<!-- Bouton Start/Reset -->
+							<button 
+								@click="gameStarted ? endGame() : startGame()"
+								class="btn shadow-lg transform transition-all hover:scale-105"
+								:class="gameStarted ? 'btn-error' : 'btn-primary'"
+							>
+								<span x-text="gameStarted ? 'Arrêter' : 'Commencer'"></span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Contrôles tactiles -->
+			<div class="mt-4">
+				<div class="flex flex-col items-center gap-2">
+					<!-- Flèche haut -->
+					<button 
+						@click="changeDirection(0, -1)"
+						class="btn btn-secondary btn-circle btn-sm shadow-lg"
+						:disabled="!gameStarted || gameOver"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+						</svg>
+					</button>
+					
+					<!-- Flèches gauche et droite -->
+					<div class="flex gap-2">
+						<button 
+							@click="changeDirection(-1, 0)"
+							class="btn btn-secondary btn-circle btn-sm shadow-lg"
+							:disabled="!gameStarted || gameOver"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+							</svg>
+						</button>
+						
+						<button 
+							@click="changeDirection(1, 0)"
+							class="btn btn-secondary btn-circle btn-sm shadow-lg"
+							:disabled="!gameStarted || gameOver"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+							</svg>
+						</button>
+					</div>
+					
+					<!-- Flèche bas -->
+					<button 
+						@click="changeDirection(0, 1)"
+						class="btn btn-secondary btn-circle btn-sm shadow-lg"
+						:disabled="!gameStarted || gameOver"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+						</svg>
+					</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+

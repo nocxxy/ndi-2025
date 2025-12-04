@@ -4,8 +4,8 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>NIRD - Numérique Inclusif, Responsable et Durable | NDI 2025</title>
-		<link rel="stylesheet" href="<%= basePath %>/stylesheets/style.css" />
-		<script defer src="<%= basePath %>/javascripts/alpine.js"></script>
+		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<script defer src="/javascripts/alpine.js"></script>
 	</head>
 
 	<body class="min-h-screen bg-base-100">
@@ -184,10 +184,10 @@
 							Découvrez comment votre établissement peut réduire ses dépendances numériques
 						</p>
 						<div class="flex flex-col sm:flex-row gap-4 justify-center">
-							<a href="<%= basePath %>/solutions" class="btn btn-lg bg-white text-primary hover:bg-base-200 shadow-lg transform transition-all hover:scale-105">
+							<a href="<%= url('/solutions') %>" class="btn btn-lg bg-white text-primary hover:bg-base-200 shadow-lg transform transition-all hover:scale-105">
 								Voir les Solutions
 							</a>
-							<a href="<%= basePath %>/simulateur" class="btn btn-lg btn-outline text-white border-2 border-white hover:bg-white hover:text-primary shadow-lg transform transition-all hover:scale-105">
+							<a href="<%= url('/simulateur') %>" class="btn btn-lg btn-outline text-white border-2 border-white hover:bg-white hover:text-primary shadow-lg transform transition-all hover:scale-105">
 								Essayer le Simulateur
 							</a>
 						</div>

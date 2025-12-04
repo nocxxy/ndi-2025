@@ -1,59 +1,127 @@
-var express = require("express");
-var router = express.Router();
+/**
+ * @fileoverview Express Router - Main routes for NDI application
+ * @description Defines all page routes for the NDI web application including:
+ *              - Main content pages (accueil, nird, solutions, simulateur, ressources)
+ *              - Windows 10 simulation page
+ *              - Mini-apps loaded in iframes (snake, typing)
+ *
+ * @requires express
+ *
+ * @example
+ * // In app.js:
+ * const indexRouter = require('./routes/index');
+ * app.use('/ndi', indexRouter);
+ */
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-	res.render("index", {
-		basePath: res.locals.basePath || "/ndi",
-		page: "accueil",
+const express = require('express');
+const router = express.Router();
+
+// =============================================================================
+// MAIN PAGES
+// =============================================================================
+
+/**
+ * GET / - Home page
+ * @route GET /
+ * @renders index.ejs
+ */
+router.get('/', (req, res) => {
+	res.render('index', {
+		basePath: res.locals.basePath || '/ndi',
+		page: 'accueil',
 	});
 });
 
-/* GET page NIRD. */
-router.get("/nird", function (req, res, next) {
-	res.render("nird", {
-		basePath: res.locals.basePath || "/ndi",
-		page: "nird",
+/**
+ * GET /nird - NIRD presentation page
+ * @route GET /nird
+ * @renders nird.ejs
+ */
+router.get('/nird', (req, res) => {
+	res.render('nird', {
+		basePath: res.locals.basePath || '/ndi',
+		page: 'nird',
 	});
 });
 
-/* GET page Solutions. */
-router.get("/solutions", function (req, res, next) {
-	res.render("solutions", {
-		basePath: res.locals.basePath || "/ndi",
-		page: "solutions",
+/**
+ * GET /solutions - Free software solutions page
+ * @route GET /solutions
+ * @renders solutions.ejs
+ */
+router.get('/solutions', (req, res) => {
+	res.render('solutions', {
+		basePath: res.locals.basePath || '/ndi',
+		page: 'solutions',
 	});
 });
 
-/* GET page Simulateur. */
-router.get("/simulateur", function (req, res, next) {
-	res.render("simulateur", {
-		basePath: res.locals.basePath || "/ndi",
-		page: "simulateur",
+/**
+ * GET /simulateur - Cost simulator page
+ * @route GET /simulateur
+ * @renders simulateur.ejs
+ */
+router.get('/simulateur', (req, res) => {
+	res.render('simulateur', {
+		basePath: res.locals.basePath || '/ndi',
+		page: 'simulateur',
 	});
 });
 
-/* GET page Ressources. */
-router.get("/ressources", function (req, res, next) {
-	res.render("ressources", {
-		basePath: res.locals.basePath || "/ndi",
-		page: "ressources",
+/**
+ * GET /ressources - Resources and documentation page
+ * @route GET /ressources
+ * @renders ressources.ejs
+ */
+router.get('/ressources', (req, res) => {
+	res.render('ressources', {
+		basePath: res.locals.basePath || '/ndi',
+		page: 'ressources',
 	});
 });
 
-/* GET page Jeu Snake. */
-router.get("/jeu", function (req, res, next) {
-	res.render("snake", {
-		basePath: res.locals.basePath || "/ndi",
-		page: "jeu",
+// =============================================================================
+// WINDOWS SIMULATION
+// =============================================================================
+
+/**
+ * GET /windows - Windows 10 desktop simulation
+ * @route GET /windows
+ * @renders windows.ejs
+ * @description Interactive Windows-like desktop with task/quest system
+ */
+router.get('/windows', (req, res) => {
+	res.render('windows', {
+		basePath: res.locals.basePath || '/ndi',
+		page: 'windows',
 	});
 });
 
-/* GET page Windows 10. */
-router.get("/windows", function (req, res, next) {
-	res.render("windows", {
-		basePath: res.locals.basePath || "/ndi",
-		page: "windows",
+// =============================================================================
+// MINI-APPS (loaded in iframes within Windows simulation)
+// =============================================================================
+
+/**
+ * GET /apps/snake - Snake game app
+ * @route GET /apps/snake
+ * @renders apps/snake.ejs
+ * @description Classic snake game, communicates score via postMessage
+ */
+router.get('/apps/snake', (req, res) => {
+	res.render('apps/snake', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
+/**
+ * GET /apps/typing - Typing speed test app
+ * @route GET /apps/typing
+ * @renders apps/typing.ejs
+ * @description WPM typing test, communicates results via postMessage
+ */
+router.get('/apps/typing', (req, res) => {
+	res.render('apps/typing', {
+		basePath: res.locals.basePath || '/ndi',
 	});
 });
 
