@@ -25,13 +25,20 @@ function url(path, basePath) {
 }
 
 /**
- * Construit une URL pour un fichier statique (toujours depuis la racine)
+ * Construit une URL pour un fichier statique
  * @param {string} path - Le chemin du fichier statique (ex: '/stylesheets/style.css')
- * @returns {string} L'URL du fichier statique
+ * @param {string} basePath - Le basePath (ex: '/ndi' ou '/')
+ * @returns {string} L'URL du fichier statique avec basePath
  */
-function staticUrl(path) {
-	// Les fichiers statiques sont toujours servis depuis la racine
-	return path.startsWith('/') ? path : '/' + path;
+function staticUrl(path, basePath) {
+	const normalizedPath = path.startsWith('/') ? path : '/' + path;
+
+	if (!basePath || basePath === '/') {
+		return normalizedPath;
+	}
+
+	const normalizedBasePath = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
+	return normalizedBasePath + normalizedPath;
 }
 
 /**

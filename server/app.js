@@ -23,7 +23,9 @@ app.use(function (req, res, next) {
 	res.locals.url = function(path) {
 		return helpers.url(path, BASE_PATH);
 	};
-	res.locals.staticUrl = helpers.staticUrl;
+	res.locals.staticUrl = function(path) {
+		return helpers.staticUrl(path, BASE_PATH);
+	};
 	res.locals.link = function(path, text, options) {
 		return helpers.link(path, text, BASE_PATH, options);
 	};
