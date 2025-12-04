@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'server/**'
+      - '.github/workflows/docker-publish.yml'
 
 env:
   REGISTRY: docker.io
