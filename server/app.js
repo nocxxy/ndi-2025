@@ -1,5 +1,6 @@
 var express = require("express");
 var path = require("path");
+var fs = require("fs");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
@@ -34,6 +35,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// Middleware de diagnostic pour les fichiers statiques (en production aussi pour debug)
+app.use((req, res, next) => {
+	if (req.path.startsWith('/javascripts/') || req.path.startsWith('/stylesheets/')) {
+		console.log('[STATIC] Request for:', req.path, 'Method:', req.method);
+		console.log('[STATIC] __dirname:', __dirname);
+		console.log('[STATIC] BASE_PATH:', BASE_PATH);
+	}
+	next();
+});
+
 // Le load balancer enlève le préfixe /ndi/ avant d'envoyer les requêtes
 // Donc on écoute sur / mais on utilise BASE_PATH pour générer les URLs dans les templates
 // Servir les fichiers statiques avec les bons MIME types (AVANT les routes)
@@ -60,36 +71,150 @@ function serveStaticWithMime(route, dir, mimeType) {
 	});
 }
 
-// Servir les fichiers statiques sur / (le load balancer a enlevé le préfixe)
-// Ordre important : Alpine.js d'abord (route spécifique), puis le dossier général
-app.use(
-	"/javascripts/alpine.js",
-	serveStaticWithMime(
-		"/javascripts/alpine.js",
-		path.join(__dirname, "node_modules/alpinejs/dist/cdn.min.js"),
-		'application/javascript; charset=utf-8'
-	)
-);
+// Routes explicites pour les fichiers critiques (pour éviter les problèmes de routing)
+const publicJsDir = path.join(__dirname, "public", "javascripts");
+const publicCssDir = path.join(__dirname, "public", "stylesheets");
+const alpineJsPath = path.join(__dirname, "node_modules/alpinejs/dist/cdn.min.js");
 
-app.use("/stylesheets", serveStaticWithMime("/stylesheets", path.join(__dirname, "public", "stylesheets"), 'text/css; charset=utf-8'));
+// Route explicite pour message-bus.js
+app.get("/javascripts/message-bus.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "message-bus.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+// Route explicite pour windows-manager.js
+app.get("/javascripts/windows-manager.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "windows-manager.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+// Route explicite pour style.css
+app.get("/stylesheets/style.css", (req, res) => {
+	const filePath = path.join(publicCssDir, "style.css");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'text/css; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+// Route explicite pour alpine.js
+app.get("/javascripts/alpine.js", (req, res) => {
+	if (fs.existsSync(alpineJsPath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(alpineJsPath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+// Routes explicites pour les autres fichiers JS (snake-game, typing-test)
+app.get("/javascripts/snake-game.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "snake-game.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+app.get("/javascripts/typing-test.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "typing-test.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+// Servir les fichiers statiques sur / (le load balancer a enlevé le préfixe)
+// Ordre important : routes explicites d'abord, puis middleware général
+app.use("/stylesheets", serveStaticWithMime("/stylesheets", publicCssDir, 'text/css; charset=utf-8'));
 app.use("/images", express.static(path.join(__dirname, "public", "images"), { maxAge: '1y' }));
-app.use("/javascripts", serveStaticWithMime("/javascripts", path.join(__dirname, "public", "javascripts"), 'application/javascript; charset=utf-8'));
+app.use("/javascripts", serveStaticWithMime("/javascripts", publicJsDir, 'application/javascript; charset=utf-8'));
 
 // AUSSI servir les fichiers statiques avec BASE_PATH au cas où le load balancer ne les enlèverait pas
 // (fallback pour certains cas de configuration)
 if (BASE_PATH && BASE_PATH !== '/') {
 	const basePathNormalized = BASE_PATH.endsWith('/') ? BASE_PATH.slice(0, -1) : BASE_PATH;
-	app.use(basePathNormalized + "/stylesheets", serveStaticWithMime(basePathNormalized + "/stylesheets", path.join(__dirname, "public", "stylesheets"), 'text/css; charset=utf-8'));
+	
+	// Routes explicites avec BASE_PATH
+	app.get(basePathNormalized + "/javascripts/message-bus.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "message-bus.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/javascripts/windows-manager.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "windows-manager.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/stylesheets/style.css", (req, res) => {
+		const filePath = path.join(publicCssDir, "style.css");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'text/css; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/javascripts/alpine.js", (req, res) => {
+		if (fs.existsSync(alpineJsPath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(alpineJsPath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/javascripts/snake-game.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "snake-game.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/javascripts/typing-test.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "typing-test.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	// Middleware général avec BASE_PATH
+	app.use(basePathNormalized + "/stylesheets", serveStaticWithMime(basePathNormalized + "/stylesheets", publicCssDir, 'text/css; charset=utf-8'));
 	app.use(basePathNormalized + "/images", express.static(path.join(__dirname, "public", "images"), { maxAge: '1y' }));
-	app.use(basePathNormalized + "/javascripts", serveStaticWithMime(basePathNormalized + "/javascripts", path.join(__dirname, "public", "javascripts"), 'application/javascript; charset=utf-8'));
-	app.use(
-		basePathNormalized + "/javascripts/alpine.js",
-		serveStaticWithMime(
-			basePathNormalized + "/javascripts/alpine.js",
-			path.join(__dirname, "node_modules/alpinejs/dist/cdn.min.js"),
-			'application/javascript; charset=utf-8'
-		)
-	);
+	app.use(basePathNormalized + "/javascripts", serveStaticWithMime(basePathNormalized + "/javascripts", publicJsDir, 'application/javascript; charset=utf-8'));
 }
 
 // Monter les routes sur / (le load balancer a déjà enlevé le préfixe)
