@@ -6,12 +6,17 @@ WORKDIR /usr/src/app
 
 # Copier les fichiers de dépendances
 COPY package*.json ./
+COPY tailwind.config.js ./
+COPY postcss.config.js ./
 
-# Installer les dépendances
-RUN npm install --production
+# Installer toutes les dépendances (y compris devDependencies pour le build)
+RUN npm install
 
 # Copier le reste de l'application
 COPY . .
+
+# Construire le CSS avec Tailwind + DaisyUI
+RUN npm run build:css
 
 # Exposer le port 3000
 EXPOSE 3000
