@@ -125,4 +125,16 @@ router.get('/apps/typing', (req, res) => {
 	});
 });
 
+/**
+ * GET /apps/mail - Mail app (Task manager)
+ * @route GET /apps/mail
+ * @renders apps/mail.ejs
+ * @description Displays tasks as emails
+ */
+router.get('/apps/mail', (req, res) => {
+	res.render('apps/mail', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
 module.exports = router;

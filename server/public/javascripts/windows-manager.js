@@ -36,6 +36,7 @@
 const APPS = [
 	{ id: 'snake', name: 'Snake', icon: '🐍', category: 'Jeux', route: '/apps/snake' },
 	{ id: 'typing', name: 'Typing Speed', icon: '⌨️', category: 'Outils', route: '/apps/typing' },
+	{ id: 'mail', name: 'Mail', icon: '📧', category: 'Outils', route: '/apps/mail' },
 ];
 
 // =============================================================================
@@ -98,7 +99,7 @@ const TASKS = [
 const INITIAL_TASKS = ['open-snake', 'open-typing', 'wpm-25', 'score-snake-30'];
 
 /** @type {string[]} Apps unlocked at start */
-const INITIAL_APPS = ['snake', 'typing'];
+const INITIAL_APPS = ['mail', 'snake', 'typing'];
 
 // =============================================================================
 // CONFIGURATION
@@ -166,6 +167,9 @@ document.addEventListener('alpine:init', () => {
 		/** @type {string[]} IDs of unlocked apps */
 		unlockedApps: [...INITIAL_APPS],
 
+		/** @type {string[]} IDs of apps with pending notifications */
+		notifications: ['mail'],
+
 		// =====================================================================
 		// Initialization
 		// =====================================================================
@@ -191,6 +195,28 @@ document.addEventListener('alpine:init', () => {
 			if (window.MessageBus) {
 				MessageBus.init((event) => this.handleEvent(event));
 			}
+		},
+
+		// =====================================================================
+		// Notification Methods
+		// =====================================================================
+
+		/**
+		 * Add a notification for an app
+		 * @param {string} appId
+		 */
+		addNotification(appId) {
+			if (!this.notifications.includes(appId)) {
+				this.notifications.push(appId);
+			}
+		},
+
+		/**
+		 * Remove notification for an app
+		 * @param {string} appId
+		 */
+		removeNotification(appId) {
+			this.notifications = this.notifications.filter(id => id !== appId);
 		},
 
 		// =====================================================================
@@ -247,6 +273,11 @@ document.addEventListener('alpine:init', () => {
 		handleEvent(event) {
 			const { type, data } = event;
 
+			if (type === 'mail:requestTasks') {
+				this.sendTasksToMail();
+				return;
+			}
+
 			TASKS.forEach(task => {
 				// Skip if already completed or not unlocked
 				if (this.completedTasks.includes(task.id)) return;
@@ -279,6 +310,38 @@ document.addEventListener('alpine:init', () => {
 		},
 
 		/**
+		 * Send current tasks to all open Mail app instances
+		 */
+		sendTasksToMail() {
+			// Format tasks for display
+			const tasksData = TASKS
+				.filter(t => this.unlockedTasks.includes(t.id))
+				.map(t => ({
+					...t,
+					completed: this.completedTasks.includes(t.id)
+				}))
+				.sort((a, b) => {
+					if (a.completed === b.completed) return 0;
+					return a.completed ? 1 : -1; // Completed last
+				});
+
+			// Find all iframe windows with the mail app
+			const mailWindows = this.windows.filter(w => w.app.id === 'mail');
+			mailWindows.forEach(win => {
+				const wrapper = document.getElementById(`window-${win.id}`);
+				if (wrapper) {
+					const iframe = wrapper.querySelector('iframe');
+					if (iframe && iframe.contentWindow) {
+						iframe.contentWindow.postMessage({
+							type: 'mail:updateTasks',
+							data: tasksData
+						}, '*');
+					}
+				}
+			});
+		},
+
+		/**
 		 * Mark a task as completed and unlock subsequent tasks/apps
 		 * @param {string} taskId
 		 */
@@ -291,9 +354,11 @@ document.addEventListener('alpine:init', () => {
 			this.completedTasks.push(taskId);
 
 			// Unlock new tasks
+			let newTasksUnlocked = false;
 			task.unlocksTasks.forEach(id => {
 				if (!this.unlockedTasks.includes(id)) {
 					this.unlockedTasks.push(id);
+					newTasksUnlocked = true;
 				}
 			});
 
@@ -304,7 +369,13 @@ document.addEventListener('alpine:init', () => {
 				}
 			});
 
+			// Notify mail app if new tasks are unlocked
+			if (newTasksUnlocked) {
+				this.addNotification('mail');
+			}
+
 			this.saveProgress();
+			this.sendTasksToMail(); // Update UI
 		},
 
 		// =====================================================================
@@ -347,7 +418,9 @@ document.addEventListener('alpine:init', () => {
 			this.completedTasks = [];
 			this.unlockedTasks = [...INITIAL_TASKS];
 			this.unlockedApps = [...INITIAL_APPS];
+			this.notifications = ['mail']; // Reset notifications
 			localStorage.removeItem(CONFIG.storageKey);
+			this.sendTasksToMail();
 		},
 
 		// =====================================================================
@@ -378,6 +451,8 @@ document.addEventListener('alpine:init', () => {
 		 */
 		openApp(app) {
 			if (!this.isAppUnlocked(app.id)) return null;
+
+			this.removeNotification(app.id);
 
 			const id = `win-${Date.now()}`;
 			const offset = this.windows.length * CONFIG.window.offsetStep;
