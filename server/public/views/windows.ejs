@@ -6,6 +6,9 @@
 		<title>Windows 10 - Émulation | NDI 2025</title>
 		<link rel="stylesheet" href="<%= basePath %>/stylesheets/style.css" />
 		<script defer src="<%= basePath %>/javascripts/alpine.js"></script>
+		<style>
+			[x-cloak] { display: none !important; }
+		</style>
 	</head>
 
 	<body class="h-screen bg-base-100 overflow-hidden">
@@ -81,15 +84,25 @@
 				maximizeWindow(windowId) {
 					const window = this.windows.find(w => w.id === windowId);
 					if (window) {
-						window.maximized = !window.maximized;
-						if (window.maximized) {
+						if (!window.maximized) {
+							// Sauvegarder la position et taille avant maximisation
+							window.prevX = window.x;
+							window.prevY = window.y;
+							window.prevWidth = window.width;
+							window.prevHeight = window.height;
+							// Maximiser
+							window.maximized = true;
 							window.x = 0;
 							window.y = 0;
-							window.width = window.innerWidth || window.innerWidth;
-							window.height = window.innerHeight || window.innerHeight;
+							window.width = window.innerWidth || document.documentElement.clientWidth;
+							window.height = window.innerHeight || document.documentElement.clientHeight;
 						} else {
-							window.width = 600;
-							window.height = 400;
+							// Restaurer
+							window.maximized = false;
+							window.x = window.prevX || 100;
+							window.y = window.prevY || 100;
+							window.width = window.prevWidth || 600;
+							window.height = window.prevHeight || 400;
 						}
 					}
 				},
@@ -125,14 +138,15 @@
 			</div>
 
 			<!-- Zone de bureau -->
-			<div class="flex-1 relative z-10 p-8 overflow-auto">
+			<div class="flex-1 relative z-10 p-8 overflow-auto pointer-events-auto">
 				<div class="max-w-7xl mx-auto">
 					<!-- Icônes du bureau -->
 					<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
 						<template x-for="app in apps.slice(0, 6)" :key="app.name">
 							<div 
+								@click="openWindow(app)"
 								@dblclick="openWindow(app)"
-								class="flex flex-col items-center gap-2 p-4 rounded-lg cursor-pointer transform transition-all hover:bg-white/10 active:scale-95 select-none"
+								class="flex flex-col items-center gap-2 p-4 rounded-lg cursor-pointer transform transition-all hover:bg-white/10 active:scale-95 select-none pointer-events-auto"
 							>
 								<div class="text-6xl drop-shadow-2xl filter" x-text="app.icon"></div>
 								<p class="text-white text-sm text-center font-medium drop-shadow-lg bg-black/30 px-2 py-1 rounded" x-text="app.name"></p>
@@ -161,15 +175,16 @@
 			<template x-for="window in windows" :key="window.id">
 				<div 
 					x-show="!window.minimized"
+					x-cloak
 					x-transition
 					@mousedown="focusWindow(window.id)"
 					:style="`position: fixed; left: ${window.x}px; top: ${window.y}px; width: ${window.maximized ? '100%' : window.width + 'px'}; height: ${window.maximized ? '100%' : window.height + 'px'}; z-index: ${window.zIndex};`"
-					class="card bg-base-100 shadow-2xl border-2 border-gray-300 flex flex-col"
+					class="card bg-base-100 shadow-2xl border-2 border-gray-300 flex flex-col pointer-events-auto"
 				>
 					<!-- Barre de titre -->
 					<div 
 						@mousedown="startDrag(window.id, $event)"
-						class="bg-gradient-to-r from-gray-700 to-gray-600 text-white px-4 py-2 flex items-center justify-between cursor-move select-none"
+						class="bg-gradient-to-r from-gray-700 to-gray-600 text-white px-4 py-2 flex items-center justify-between cursor-move select-none pointer-events-auto"
 					>
 						<div class="flex items-center gap-3">
 							<div class="text-2xl" x-text="window.app.icon"></div>
@@ -177,8 +192,9 @@
 						</div>
 						<div class="flex items-center gap-2">
 							<button 
-								@click="minimizeWindow(window.id)"
-								class="btn btn-ghost btn-xs text-white hover:bg-white/20 rounded-none"
+								@click.stop="minimizeWindow(window.id)"
+								@mousedown.stop
+								class="btn btn-ghost btn-xs text-white hover:bg-white/20 rounded-none pointer-events-auto"
 								title="Minimiser"
 							>
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -186,8 +202,9 @@
 								</svg>
 							</button>
 							<button 
-								@click="maximizeWindow(window.id)"
-								class="btn btn-ghost btn-xs text-white hover:bg-white/20 rounded-none"
+								@click.stop="maximizeWindow(window.id)"
+								@mousedown.stop
+								class="btn btn-ghost btn-xs text-white hover:bg-white/20 rounded-none pointer-events-auto"
 								title="Maximiser"
 							>
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -195,8 +212,9 @@
 								</svg>
 							</button>
 							<button 
-								@click="closeWindow(window.id)"
-								class="btn btn-ghost btn-xs text-error hover:bg-error/20 rounded-none"
+								@click.stop="closeWindow(window.id)"
+								@mousedown.stop
+								class="btn btn-ghost btn-xs text-error hover:bg-error/20 rounded-none pointer-events-auto"
 								title="Fermer"
 							>
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -252,10 +270,11 @@
 			<!-- Barre de recherche Cortana -->
 			<div 
 				x-show="showSearch"
+				x-cloak
 				x-transition
-				class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-2xl px-4"
+				class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-2xl px-4 pointer-events-auto"
 			>
-				<div class="card bg-base-100 shadow-2xl border-2 border-primary/30">
+				<div class="card bg-base-100 shadow-2xl border-2 border-primary/30 pointer-events-auto" @click.stop>
 					<div class="card-body p-6">
 						<div class="flex items-center gap-4 mb-4">
 							<div class="text-4xl">🔍</div>
@@ -265,8 +284,9 @@
 								@input="search()"
 								@keydown.escape="showSearch = false; searchQuery = ''; searchResults = []"
 								@keydown.enter="if(searchResults.length > 0) openWindow(searchResults[0])"
+								@click.stop
 								placeholder="Tapez ici pour rechercher..."
-								class="input input-bordered input-primary w-full text-lg focus:outline-none focus:ring-2 focus:ring-primary"
+								class="input input-bordered input-primary w-full text-lg focus:outline-none focus:ring-2 focus:ring-primary pointer-events-auto"
 								autofocus
 							/>
 						</div>
@@ -275,8 +295,8 @@
 						<div x-show="searchResults.length > 0" x-transition class="space-y-2 max-h-96 overflow-y-auto">
 							<template x-for="result in searchResults" :key="result.name">
 								<button 
-									@click="openWindow(result)"
-									class="w-full flex items-center gap-4 p-4 rounded-lg hover:bg-base-200 transform transition-all text-left"
+									@click.stop="openWindow(result)"
+									class="w-full flex items-center gap-4 p-4 rounded-lg hover:bg-base-200 transform transition-all text-left pointer-events-auto"
 								>
 									<div class="text-3xl" x-text="result.icon"></div>
 									<div class="flex-1">
@@ -305,8 +325,8 @@
 							<div class="grid grid-cols-2 gap-2">
 								<template x-for="app in apps.slice(0, 4)" :key="app.name">
 									<button 
-										@click="openWindow(app)"
-										class="flex items-center gap-3 p-3 rounded-lg hover:bg-base-200 transform transition-all text-left"
+										@click.stop="openWindow(app)"
+										class="flex items-center gap-3 p-3 rounded-lg hover:bg-base-200 transform transition-all text-left pointer-events-auto"
 									>
 										<div class="text-2xl" x-text="app.icon"></div>
 										<p class="text-sm font-medium" x-text="app.name"></p>
@@ -319,11 +339,11 @@
 			</div>
 
 			<!-- Barre des tâches -->
-			<div class="h-14 bg-gray-800/90 backdrop-blur-md border-t border-gray-700 relative z-20 flex items-center px-4 gap-2">
+			<div class="h-14 bg-gray-800/90 backdrop-blur-md border-t border-gray-700 relative z-20 flex items-center px-4 gap-2 pointer-events-auto">
 				<!-- Bouton Démarrer -->
 				<button 
 					@click="showStartMenu = !showStartMenu; showSearch = false"
-					class="btn btn-ghost btn-circle text-white hover:bg-white/20"
+					class="btn btn-ghost btn-circle text-white hover:bg-white/20 pointer-events-auto"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
 						<path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>
@@ -333,7 +353,7 @@
 				<!-- Barre de recherche Cortana -->
 				<button 
 					@click="showSearch = !showSearch; showStartMenu = false"
-					class="flex-1 max-w-xl flex items-center gap-3 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-left transition-all"
+					class="flex-1 max-w-xl flex items-center gap-3 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-left transition-all pointer-events-auto"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -342,11 +362,11 @@
 				</button>
 
 				<!-- Fenêtres dans la barre des tâches -->
-				<div class="flex items-center gap-1 mx-4">
+				<div class="flex items-center gap-1 mx-4 pointer-events-auto">
 					<template x-for="window in windows" :key="window.id">
 						<button 
 							@click="window.minimized = !window.minimized; if(window.minimized) {} else { focusWindow(window.id); }"
-							class="px-4 py-2 rounded-lg text-white text-sm hover:bg-white/20 transition-all flex items-center gap-2"
+							class="px-4 py-2 rounded-lg text-white text-sm hover:bg-white/20 transition-all flex items-center gap-2 pointer-events-auto"
 							:class="window.minimized ? 'opacity-60' : 'bg-white/10'"
 						>
 							<div class="text-lg" x-text="window.app.icon"></div>
@@ -356,13 +376,13 @@
 				</div>
 
 				<!-- Icônes de la barre des tâches -->
-				<div class="flex items-center gap-2 ml-auto">
-					<button class="btn btn-ghost btn-circle text-white hover:bg-white/20">
+				<div class="flex items-center gap-2 ml-auto pointer-events-auto">
+					<button class="btn btn-ghost btn-circle text-white hover:bg-white/20 pointer-events-auto">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
 						</svg>
 					</button>
-					<button class="btn btn-ghost btn-circle text-white hover:bg-white/20">
+					<button class="btn btn-ghost btn-circle text-white hover:bg-white/20 pointer-events-auto">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
 						</svg>
@@ -384,16 +404,17 @@
 			<!-- Menu Démarrer -->
 			<div 
 				x-show="showStartMenu"
+				x-cloak
 				x-transition
 				@click.away="showStartMenu = false"
-				class="absolute bottom-16 left-4 w-80 bg-gray-800/95 backdrop-blur-md rounded-lg shadow-2xl border border-gray-700 z-30"
+				class="absolute bottom-16 left-4 w-80 bg-gray-800/95 backdrop-blur-md rounded-lg shadow-2xl border border-gray-700 z-30 pointer-events-auto"
 			>
-				<div class="p-4">
+				<div class="p-4" @click.stop>
 					<div class="grid grid-cols-4 gap-4 mb-4">
 						<template x-for="app in apps.slice(0, 8)" :key="app.name">
 							<button 
-								@click="openWindow(app); showStartMenu = false"
-								class="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-white/10 transform transition-all"
+								@click.stop="openWindow(app); showStartMenu = false"
+								class="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-white/10 transform transition-all pointer-events-auto"
 							>
 								<div class="text-4xl" x-text="app.icon"></div>
 								<p class="text-white text-xs text-center" x-text="app.name"></p>
@@ -403,13 +424,13 @@
 					<div class="divider my-2"></div>
 					<div class="space-y-1">
 						<button 
-							@click="openWindow(apps.find(a => a.name === 'Paramètres')); showStartMenu = false"
-							class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 text-white text-left"
+							@click.stop="openWindow(apps.find(a => a.name === 'Paramètres')); showStartMenu = false"
+							class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 text-white text-left pointer-events-auto"
 						>
 							<div class="text-2xl">⚙️</div>
 							<span>Paramètres</span>
 						</button>
-						<button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 text-white text-left">
+						<button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 text-white text-left pointer-events-auto">
 							<div class="text-2xl">🔌</div>
 							<span>Arrêter</span>
 						</button>
@@ -421,8 +442,10 @@
 		<!-- Overlay pour fermer la recherche -->
 		<div 
 			x-show="showSearch"
+			x-cloak
 			@click="showSearch = false; searchQuery = ''; searchResults = []"
 			class="fixed inset-0 bg-black/50 z-40"
+			:class="showSearch ? 'pointer-events-auto' : 'pointer-events-none'"
 			x-transition
 		></div>
 	</body>
