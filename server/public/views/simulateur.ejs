@@ -12,13 +12,18 @@
 		<%- include('partials/navbar', { basePath, page }) %>
 
 		<!-- Hero -->
-		<section class="hero min-h-[40vh] bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/20">
-			<div class="hero-content text-center">
+		<section class="hero min-h-[40vh] bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 relative overflow-hidden">
+			<div class="absolute inset-0 opacity-10">
+				<div class="absolute top-10 left-10 w-72 h-72 bg-primary rounded-full blur-3xl"></div>
+				<div class="absolute bottom-10 right-10 w-96 h-96 bg-accent rounded-full blur-3xl"></div>
+				<div class="absolute top-1/2 left-1/2 w-80 h-80 bg-secondary rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
+			</div>
+			<div class="hero-content text-center relative z-10">
 				<div class="max-w-4xl">
-					<h1 class="text-5xl md:text-6xl font-bold mb-6">
+					<h1 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
 						🎮 Simulateur NIRD
 					</h1>
-					<p class="text-2xl mb-4">
+					<p class="text-2xl mb-4 font-semibold">
 						Calculez les économies et l'impact de votre établissement
 					</p>
 					<p class="text-lg opacity-80">
@@ -29,7 +34,7 @@
 		</section>
 
 		<!-- Simulateur Interactif -->
-		<section class="py-20">
+		<section class="py-20 bg-gradient-to-br from-base-100 via-primary/5 to-base-100">
 			<div class="container mx-auto px-4">
 				<div 
 					x-data="{
@@ -89,9 +94,9 @@
 				>
 					<!-- Configuration -->
 					<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-						<!-- Paramètres établissement -->
-						<div class="card bg-base-200 shadow-xl">
-							<div class="card-body">
+					<!-- Paramètres établissement -->
+					<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-primary/20 shadow-2xl">
+						<div class="card-body p-6">
 								<h2 class="card-title text-2xl mb-6">📊 Votre Établissement</h2>
 								
 								<div class="form-control mb-4">
@@ -172,9 +177,9 @@
 							</div>
 						</div>
 
-						<!-- Actions NIRD -->
-						<div class="card bg-base-200 shadow-xl">
-							<div class="card-body">
+					<!-- Actions NIRD -->
+					<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-secondary/20 shadow-2xl">
+						<div class="card-body p-6">
 								<h2 class="card-title text-2xl mb-6">✅ Actions NIRD</h2>
 								
 								<div class="space-y-4">
@@ -251,8 +256,8 @@
 					<!-- Résultats -->
 					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
 						<!-- Score de résistance -->
-						<div class="card bg-gradient-to-br from-primary/20 to-primary/5 shadow-xl">
-							<div class="card-body text-center">
+						<div class="card bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/30 shadow-2xl">
+							<div class="card-body text-center p-6">
 								<div class="text-6xl mb-4" x-text="niveauResistance.icon"></div>
 								<h3 class="text-2xl font-bold mb-2" :class="'text-' + niveauResistance.color" x-text="niveauResistance.text"></h3>
 								<div class="radial-progress" :class="'text-' + niveauResistance.color" :style="`--value: ${resistanceScore}`" x-text="resistanceScore + '%'"></div>
@@ -261,8 +266,8 @@
 						</div>
 
 						<!-- Économies totales -->
-						<div class="card bg-gradient-to-br from-success/20 to-success/5 shadow-xl">
-							<div class="card-body text-center">
+						<div class="card bg-gradient-to-br from-success/20 to-success/5 border-2 border-success/30 shadow-2xl">
+							<div class="card-body text-center p-6">
 								<div class="text-6xl mb-4">💰</div>
 								<h3 class="text-2xl font-bold mb-2 text-success">Économies</h3>
 								<div class="stat-value text-success text-4xl" x-text="totalEconomies.toLocaleString('fr-FR') + ' €'"></div>
@@ -271,8 +276,8 @@
 						</div>
 
 						<!-- PC sauvegardés -->
-						<div class="card bg-gradient-to-br from-accent/20 to-accent/5 shadow-xl">
-							<div class="card-body text-center">
+						<div class="card bg-gradient-to-br from-accent/20 to-accent/5 border-2 border-accent/30 shadow-2xl">
+							<div class="card-body text-center p-6">
 								<div class="text-6xl mb-4">♻️</div>
 								<h3 class="text-2xl font-bold mb-2 text-accent">PC Sauvegardés</h3>
 								<div class="stat-value text-accent text-4xl" x-text="pcSauves"></div>
@@ -281,8 +286,8 @@
 						</div>
 
 						<!-- Impact écologique -->
-						<div class="card bg-gradient-to-br from-secondary/20 to-secondary/5 shadow-xl">
-							<div class="card-body text-center">
+						<div class="card bg-gradient-to-br from-secondary/20 to-secondary/5 border-2 border-secondary/30 shadow-2xl">
+							<div class="card-body text-center p-6">
 								<div class="text-6xl mb-4">🌱</div>
 								<h3 class="text-2xl font-bold mb-2 text-secondary">Impact CO₂</h3>
 								<div class="stat-value text-secondary text-4xl" x-text="(pcSauves * 200).toLocaleString('fr-FR') + ' kg'"></div>
@@ -292,8 +297,8 @@
 					</div>
 
 					<!-- Détail des économies -->
-					<div class="card bg-base-200 shadow-xl mb-12">
-						<div class="card-body">
+					<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-primary/20 shadow-2xl mb-12">
+						<div class="card-body p-6">
 							<h2 class="card-title text-2xl mb-6">📈 Détail des Économies</h2>
 							<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 								<div class="stat bg-base-100 rounded-lg shadow p-4">
@@ -334,17 +339,17 @@
 					</div>
 
 					<!-- Actions -->
-					<div class="card bg-gradient-to-r from-primary to-secondary shadow-2xl">
+					<div class="card bg-gradient-to-r from-primary via-accent to-secondary shadow-2xl border-2 border-primary/30">
 						<div class="card-body text-center p-12">
 							<h2 class="text-3xl font-bold text-white mb-4">Prêt à passer à l'action ?</h2>
 							<p class="text-xl text-white/90 mb-8">
 								Découvrez comment mettre en place ces solutions dans votre établissement
 							</p>
 							<div class="flex flex-col sm:flex-row gap-4 justify-center">
-								<a href="<%= basePath %>/solutions" class="btn btn-lg bg-white text-primary hover:bg-base-200">
+								<a href="<%= basePath %>/solutions" class="btn btn-lg bg-white text-primary hover:bg-base-200 shadow-lg transform transition-all hover:scale-105">
 									Voir les Solutions
 								</a>
-								<a href="<%= basePath %>/ressources" class="btn btn-lg btn-outline text-white border-white hover:bg-white hover:text-primary">
+								<a href="<%= basePath %>/ressources" class="btn btn-lg btn-outline text-white border-2 border-white hover:bg-white hover:text-primary shadow-lg transform transition-all hover:scale-105">
 									Consulter les Ressources
 								</a>
 							</div>

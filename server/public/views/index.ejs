@@ -14,10 +14,15 @@
 		<%- include('partials/navbar', { basePath, page }) %>
 
 		<!-- Hero Section -->
-		<section id="accueil" class="hero min-h-[70vh] bg-gradient-to-br from-primary/10 via-base-200 to-secondary/10">
-			<div class="hero-content text-center">
+		<section id="accueil" class="hero min-h-[70vh] bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 relative overflow-hidden">
+			<div class="absolute inset-0 opacity-10">
+				<div class="absolute top-10 left-10 w-72 h-72 bg-primary rounded-full blur-3xl"></div>
+				<div class="absolute bottom-10 right-10 w-96 h-96 bg-accent rounded-full blur-3xl"></div>
+				<div class="absolute top-1/2 left-1/2 w-80 h-80 bg-secondary rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
+			</div>
+			<div class="hero-content text-center relative z-10">
 				<div class="max-w-4xl">
-					<h1 class="text-5xl md:text-6xl font-bold mb-6">
+					<h1 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
 						Le Village Numérique Résistant
 					</h1>
 					<p class="text-2xl mb-4 font-semibold text-primary">
@@ -27,69 +32,85 @@
 						David contre Goliath, Astérix contre l'Empire numérique
 					</p>
 					<div class="flex flex-col sm:flex-row gap-4 justify-center">
-						<a href="<%= basePath %>/simulateur" class="btn btn-primary btn-lg animate-pulse">🎮 Essayer le Simulateur</a>
-						<a href="<%= basePath %>/nird" class="btn btn-outline btn-lg">Découvrir NIRD</a>
+						<a href="<%= basePath %>/simulateur" class="btn btn-primary btn-lg shadow-lg transform transition-all hover:scale-105">🎮 Essayer le Simulateur</a>
+						<a href="<%= basePath %>/nird" class="btn btn-outline btn-lg shadow-lg transform transition-all hover:scale-105">Découvrir NIRD</a>
 					</div>
 				</div>
 			</div>
 		</section>
 
 		<!-- Section Problématique -->
-		<section class="py-16 bg-base-200">
+		<section class="py-20 bg-gradient-to-br from-base-200 via-base-100 to-base-200">
 			<div class="container mx-auto px-4">
-				<div class="text-center mb-12">
-					<h2 class="text-4xl font-bold mb-4">Le Défi Actuel</h2>
-					<p class="text-xl max-w-3xl mx-auto">
+				<div class="text-center mb-16">
+					<h2 class="text-5xl font-bold mb-4">Le Défi Actuel</h2>
+					<p class="text-xl max-w-3xl mx-auto opacity-80">
 						À l'heure où la fin du support de Windows 10 met en évidence la dépendance structurelle aux Big Tech
 					</p>
 				</div>
 				
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-					<div class="card bg-error/10 border border-error/20 shadow-xl">
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" x-data="{ active: null }">
+					<div 
+						@mouseenter="active = 'obsolescence'"
+						@mouseleave="active = null"
+						class="card bg-gradient-to-br from-error/20 to-error/5 border-2 border-error/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-error/30"
+					>
 						<div class="card-body">
-							<h3 class="card-title text-error">
+							<h3 class="card-title text-error text-xl">
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
 								</svg>
 								Matériel obsolète
 							</h3>
-							<p>Ordinateurs rendus inutilisables alors qu'ils fonctionnent encore</p>
+							<p class="opacity-80">Ordinateurs rendus inutilisables alors qu'ils fonctionnent encore</p>
 						</div>
 					</div>
 
-					<div class="card bg-warning/10 border border-warning/20 shadow-xl">
+					<div 
+						@mouseenter="active = 'licences'"
+						@mouseleave="active = null"
+						class="card bg-gradient-to-br from-warning/20 to-warning/5 border-2 border-warning/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-warning/30"
+					>
 						<div class="card-body">
-							<h3 class="card-title text-warning">
+							<h3 class="card-title text-warning text-xl">
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 								</svg>
 								Licences coûteuses
 							</h3>
-							<p>Abonnements et licences qui pèsent sur les budgets</p>
+							<p class="opacity-80">Abonnements et licences qui pèsent sur les budgets</p>
 						</div>
 					</div>
 
-					<div class="card bg-error/10 border border-error/20 shadow-xl">
+					<div 
+						@mouseenter="active = 'donnees'"
+						@mouseleave="active = null"
+						class="card bg-gradient-to-br from-error/20 to-error/5 border-2 border-error/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-error/30"
+					>
 						<div class="card-body">
-							<h3 class="card-title text-error">
+							<h3 class="card-title text-error text-xl">
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
 								</svg>
 								Données hors UE
 							</h3>
-							<p>Stockage de données sensibles hors de l'Union Européenne</p>
+							<p class="opacity-80">Stockage de données sensibles hors de l'Union Européenne</p>
 						</div>
 					</div>
 
-					<div class="card bg-warning/10 border border-warning/20 shadow-xl">
+					<div 
+						@mouseenter="active = 'ecosystemes'"
+						@mouseleave="active = null"
+						class="card bg-gradient-to-br from-warning/20 to-warning/5 border-2 border-warning/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-warning/30"
+					>
 						<div class="card-body">
-							<h3 class="card-title text-warning">
+							<h3 class="card-title text-warning text-xl">
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
 								</svg>
 								Écosystèmes fermés
 							</h3>
-							<p>Vendor lock-in et dépendance à des solutions propriétaires</p>
+							<p class="opacity-80">Vendor lock-in et dépendance à des solutions propriétaires</p>
 						</div>
 					</div>
 				</div>
@@ -97,46 +118,67 @@
 		</section>
 
 		<!-- Section NIRD -->
-		<section id="nird" class="py-16">
+		<section id="nird" class="py-20 bg-gradient-to-br from-base-100 via-accent/5 to-base-100">
 			<div class="container mx-auto px-4">
-				<div class="text-center mb-12">
-					<h2 class="text-4xl font-bold mb-4">La Démarche NIRD</h2>
-					<p class="text-xl max-w-3xl mx-auto">
+				<div class="text-center mb-16">
+					<h2 class="text-5xl font-bold mb-4">La Démarche NIRD</h2>
+					<p class="text-xl max-w-3xl mx-auto opacity-80">
 						Numérique <span class="text-primary font-bold">Inclusif</span>, 
 						<span class="text-secondary font-bold">Responsable</span> et 
 						<span class="text-accent font-bold">Durable</span>
 					</p>
 				</div>
 
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12" x-data="{ active: null }">
 					<!-- Inclusion -->
-					<div class="card bg-primary/10 border border-primary/20 shadow-xl">
-						<div class="card-body text-center">
-							<div class="text-6xl mb-4">🤝</div>
-							<h3 class="card-title justify-center text-primary text-2xl">Inclusion</h3>
-							<p class="text-center">
+					<div 
+						@mouseenter="active = 'inclusion'"
+						@mouseleave="active = null"
+						class="card bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-primary/30"
+					>
+						<div class="card-body text-center p-8">
+							<div class="text-8xl mb-6 transform transition-transform duration-300" 
+								 :class="active === 'inclusion' ? 'scale-125 rotate-12' : ''">
+								🤝
+							</div>
+							<h3 class="card-title justify-center text-primary text-3xl mb-4">Inclusion</h3>
+							<p class="text-center opacity-80">
 								Un numérique accessible à tous, sans barrières techniques ou financières
 							</p>
 						</div>
 					</div>
 
 					<!-- Responsabilité -->
-					<div class="card bg-secondary/10 border border-secondary/20 shadow-xl">
-						<div class="card-body text-center">
-							<div class="text-6xl mb-4">🌍</div>
-							<h3 class="card-title justify-center text-secondary text-2xl">Responsabilité</h3>
-							<p class="text-center">
+					<div 
+						@mouseenter="active = 'responsabilite'"
+						@mouseleave="active = null"
+						class="card bg-gradient-to-br from-secondary/20 to-secondary/5 border-2 border-secondary/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-secondary/30"
+					>
+						<div class="card-body text-center p-8">
+							<div class="text-8xl mb-6 transform transition-transform duration-300"
+								 :class="active === 'responsabilite' ? 'scale-125 rotate-12' : ''">
+								🌍
+							</div>
+							<h3 class="card-title justify-center text-secondary text-3xl mb-4">Responsabilité</h3>
+							<p class="text-center opacity-80">
 								Un numérique éthique, respectueux de la vie privée et des données
 							</p>
 						</div>
 					</div>
 
 					<!-- Durabilité -->
-					<div class="card bg-accent/10 border border-accent/20 shadow-xl">
-						<div class="card-body text-center">
-							<div class="text-6xl mb-4">♻️</div>
-							<h3 class="card-title justify-center text-accent text-2xl">Durabilité</h3>
-							<p class="text-center">
+					<div 
+						@mouseenter="active = 'durabilite'"
+						@mouseleave="active = null"
+						class="card bg-gradient-to-br from-accent/20 to-accent/5 border-2 border-accent/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-accent/30"
+					>
+						<div class="card-body text-center p-8">
+							<div class="text-8xl mb-6 transform transition-transform duration-300"
+								 :class="active === 'durabilite' ? 'scale-125 rotate-12' : ''">
+								♻️
+							</div>
+							<h3 class="card-title justify-center text-accent text-3xl mb-4">Durabilité</h3>
+							<p class="text-center opacity-80">
 								Un numérique qui lutte contre l'obsolescence et favorise le réemploi
 							</p>
 						</div>
@@ -144,49 +186,49 @@
 				</div>
 
 				<!-- Activités NIRD -->
-				<div class="card bg-base-200 shadow-xl">
-					<div class="card-body">
-						<h3 class="card-title text-2xl mb-6">Les Activités de NIRD</h3>
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div class="flex items-start gap-3">
-								<div class="badge badge-primary badge-lg">1</div>
+				<div class="card bg-gradient-to-br from-base-200 to-base-100 shadow-2xl border-2 border-primary/10">
+					<div class="card-body p-8">
+						<h3 class="card-title text-3xl mb-8">Les Activités de NIRD</h3>
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-primary/10 to-transparent hover:from-primary/20 transition-all">
+								<div class="badge badge-primary badge-lg text-lg p-4">1</div>
 								<div>
-									<h4 class="font-semibold mb-1">Sensibilisation</h4>
+									<h4 class="font-bold mb-2 text-lg">Sensibilisation</h4>
 									<p class="text-sm opacity-80">Sensibiliser les équipes éducatives et les élèves à la sobriété numérique</p>
 								</div>
 							</div>
-							<div class="flex items-start gap-3">
-								<div class="badge badge-secondary badge-lg">2</div>
+							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-secondary/10 to-transparent hover:from-secondary/20 transition-all">
+								<div class="badge badge-secondary badge-lg text-lg p-4">2</div>
 								<div>
-									<h4 class="font-semibold mb-1">Réemploi</h4>
+									<h4 class="font-bold mb-2 text-lg">Réemploi</h4>
 									<p class="text-sm opacity-80">Encourager le réemploi et le reconditionnement du matériel</p>
 								</div>
 							</div>
-							<div class="flex items-start gap-3">
-								<div class="badge badge-accent badge-lg">3</div>
+							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-accent/10 to-transparent hover:from-accent/20 transition-all">
+								<div class="badge badge-accent badge-lg text-lg p-4">3</div>
 								<div>
-									<h4 class="font-semibold mb-1">Linux</h4>
+									<h4 class="font-bold mb-2 text-lg">Linux</h4>
 									<p class="text-sm opacity-80">Promouvoir l'usage de Linux pour lutter contre l'obsolescence programmée</p>
 								</div>
 							</div>
-							<div class="flex items-start gap-3">
-								<div class="badge badge-primary badge-lg">4</div>
+							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-primary/10 to-transparent hover:from-primary/20 transition-all">
+								<div class="badge badge-primary badge-lg text-lg p-4">4</div>
 								<div>
-									<h4 class="font-semibold mb-1">Mutualisation</h4>
+									<h4 class="font-bold mb-2 text-lg">Mutualisation</h4>
 									<p class="text-sm opacity-80">Mutualiser les ressources et outils libres via la Forge</p>
 								</div>
 							</div>
-							<div class="flex items-start gap-3">
-								<div class="badge badge-secondary badge-lg">5</div>
+							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-secondary/10 to-transparent hover:from-secondary/20 transition-all">
+								<div class="badge badge-secondary badge-lg text-lg p-4">5</div>
 								<div>
-									<h4 class="font-semibold mb-1">Accompagnement</h4>
+									<h4 class="font-bold mb-2 text-lg">Accompagnement</h4>
 									<p class="text-sm opacity-80">Accompagner les établissements dans une transition écoresponsable</p>
 								</div>
 							</div>
-							<div class="flex items-start gap-3">
-								<div class="badge badge-accent badge-lg">6</div>
+							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-accent/10 to-transparent hover:from-accent/20 transition-all">
+								<div class="badge badge-accent badge-lg text-lg p-4">6</div>
 								<div>
-									<h4 class="font-semibold mb-1">Co-construction</h4>
+									<h4 class="font-bold mb-2 text-lg">Co-construction</h4>
 									<p class="text-sm opacity-80">Favoriser la co-construction de solutions locales et ouvertes</p>
 								</div>
 							</div>
@@ -197,20 +239,20 @@
 		</section>
 
 		<!-- Section Sujet 2025 -->
-		<section id="sujet" class="py-16 bg-base-200">
+		<section id="sujet" class="py-20 bg-gradient-to-br from-base-200 via-secondary/5 to-base-200">
 			<div class="container mx-auto px-4">
-				<div class="text-center mb-12">
-					<h2 class="text-4xl font-bold mb-4">Le Sujet NDI 2025</h2>
-					<p class="text-xl max-w-3xl mx-auto">
+				<div class="text-center mb-16">
+					<h2 class="text-5xl font-bold mb-4">Le Sujet NDI 2025</h2>
+					<p class="text-xl max-w-3xl mx-auto opacity-80">
 						Créez une application Web qui aide à comprendre comment un établissement peut réduire ses dépendances numériques
 					</p>
 				</div>
 
-				<div class="max-w-4xl mx-auto space-y-6">
-					<div class="card bg-base-100 shadow-xl">
-						<div class="card-body">
-							<h3 class="card-title text-primary">🎯 L'Objectif</h3>
-							<p>
+				<div class="max-w-4xl mx-auto space-y-6 mb-12">
+					<div class="card bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 shadow-2xl transform transition-all hover:scale-[1.02]">
+						<div class="card-body p-8">
+							<h3 class="card-title text-primary text-2xl mb-4">🎯 L'Objectif</h3>
+							<p class="text-lg opacity-90">
 								Développer une plateforme qui permet d'animer la communauté NIRD, 
 								d'encourager la contribution, de faire la promotion de NIRD sous toutes ses formes, 
 								de faciliter la contribution au sein de la communauté et à l'extérieur, 
@@ -219,10 +261,10 @@
 						</div>
 					</div>
 
-					<div class="card bg-base-100 shadow-xl">
-						<div class="card-body">
-							<h3 class="card-title text-secondary">🎮 L'Expérience</h3>
-							<p>
+					<div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border-2 border-secondary/20 shadow-2xl transform transition-all hover:scale-[1.02]">
+						<div class="card-body p-8">
+							<h3 class="card-title text-secondary text-2xl mb-4">🎮 L'Expérience</h3>
+							<p class="text-lg opacity-90">
 								L'application doit proposer une expérience <strong>ludique, attractive et engageante</strong>. 
 								Il peut s'agir d'interactivité, d'illustrations, de mécaniques de choix, de petites énigmes, 
 								de défis, de scénarios, d'une ambiance humoristique... 
@@ -231,10 +273,10 @@
 						</div>
 					</div>
 
-					<div class="card bg-base-100 shadow-xl">
-						<div class="card-body">
-							<h3 class="card-title text-accent">💡 Format Libre</h3>
-							<p>
+					<div class="card bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/20 shadow-2xl transform transition-all hover:scale-[1.02]">
+						<div class="card-body p-8">
+							<h3 class="card-title text-accent text-2xl mb-4">💡 Format Libre</h3>
+							<p class="text-lg opacity-90">
 								Vous êtes libres du format : outil interactif, mini-site narratif, parcours visuel, 
 								plateforme explicative, tableau de simulation, interface gamifiée, ou toute autre forme créative. 
 								L'important est de transmettre l'esprit de résistance numérique propre à NIRD.
@@ -244,36 +286,36 @@
 				</div>
 
 				<!-- Compteur interactif - Exemple de gamification -->
-				<div class="mt-12 card bg-gradient-to-br from-primary/20 to-secondary/20 shadow-2xl">
-					<div class="card-body text-center">
-						<h3 class="text-2xl font-bold mb-4">💪 Le Village Résistant</h3>
-						<div x-data="{ resistance: 0, maxResistance: 100 }" class="space-y-4">
-							<div class="stat">
-								<div class="stat-value text-primary">
+				<div class="max-w-4xl mx-auto card bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 shadow-2xl border-2 border-primary/30">
+					<div class="card-body text-center p-8">
+						<h3 class="text-3xl font-bold mb-6">💪 Le Village Résistant</h3>
+						<div x-data="{ resistance: 0, maxResistance: 100 }" class="space-y-6">
+							<div class="stat bg-base-100/50 rounded-lg p-6">
+								<div class="stat-value text-primary text-5xl">
 									<span x-text="resistance"></span>%
 								</div>
-								<div class="stat-desc">Niveau de résistance numérique</div>
+								<div class="stat-desc text-lg">Niveau de résistance numérique</div>
 							</div>
-							<div class="progress progress-primary w-full" :style="`--value: ${resistance}`"></div>
-							<div class="flex flex-wrap gap-2 justify-center">
-								<button @click="resistance = Math.min(resistance + 10, maxResistance)" class="btn btn-primary btn-sm">
+							<div class="progress progress-primary w-full h-4" :style="`--value: ${resistance}`"></div>
+							<div class="flex flex-wrap gap-3 justify-center">
+								<button @click="resistance = Math.min(resistance + 10, maxResistance)" class="btn btn-primary shadow-lg transform transition-all hover:scale-105">
 									+ Adopter Linux
 								</button>
-								<button @click="resistance = Math.min(resistance + 15, maxResistance)" class="btn btn-secondary btn-sm">
+								<button @click="resistance = Math.min(resistance + 15, maxResistance)" class="btn btn-secondary shadow-lg transform transition-all hover:scale-105">
 									+ Réutiliser le matériel
 								</button>
-								<button @click="resistance = Math.min(resistance + 20, maxResistance)" class="btn btn-accent btn-sm">
+								<button @click="resistance = Math.min(resistance + 20, maxResistance)" class="btn btn-accent shadow-lg transform transition-all hover:scale-105">
 									+ Utiliser des logiciels libres
 								</button>
-								<button @click="resistance = 0" class="btn btn-outline btn-sm">
+								<button @click="resistance = 0" class="btn btn-outline shadow-lg transform transition-all hover:scale-105">
 									Réinitialiser
 								</button>
 							</div>
-							<div x-show="resistance >= maxResistance" x-transition class="alert alert-success mt-4">
+							<div x-show="resistance >= maxResistance" x-transition class="alert alert-success mt-6 shadow-lg">
 								<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 								</svg>
-								<span>🎉 Félicitations ! Votre établissement est maintenant un Village Numérique Résistant !</span>
+								<span class="text-lg">🎉 Félicitations ! Votre établissement est maintenant un Village Numérique Résistant !</span>
 							</div>
 						</div>
 					</div>
@@ -282,62 +324,62 @@
 		</section>
 
 		<!-- Section Acteurs -->
-		<section class="py-16">
+		<section class="py-20 bg-gradient-to-br from-base-100 via-primary/5 to-base-100">
 			<div class="container mx-auto px-4">
-				<div class="text-center mb-12">
-					<h2 class="text-4xl font-bold mb-4">Les Acteurs du Projet</h2>
-					<p class="text-xl max-w-3xl mx-auto">
+				<div class="text-center mb-16">
+					<h2 class="text-5xl font-bold mb-4">Les Acteurs du Projet</h2>
+					<p class="text-xl max-w-3xl mx-auto opacity-80">
 						Un collectif d'acteurs engagés pour un numérique éducatif plus autonome
 					</p>
 				</div>
 
-				<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-					<div class="card bg-base-200 shadow">
-						<div class="card-body text-center">
-							<div class="text-3xl mb-2">👨‍🎓</div>
-							<p class="font-semibold">Élèves</p>
+				<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+					<div class="card bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-primary/30">
+						<div class="card-body text-center p-6">
+							<div class="text-5xl mb-3">👨‍🎓</div>
+							<p class="font-bold text-lg">Élèves</p>
 						</div>
 					</div>
-					<div class="card bg-base-200 shadow">
-						<div class="card-body text-center">
-							<div class="text-3xl mb-2">👩‍🏫</div>
-							<p class="font-semibold">Enseignants</p>
+					<div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border-2 border-secondary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-secondary/30">
+						<div class="card-body text-center p-6">
+							<div class="text-5xl mb-3">👩‍🏫</div>
+							<p class="font-bold text-lg">Enseignants</p>
 						</div>
 					</div>
-					<div class="card bg-base-200 shadow">
-						<div class="card-body text-center">
-							<div class="text-3xl mb-2">🏫</div>
-							<p class="font-semibold">Directions</p>
+					<div class="card bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-accent/30">
+						<div class="card-body text-center p-6">
+							<div class="text-5xl mb-3">🏫</div>
+							<p class="font-bold text-lg">Directions</p>
 						</div>
 					</div>
-					<div class="card bg-base-200 shadow">
-						<div class="card-body text-center">
-							<div class="text-3xl mb-2">💻</div>
-							<p class="font-semibold">Techniciens</p>
+					<div class="card bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-primary/30">
+						<div class="card-body text-center p-6">
+							<div class="text-5xl mb-3">💻</div>
+							<p class="font-bold text-lg">Techniciens</p>
 						</div>
 					</div>
-					<div class="card bg-base-200 shadow">
-						<div class="card-body text-center">
-							<div class="text-3xl mb-2">🤝</div>
-							<p class="font-semibold">Associations</p>
+					<div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border-2 border-secondary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-secondary/30">
+						<div class="card-body text-center p-6">
+							<div class="text-5xl mb-3">🤝</div>
+							<p class="font-bold text-lg">Associations</p>
 						</div>
 					</div>
-					<div class="card bg-base-200 shadow">
-						<div class="card-body text-center">
-							<div class="text-3xl mb-2">🏛️</div>
-							<p class="font-semibold">Collectivités</p>
+					<div class="card bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-accent/30">
+						<div class="card-body text-center p-6">
+							<div class="text-5xl mb-3">🏛️</div>
+							<p class="font-bold text-lg">Collectivités</p>
 						</div>
 					</div>
-					<div class="card bg-base-200 shadow">
-						<div class="card-body text-center">
-							<div class="text-3xl mb-2">🎓</div>
-							<p class="font-semibold">Services académiques</p>
+					<div class="card bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-primary/30">
+						<div class="card-body text-center p-6">
+							<div class="text-5xl mb-3">🎓</div>
+							<p class="font-bold text-lg">Services académiques</p>
 						</div>
 					</div>
-					<div class="card bg-base-200 shadow">
-						<div class="card-body text-center">
-							<div class="text-3xl mb-2">🏛️</div>
-							<p class="font-semibold">Ministère</p>
+					<div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border-2 border-secondary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-secondary/30">
+						<div class="card-body text-center p-6">
+							<div class="text-5xl mb-3">🏛️</div>
+							<p class="font-bold text-lg">Ministère</p>
 						</div>
 					</div>
 				</div>
@@ -345,62 +387,61 @@
 		</section>
 
 		<!-- Section Ressources -->
-		<section id="ressources" class="py-16 bg-base-200">
+		<section id="ressources" class="py-20 bg-gradient-to-br from-base-200 via-accent/5 to-base-200">
 			<div class="container mx-auto px-4">
-				<div class="text-center mb-12">
-					<h2 class="text-4xl font-bold mb-4">Ressources & Liens</h2>
+				<div class="text-center mb-16">
+					<h2 class="text-5xl font-bold mb-4">Ressources & Liens</h2>
+					<p class="text-xl opacity-80">Découvrez toutes les ressources pour approfondir</p>
 				</div>
 
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-					<div class="card bg-base-100 shadow-xl">
-						<div class="card-body">
-							<h3 class="card-title text-primary">🌐 Site Officiel</h3>
-							<p class="mb-4">Découvrez la démarche NIRD sur la Forge des communs numériques éducatifs</p>
-							<a href="https://nird.forge.apps.education.fr/" target="_blank" class="btn btn-primary btn-sm">
+					<div class="card bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 shadow-2xl transform transition-all hover:scale-105">
+						<div class="card-body p-6">
+							<h3 class="card-title text-primary text-xl mb-4">🌐 Site Officiel</h3>
+							<p class="mb-4 opacity-80">Découvrez la démarche NIRD sur la Forge des communs numériques éducatifs</p>
+							<a href="https://nird.forge.apps.education.fr/" target="_blank" class="btn btn-primary shadow-lg">
 								Visiter le site NIRD
 							</a>
 						</div>
 					</div>
 
-					<div class="card bg-base-100 shadow-xl">
-						<div class="card-body">
-							<h3 class="card-title text-secondary">📺 Vidéos & Médias</h3>
-							<p class="mb-4">Reportages et témoignages sur la résistance numérique</p>
-							<div class="space-y-2 text-sm">
-								<p>• Windows 11 : l'alternative des logiciels libres (France 3)</p>
-								<p>• Logiciel obsolète : l'État obligé de jeter des milliers d'ordinateurs ? (France Info)</p>
-								<p>• "Linux, c'est facile !" (Lycée Carnot)</p>
-							</div>
+					<div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border-2 border-secondary/20 shadow-2xl transform transition-all hover:scale-105">
+						<div class="card-body p-6">
+							<h3 class="card-title text-secondary text-xl mb-4">📺 Vidéos & Médias</h3>
+							<p class="mb-4 opacity-80">Reportages et témoignages sur la résistance numérique</p>
+							<a href="<%= basePath %>/ressources" class="btn btn-secondary shadow-lg">
+								Voir toutes les vidéos
+							</a>
 						</div>
 					</div>
 
-					<div class="card bg-base-100 shadow-xl">
-						<div class="card-body">
-							<h3 class="card-title text-accent">📚 Articles</h3>
-							<p class="mb-4">En savoir plus sur le projet NIRD au lycée Carnot</p>
-							<a href="https://www.cafepedagogique.net/2025/04/27/bruay-labuissiere-voyage-au-centre-du-libre-educatif/" target="_blank" class="btn btn-accent btn-sm">
+					<div class="card bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/20 shadow-2xl transform transition-all hover:scale-105">
+						<div class="card-body p-6">
+							<h3 class="card-title text-accent text-xl mb-4">📚 Articles</h3>
+							<p class="mb-4 opacity-80">En savoir plus sur le projet NIRD au lycée Carnot</p>
+							<a href="https://www.cafepedagogique.net/2025/04/27/bruay-labuissiere-voyage-au-centre-du-libre-educatif/" target="_blank" class="btn btn-accent shadow-lg">
 								Lire l'article
 							</a>
 						</div>
 					</div>
 
-					<div class="card bg-base-100 shadow-xl">
-						<div class="card-body">
-							<h3 class="card-title text-primary">🎯 Objectifs Importants</h3>
-							<div class="space-y-2">
-								<div class="alert alert-info">
+					<div class="card bg-gradient-to-br from-base-100 to-base-200 border-2 border-primary/20 shadow-2xl">
+						<div class="card-body p-6">
+							<h3 class="card-title text-primary text-xl mb-4">🎯 Objectifs Importants</h3>
+							<div class="space-y-3">
+								<div class="alert alert-info shadow-md">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
 									</svg>
 									<span class="text-sm">L'application devra être en ligne à la fin de la Nuit</span>
 								</div>
-								<div class="alert alert-success">
+								<div class="alert alert-success shadow-md">
 									<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 									</svg>
 									<span class="text-sm">Utiliser des ressources libres de droit</span>
 								</div>
-								<div class="alert alert-warning">
+								<div class="alert alert-warning shadow-md">
 									<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
 									</svg>

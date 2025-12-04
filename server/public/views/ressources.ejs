@@ -12,13 +12,18 @@
 		<%- include('partials/navbar', { basePath, page }) %>
 
 		<!-- Hero -->
-		<section class="hero min-h-[40vh] bg-gradient-to-br from-info/20 via-primary/10 to-secondary/20">
-			<div class="hero-content text-center">
+		<section class="hero min-h-[40vh] bg-gradient-to-br from-info/20 via-accent/10 to-secondary/20 relative overflow-hidden">
+			<div class="absolute inset-0 opacity-10">
+				<div class="absolute top-10 left-10 w-72 h-72 bg-info rounded-full blur-3xl"></div>
+				<div class="absolute bottom-10 right-10 w-96 h-96 bg-accent rounded-full blur-3xl"></div>
+				<div class="absolute top-1/2 left-1/2 w-80 h-80 bg-secondary rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
+			</div>
+			<div class="hero-content text-center relative z-10">
 				<div class="max-w-4xl">
-					<h1 class="text-5xl md:text-6xl font-bold mb-6">
+					<h1 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-info via-accent to-secondary bg-clip-text text-transparent">
 						📚 Ressources
 					</h1>
-					<p class="text-2xl mb-4">
+					<p class="text-2xl mb-4 font-semibold">
 						Tout ce dont vous avez besoin pour comprendre et agir
 					</p>
 				</div>
@@ -26,14 +31,14 @@
 		</section>
 
 		<!-- Ressources par catégorie -->
-		<section class="py-20">
+		<section class="py-20 bg-gradient-to-br from-base-100 via-info/5 to-base-100">
 			<div class="container mx-auto px-4">
 				<div 
 					x-data="{ activeTab: 'site' }"
 					class="max-w-6xl mx-auto"
 				>
 					<!-- Tabs -->
-					<div class="tabs tabs-boxed mb-8 justify-center">
+					<div class="tabs tabs-boxed mb-8 justify-center bg-base-200 shadow-lg">
 						<a 
 							@click="activeTab = 'site'"
 							class="tab tab-lg"
@@ -66,8 +71,8 @@
 
 					<!-- Contenu Site Officiel -->
 					<div x-show="activeTab === 'site'" x-transition class="space-y-6">
-						<div class="card bg-base-200 shadow-xl">
-							<div class="card-body">
+						<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-primary/20 shadow-2xl">
+							<div class="card-body p-6">
 								<h2 class="card-title text-3xl mb-4">
 									🌐 Site Officiel NIRD
 								</h2>
@@ -92,96 +97,96 @@
 					<!-- Contenu Vidéos -->
 					<div x-show="activeTab === 'videos'" x-transition class="space-y-6">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div class="card bg-base-200 shadow-xl">
-								<div class="card-body">
-									<h3 class="card-title text-primary">Windows 11 : l'alternative des logiciels libres</h3>
+							<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-primary/20 shadow-2xl transform transition-all hover:scale-105">
+								<div class="card-body p-6">
+									<h3 class="card-title text-primary text-lg mb-3">Windows 11 : l'alternative des logiciels libres</h3>
 									<p class="text-sm opacity-80 mb-4">
 										Reportage de France 3 Alpes (2 min) - Octobre 2025
 									</p>
 									<a 
 										href="https://video.echirolles.fr/w/hVykGUtRZqRen6eiutqRvQ" 
 										target="_blank"
-										class="btn btn-primary btn-sm"
+										class="btn btn-primary btn-sm shadow-lg transform transition-all hover:scale-105"
 									>
 										Regarder
 									</a>
 								</div>
 							</div>
 
-							<div class="card bg-base-200 shadow-xl">
-								<div class="card-body">
-									<h3 class="card-title text-secondary">Mises à jour de Windows : face à l'obsolescence programmée</h3>
+							<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-secondary/20 shadow-2xl transform transition-all hover:scale-105">
+								<div class="card-body p-6">
+									<h3 class="card-title text-secondary text-lg mb-3">Mises à jour de Windows : face à l'obsolescence programmée</h3>
 									<p class="text-sm opacity-80 mb-4">
 										Grand reportage de France Inter (4 min) - Octobre 2025
 									</p>
 									<a 
 										href="https://www.radiofrance.fr/franceinter/podcasts/le-grand-reportage-de-france-inter/le-grand-reportage-du-mardi-14-octobre-2025-4136495" 
 										target="_blank"
-										class="btn btn-secondary btn-sm"
+										class="btn btn-secondary btn-sm shadow-lg transform transition-all hover:scale-105"
 									>
 										Écouter
 									</a>
 								</div>
 							</div>
 
-							<div class="card bg-base-200 shadow-xl">
-								<div class="card-body">
-									<h3 class="card-title text-accent">Logiciel obsolète : l'État obligé de jeter des milliers d'ordinateurs ?</h3>
+							<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-accent/20 shadow-2xl transform transition-all hover:scale-105">
+								<div class="card-body p-6">
+									<h3 class="card-title text-accent text-lg mb-3">Logiciel obsolète : l'État obligé de jeter des milliers d'ordinateurs ?</h3>
 									<p class="text-sm opacity-80 mb-4">
 										Reportage France Info (3 min) - Septembre 2025
 									</p>
 									<a 
 										href="https://www.youtube.com/watch?v=76T8oubek-c" 
 										target="_blank"
-										class="btn btn-accent btn-sm"
+										class="btn btn-accent btn-sm shadow-lg transform transition-all hover:scale-105"
 									>
 										Regarder
 									</a>
 								</div>
 							</div>
 
-							<div class="card bg-base-200 shadow-xl">
-								<div class="card-body">
-									<h3 class="card-title text-primary">"Linux, c'est facile !"</h3>
+							<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-primary/20 shadow-2xl transform transition-all hover:scale-105">
+								<div class="card-body p-6">
+									<h3 class="card-title text-primary text-lg mb-3">"Linux, c'est facile !"</h3>
 									<p class="text-sm opacity-80 mb-4">
 										Intervention des élèves du lycée Carnot (5 min)
 									</p>
 									<a 
 										href="https://tube-numerique-educatif.apps.education.fr/w/3LXem3XK4asbwZa5R1qGkW" 
 										target="_blank"
-										class="btn btn-primary btn-sm"
+										class="btn btn-primary btn-sm shadow-lg transform transition-all hover:scale-105"
 									>
 										Regarder
 									</a>
 								</div>
 							</div>
 
-							<div class="card bg-base-200 shadow-xl">
-								<div class="card-body">
-									<h3 class="card-title text-secondary">Le projet NIRD présenté par les élèves</h3>
+							<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-secondary/20 shadow-2xl transform transition-all hover:scale-105">
+								<div class="card-body p-6">
+									<h3 class="card-title text-secondary text-lg mb-3">Le projet NIRD présenté par les élèves</h3>
 									<p class="text-sm opacity-80 mb-4">
 										Lycée Carnot (4 min)
 									</p>
 									<a 
 										href="https://tube-numerique-educatif.apps.education.fr/w/pZCnzPKTYX2iF38Qh4ZGmq" 
 										target="_blank"
-										class="btn btn-secondary btn-sm"
+										class="btn btn-secondary btn-sm shadow-lg transform transition-all hover:scale-105"
 									>
 										Regarder
 									</a>
 								</div>
 							</div>
 
-							<div class="card bg-base-200 shadow-xl">
-								<div class="card-body">
-									<h3 class="card-title text-accent">L'Ordinateur Obsolète</h3>
+							<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-accent/20 shadow-2xl transform transition-all hover:scale-105">
+								<div class="card-body p-6">
+									<h3 class="card-title text-accent text-lg mb-3">L'Ordinateur Obsolète</h3>
 									<p class="text-sm opacity-80 mb-4">
 										Back Market (1 min)
 									</p>
 									<a 
 										href="https://www.youtube.com/watch?v=S6GLqkhykmA" 
 										target="_blank"
-										class="btn btn-accent btn-sm"
+										class="btn btn-accent btn-sm shadow-lg transform transition-all hover:scale-105"
 									>
 										Regarder
 									</a>
@@ -192,18 +197,18 @@
 
 					<!-- Contenu Articles -->
 					<div x-show="activeTab === 'articles'" x-transition class="space-y-6">
-						<div class="card bg-base-200 shadow-xl">
-							<div class="card-body">
+						<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-primary/20 shadow-2xl">
+							<div class="card-body p-6">
 								<h3 class="card-title text-2xl mb-4">
 									📰 Bruay-la-Buissière : Voyage au centre du libre éducatif
 								</h3>
-								<p class="text-lg mb-4">
+								<p class="text-lg mb-4 opacity-90">
 									Article du Café Pédagogique sur le projet NIRD au lycée Carnot
 								</p>
 								<a 
 									href="https://www.cafepedagogique.net/2025/04/27/bruay-labuissiere-voyage-au-centre-du-libre-educatif/" 
 									target="_blank"
-									class="btn btn-primary"
+									class="btn btn-primary shadow-lg transform transition-all hover:scale-105"
 								>
 									Lire l'article
 								</a>
@@ -214,33 +219,33 @@
 					<!-- Contenu Outils -->
 					<div x-show="activeTab === 'outils'" x-transition class="space-y-6">
 						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-							<div class="card bg-base-200 shadow-xl">
-								<div class="card-body">
-									<h3 class="card-title text-primary">🐧 Ubuntu Education</h3>
+							<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-primary/20 shadow-2xl transform transition-all hover:scale-105">
+								<div class="card-body p-6 text-center">
+									<h3 class="card-title justify-center text-primary text-xl mb-3">🐧 Ubuntu Education</h3>
 									<p class="text-sm opacity-80 mb-4">
 										Distribution Linux adaptée à l'éducation
 									</p>
-									<a href="#" class="btn btn-primary btn-sm">En savoir plus</a>
+									<a href="#" class="btn btn-primary btn-sm shadow-lg">En savoir plus</a>
 								</div>
 							</div>
 
-							<div class="card bg-base-200 shadow-xl">
-								<div class="card-body">
-									<h3 class="card-title text-secondary">📄 LibreOffice</h3>
+							<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-secondary/20 shadow-2xl transform transition-all hover:scale-105">
+								<div class="card-body p-6 text-center">
+									<h3 class="card-title justify-center text-secondary text-xl mb-3">📄 LibreOffice</h3>
 									<p class="text-sm opacity-80 mb-4">
 										Suite bureautique complète et gratuite
 									</p>
-									<a href="#" class="btn btn-secondary btn-sm">En savoir plus</a>
+									<a href="#" class="btn btn-secondary btn-sm shadow-lg">En savoir plus</a>
 								</div>
 							</div>
 
-							<div class="card bg-base-200 shadow-xl">
-								<div class="card-body">
-									<h3 class="card-title text-accent">☁️ Nextcloud</h3>
+							<div class="card bg-gradient-to-br from-base-200 to-base-100 border-2 border-accent/20 shadow-2xl transform transition-all hover:scale-105">
+								<div class="card-body p-6 text-center">
+									<h3 class="card-title justify-center text-accent text-xl mb-3">☁️ Nextcloud</h3>
 									<p class="text-sm opacity-80 mb-4">
 										Cloud privé et souverain
 									</p>
-									<a href="#" class="btn btn-accent btn-sm">En savoir plus</a>
+									<a href="#" class="btn btn-accent btn-sm shadow-lg">En savoir plus</a>
 								</div>
 							</div>
 						</div>
@@ -250,16 +255,16 @@
 		</section>
 
 		<!-- Objectifs Importants -->
-		<section class="py-20 bg-base-200">
+		<section class="py-20 bg-gradient-to-br from-base-200 via-warning/5 to-base-200">
 			<div class="container mx-auto px-4">
 				<div class="max-w-4xl mx-auto">
 					<div class="text-center mb-12">
-						<h2 class="text-4xl font-bold mb-4">⚠️ Objectifs Importants</h2>
+						<h2 class="text-5xl font-bold mb-4">⚠️ Objectifs Importants</h2>
 						<p class="text-xl opacity-80">Points à retenir pour la Nuit de l'Info</p>
 					</div>
 
 					<div class="space-y-4">
-						<div class="alert alert-info shadow-lg">
+						<div class="alert alert-info shadow-xl border-2 border-info/30">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
 							</svg>
@@ -269,7 +274,7 @@
 							</div>
 						</div>
 
-						<div class="alert alert-success shadow-lg">
+						<div class="alert alert-success shadow-xl border-2 border-success/30">
 							<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 							</svg>
@@ -279,7 +284,7 @@
 							</div>
 						</div>
 
-						<div class="alert alert-warning shadow-lg">
+						<div class="alert alert-warning shadow-xl border-2 border-warning/30">
 							<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
 							</svg>

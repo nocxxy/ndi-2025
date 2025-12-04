@@ -41,4 +41,12 @@ router.get("/ressources", function (req, res, next) {
 	});
 });
 
+/* GET page Jeu Snake. */
+router.get("/jeu", function (req, res, next) {
+	res.render("snake", {
+		basePath: res.locals.basePath || "/ndi",
+		page: "jeu",
+	});
+});
+
 module.exports = router;
