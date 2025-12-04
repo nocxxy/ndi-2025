@@ -25,29 +25,30 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// Servir les fichiers statiques avec le base path
+// Le load balancer enlève le préfixe /ndi/ avant d'envoyer les requêtes
+// Donc on écoute sur / mais on utilise BASE_PATH pour générer les URLs dans les templates
 app.use(
-	BASE_PATH + "/stylesheets",
+	"/stylesheets",
 	express.static(path.join(__dirname, "public", "stylesheets")),
 );
 app.use(
-	BASE_PATH + "/images",
+	"/images",
 	express.static(path.join(__dirname, "public", "images")),
 );
 app.use(
-	BASE_PATH + "/javascripts",
+	"/javascripts",
 	express.static(path.join(__dirname, "public", "javascripts")),
 );
 
-// Servir Alpine.js depuis node_modules avec le base path
+// Servir Alpine.js depuis node_modules
 app.use(
-	BASE_PATH + "/javascripts/alpine.js",
+	"/javascripts/alpine.js",
 	express.static(
 		path.join(__dirname, "node_modules/alpinejs/dist/cdn.min.js"),
 	),
 );
 
-// Monter les routes avec le base path
-app.use(BASE_PATH, indexRouter);
+// Monter les routes sur / (le load balancer a déjà enlevé le préfixe)
+app.use("/", indexRouter);
 
 module.exports = app;
