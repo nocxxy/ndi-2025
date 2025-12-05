@@ -1,0 +1,15 @@
+{
+    "id": "welcome-mail-1",
+    "pending": {
+        "title": "Bienvenue dans l'équipe !",
+        "description": "Bonjour ! Bienvenue dans l’entreprise ! C’est ton premier jour mais on a déjà un tas de trucs à faire. Tu devrais bientôt recevoir des tâches à accomplir et pour ça on a plein d’applications géniales. Pour chaque mission il te suffit de rechercher l’application la plus adaptée selon toi et de terminer le mini-jeu associé. Elles sont toutes accessibles depuis la barre de recherche du bureau ! Si tu es bloqué lors d’une étape, tape simplement ‘aide’ dans la barre pour avoir un indice sur la tâche en cours.\n\nAmuse-toi bien et surtout suis ton instinct !\n\nPS : Ton PC sort tout juste du reconditionnement, si tu as des soucis n’hésite pas à demander de l’aide."
+    },
+    "success": {
+        "title": "Bienvenue (Lu)",
+        "description": "Message lu."
+    },
+    "failure": {
+        "title": "Bienvenue",
+        "description": "..."
+    }
+}

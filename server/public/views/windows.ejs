@@ -205,6 +205,38 @@
 		</template>
 	</div>
 
+	<!-- System Popups (Modals) -->
+	<template x-for="popup in $store.wm.popups" :key="popup.id">
+		<div class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm" x-cloak>
+			<div 
+				class="bg-white rounded-lg shadow-2xl border border-gray-300 w-full max-w-lg mx-4 overflow-hidden flex flex-col max-h-[90vh]"
+				@click.outside="$store.wm.removePopup(popup.id)"
+			>
+				<!-- Header -->
+				<div class="bg-gray-100 border-b px-4 py-3 flex justify-between items-center">
+					<div class="flex items-center gap-2 font-bold text-gray-700">
+						<span class="text-yellow-600">⚠️</span>
+						<span x-text="popup.title"></span>
+					</div>
+					<button @click="$store.wm.removePopup(popup.id)" class="text-gray-400 hover:text-gray-700">×</button>
+				</div>
+				
+				<!-- Content -->
+				<div class="p-6 overflow-y-auto whitespace-pre-line text-sm text-gray-800 leading-relaxed" x-html="popup.content"></div>
+				
+				<!-- Footer -->
+				<div class="bg-gray-50 border-t px-4 py-3 flex justify-end gap-2">
+					<button 
+						@click="$store.wm.removePopup(popup.id)" 
+						class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded transition-colors"
+					>
+						OK
+					</button>
+				</div>
+			</div>
+		</div>
+	</template>
+
 	<!-- Taskbar -->
 	<div class="fixed bottom-0 left-0 right-0 h-14 bg-gray-800/95 backdrop-blur border-t border-gray-700 flex items-center px-2 gap-2 z-40">
 		<button @click="$store.wm.toggleStartMenu()" class="w-12 h-12 flex items-center justify-center hover:bg-white/10 rounded transition-colors">

@@ -80,6 +80,15 @@ router.get('/ressources', (req, res) => {
 	});
 });
 
+/**
+ * GET /boot - Windows boot screen
+ */
+router.get('/boot', (req, res) => {
+	res.render('boot', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
 // =============================================================================
 // WINDOWS SIMULATION
 // =============================================================================
@@ -187,6 +196,24 @@ router.get('/apps/chatbot', (req, res) => {
  */
 router.get('/apps/server-shield', (req, res) => {
 	res.render('apps/server-shield', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
+/**
+ * GET /apps/sport - Pause Sport Express
+ */
+router.get('/apps/sport', (req, res) => {
+	res.render('apps/sport', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
+/**
+ * GET /fake-update - Fake Microsoft Update Page
+ */
+router.get('/fake-update', (req, res) => {
+	res.render('fake-update', {
 		basePath: res.locals.basePath || '/ndi',
 	});
 });

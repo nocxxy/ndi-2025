@@ -12,7 +12,6 @@
 
 const APPS = [
 	{ id: 'snake', name: 'Snake', icon: '🐍', category: 'Jeux', route: '/apps/snake' },
-	{ id: 'typing', name: 'Typing Speed', icon: '⌨️', category: 'Outils', route: '/apps/typing' },
 	{ id: 'word', name: 'Word', icon: '📝', category: 'Bureautique', route: '/apps/word' },
 	{ id: 'libreoffice', name: 'LibreOffice', icon: '📄', category: 'Bureautique', route: '/apps/libreoffice' },
 	{ id: 'cloud', name: 'OneDrive', icon: '☁️', category: 'Outils', route: '/apps/cloud' },
@@ -20,6 +19,7 @@ const APPS = [
 	{ id: 'coffee', name: 'Café', icon: '☕', category: 'Détente', route: '/apps/coffee' },
 	{ id: 'chatbot', name: 'Copilot', icon: '✨', category: 'IA', route: '/apps/chatbot' },
 	{ id: 'server-shield', name: 'Server Shield', icon: '🛡️', category: 'Outils', route: '/apps/server-shield' },
+	{ id: 'sport', name: 'Pause Sport', icon: '🏃‍♂️', category: 'Santé', route: '/apps/sport' },
 ];
 
 /**
@@ -35,6 +35,22 @@ const APPS = [
  * @property {string[]} unlocksApps - Apps to unlock on success
  */
 const TASKS = [
+	{
+		id: 'welcome-mail-1',
+		trigger: null, // Informational only
+		dialogFile: 'welcome-mail-1.json',
+		validate: null,
+		unlocksTasks: [],
+		unlocksApps: [],
+	},
+	{
+		id: 'eco-info-mail',
+		trigger: null, // Informational only
+		dialogFile: 'eco-info-mail.json',
+		validate: null,
+		unlocksTasks: [],
+		unlocksApps: [],
+	},
 	{
 		id: 'open-snake',
 		trigger: 'app:opened',
@@ -52,22 +68,6 @@ const TASKS = [
 		allowedApps: ['snake'],
 		unlocksTasks: ['open-typing'],
 		unlocksApps: [],
-	},
-	{
-		id: 'open-typing',
-		trigger: 'app:opened',
-		dialogFile: 'open-typing.json',
-		validate: (data) => data.appId === 'typing' ? true : null,
-		unlocksTasks: ['wpm-25'],
-		unlocksApps: [],
-	},
-	{
-		id: 'wpm-25',
-		trigger: 'typing:finished',
-		dialogFile: 'wpm-25.json',
-		validate: (data) => data.wpm >= 25,
-		unlocksTasks: ['prepare-meeting-word'],
-		unlocksApps: ['word'],
 	},
 	{
 		id: 'prepare-meeting-word',
@@ -137,8 +137,8 @@ const TASKS = [
 	}
 ];
 
-const INITIAL_TASKS = ['prepare-meeting-word'];
-const INITIAL_APPS = ['mail', 'word', 'coffee', 'server-shield'];
+const INITIAL_TASKS = ['welcome-mail-1', 'eco-info-mail', 'prepare-meeting-word'];
+const INITIAL_APPS = ['mail', 'word', 'coffee', 'sport'];
 
 const CONFIG = {
 	window: {
@@ -178,6 +178,7 @@ document.addEventListener('alpine:init', () => {
 		unlockedApps: [...INITIAL_APPS],
 		notifications: ['mail'],
 		toasts: [],
+		popups: [],
 
 		// Initialization
 		init(basePath = '') {
@@ -188,6 +189,16 @@ document.addEventListener('alpine:init', () => {
 			
 			// Load initial task data
 			this.unlockedTasks.forEach(taskId => this.loadTaskData(taskId));
+
+			// Trigger Welcome Popup (fake security alert)
+			setTimeout(() => {
+				this.addPopup(
+					"Alerte de Sécurité Windows",
+					`La version de votre système d’exploitation n’est plus couverte par le support.
+					
+					Cliquez sur le lien suivant pour passer à la version suivante : <a href="${this.basePath}/fake-update" target="_blank" class="text-blue-600 hover:underline">Mettre à jour maintenant</a>`
+				);
+			}, 1000);
 		},
 
 		initMessageBus() {
@@ -215,6 +226,18 @@ document.addEventListener('alpine:init', () => {
 		},
 		removeToast(id) {
 			this.toasts = this.toasts.filter(t => t.id !== id);
+		},
+
+		// Popup Methods
+		addPopup(title, content) {
+			// Prevent duplicates
+			if (this.popups.some(p => p.title === title)) return;
+			
+			const id = Date.now() + Math.random();
+			this.popups.push({ id, title, content });
+		},
+		removePopup(id) {
+			this.popups = this.popups.filter(p => p.id !== id);
 		},
 
 		// Task Methods

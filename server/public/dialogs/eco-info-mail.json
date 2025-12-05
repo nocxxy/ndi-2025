@@ -1,0 +1,15 @@
+{
+    "id": "eco-info-mail",
+    "pending": {
+        "title": "Info : Reconditionnement & OS",
+        "description": "Alors voilà ! Le reconditionnement et la réparation chez nous c’est pas juste un moyen de faire des économies, c’est aussi une super solution écologique ! Pourquoi jeter une machine qui marche encore ? Au lieu de ça, on peut lui donner une nouvelle vie.\n\nOn a parfois du mal car les choses sont faites pour devenir obsolètes trop vite. Quand une machine commence à galérer avec son système d’exploitation, c’est là qu’on peut intervenir : passer à un OS plus léger ou à jour peut la remettre en forme sans avoir besoin de racheter un appareil tout neuf. C’est une solution pratique et surtout nécessaire si on veut éviter la surconsommation et la dépendance à ces systèmes.\n\nEn gros, réparer et reconditionner, c’est une façon intelligente de récupérer des performances, réduire notre impact environnemental et économiser. Un win-win !"
+    },
+    "success": {
+        "title": "Info : Reconditionnement (Lu)",
+        "description": "Message lu."
+    },
+    "failure": {
+        "title": "Info : Reconditionnement",
+        "description": "..."
+    }
+}
