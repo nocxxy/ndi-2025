@@ -1,0 +1,15 @@
+{
+    "id": "score-snake-30",
+    "pending": {
+        "title": "Mission : Collecte de Données",
+        "description": "Nous devons calibrer les capteurs. Atteignez un score de 30 points dans le jeu Snake pour valider cette étape."
+    },
+    "success": {
+        "title": "Succès : Calibrage Terminé",
+        "description": "Score de 30 points atteint. Les données ont été enregistrées. Calibrage nominal."
+    },
+    "failure": {
+        "title": "Echec : Insuffisant",
+        "description": "Le score obtenu est inférieur au seuil requis de 30 points. La calibration a échoué. Veuillez recommencer."
+    }
+}

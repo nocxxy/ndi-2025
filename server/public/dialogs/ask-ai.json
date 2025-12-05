@@ -1,0 +1,15 @@
+{
+    "id": "ask-ai",
+    "pending": {
+        "title": "Mission : Rechercher de l'aide",
+        "description": "On ne sait jamais, peut-être qu'une IA peut nous aider. Ouvre l'application Copilot et pose une question."
+    },
+    "success": {
+        "title": "Succès : Réponse obtenue",
+        "description": "L'IA a répondu. C'est fascinant... et gourmand en ressources. Maintenant, une petite pause s'impose."
+    },
+    "failure": {
+        "title": "Echec",
+        "description": "Pas de réponse."
+    }
+}

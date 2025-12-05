@@ -57,18 +57,21 @@
 			<template x-for="app in $store.wm.availableApps" :key="app.id">
 				<button
 					@click="$store.wm.openApp(app)"
-					class="relative flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-white/10 active:scale-95 transition-all select-none group"
+					class="flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-white/10 active:scale-95 transition-all select-none group"
 				>
-					<!-- Notification Badge -->
-					<div
-						x-show="$store.wm.notifications.includes(app.id)"
-						x-transition:enter="transition ease-out duration-300"
-						x-transition:enter-start="opacity-0 scale-0"
-						x-transition:enter-end="opacity-100 scale-100"
-						class="absolute top-2 right-2 w-4 h-4 bg-red-500 rounded-full border-2 border-gray-900 animate-bounce"
-					></div>
+					<div class="relative">
+						<!-- Notification Badge -->
+						<div
+							x-show="$store.wm.notifications.includes(app.id)"
+							x-transition:enter="transition ease-out duration-300"
+							x-transition:enter-start="opacity-0 scale-0"
+							x-transition:enter-end="opacity-100 scale-100"
+							class="absolute top-2 -right-2 w-6 h-6 bg-red-500 rounded-full border-2 border-white shadow-lg animate-bounce z-10"
+						></div>
 
-					<span class="text-5xl drop-shadow-lg transition-transform group-hover:scale-110" x-text="app.icon"></span>
+						<span class="text-5xl drop-shadow-lg transition-transform group-hover:scale-110 block" x-text="app.icon"></span>
+					</div>
+					
 					<span class="text-white text-sm text-center bg-black/40 px-2 py-0.5 rounded shadow-sm backdrop-blur-sm" x-text="app.name"></span>
 				</button>
 			</template>
@@ -178,6 +181,28 @@
 				</template>
 			</div>
 		</div>
+	</div>
+
+	<!-- Notification Center -->
+	<div class="fixed bottom-16 right-4 z-50 flex flex-col gap-1 pointer-events-none">
+		<template x-for="notif in $store.wm.toasts" :key="notif.id">
+			<div
+				x-transition:enter="transition ease-out duration-300"
+				x-transition:enter-start="opacity-0 translate-y-2"
+				x-transition:enter-end="opacity-100 translate-y-0"
+				x-transition:leave="transition ease-in duration-200"
+				x-transition:leave-start="opacity-100 translate-y-0"
+				x-transition:leave-end="opacity-0 translate-y-2"
+				class="bg-gray-900/95 backdrop-blur text-white p-4 shadow-2xl border border-gray-700 w-80 pointer-events-auto flex gap-3"
+			>
+				<div class="text-2xl">📧</div>
+				<div class="flex-1 min-w-0">
+					<h4 class="font-bold text-sm truncate" x-text="notif.title"></h4>
+					<p class="text-xs text-gray-400 mt-1" x-text="notif.message"></p>
+				</div>
+				<button @click="$store.wm.removeToast(notif.id)" class="text-gray-500 hover:text-white self-start">×</button>
+			</div>
+		</template>
 	</div>
 
 	<!-- Taskbar -->

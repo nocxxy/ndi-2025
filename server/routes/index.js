@@ -137,4 +137,58 @@ router.get('/apps/mail', (req, res) => {
 	});
 });
 
+/**
+ * GET /apps/word - Word app (Fails)
+ */
+router.get('/apps/word', (req, res) => {
+	res.render('apps/word', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
+/**
+ * GET /apps/libreoffice - LibreOffice app (Succeeds)
+ */
+router.get('/apps/libreoffice', (req, res) => {
+	res.render('apps/libreoffice', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
+/**
+ * GET /apps/cloud - Cloud app (Simulates download crash)
+ */
+router.get('/apps/cloud', (req, res) => {
+	res.render('apps/cloud', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
+/**
+ * GET /apps/coffee - Coffee app (Fun/Annoying app)
+ */
+router.get('/apps/coffee', (req, res) => {
+	res.render('apps/coffee', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
+/**
+ * GET /apps/chatbot - Copilot app
+ */
+router.get('/apps/chatbot', (req, res) => {
+	res.render('apps/chatbot', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
+/**
+ * GET /apps/server-shield - Server Shield Mini-game
+ */
+router.get('/apps/server-shield', (req, res) => {
+	res.render('apps/server-shield', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
 module.exports = router;

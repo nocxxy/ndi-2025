@@ -1,109 +1,144 @@
 /**
  * @fileoverview Windows Manager - Alpine.js store for Windows 10 simulation
  * @description Unified store managing the Windows desktop simulation including:
- *              - App registry and window management (open, close, minimize, maximize)
- *              - Task/mission system with unlock chains
- *              - Drag & resize functionality
- *              - localStorage persistence for progress
- *
- * @requires Alpine.js
- * @requires message-bus.js (for iframe communication)
- *
- * @example
- * // Initialize in template:
- * <body x-data x-init="$store.wm.init('/ndi')">
- *
- * // Access store:
- * $store.wm.openApp(app)
- * $store.wm.availableTasks
+ *              - App registry and window management
+ *              - Task/mission system with unlock chains and failure states
+ *              - Persistence
  */
 
 // =============================================================================
-// APP REGISTRY
-// Add new apps here. They will appear on the desktop once unlocked.
+// CONSTANTS
 // =============================================================================
 
-/**
- * @typedef {Object} App
- * @property {string} id - Unique identifier
- * @property {string} name - Display name
- * @property {string} icon - Emoji icon
- * @property {string} category - Category for search
- * @property {string} route - URL route (will be prefixed with basePath)
- */
-
-/** @type {App[]} */
 const APPS = [
 	{ id: 'snake', name: 'Snake', icon: '🐍', category: 'Jeux', route: '/apps/snake' },
 	{ id: 'typing', name: 'Typing Speed', icon: '⌨️', category: 'Outils', route: '/apps/typing' },
+	{ id: 'word', name: 'Word', icon: '📝', category: 'Bureautique', route: '/apps/word' },
+	{ id: 'libreoffice', name: 'LibreOffice', icon: '📄', category: 'Bureautique', route: '/apps/libreoffice' },
+	{ id: 'cloud', name: 'OneDrive', icon: '☁️', category: 'Outils', route: '/apps/cloud' },
 	{ id: 'mail', name: 'Mail', icon: '📧', category: 'Outils', route: '/apps/mail' },
+	{ id: 'coffee', name: 'Café', icon: '☕', category: 'Détente', route: '/apps/coffee' },
+	{ id: 'chatbot', name: 'Copilot', icon: '✨', category: 'IA', route: '/apps/chatbot' },
+	{ id: 'server-shield', name: 'Server Shield', icon: '🛡️', category: 'Outils', route: '/apps/server-shield' },
 ];
 
-// =============================================================================
-// TASK REGISTRY
-// Add new tasks here. Tasks unlock sequentially based on triggers and conditions.
-// =============================================================================
-
 /**
- * @typedef {Object} Task
- * @property {string} id - Unique identifier
- * @property {string} title - Display title
- * @property {string} description - Task description
- * @property {string} trigger - Event type that can complete this task
- * @property {Object} condition - Conditions to check against event data
- * @property {string[]} unlocksTasks - Task IDs to unlock on completion
- * @property {string[]} unlocksApps - App IDs to unlock on completion
+ * Task Definitions
+ * @property {string} id - Unique ID
+ * @property {string} trigger - Event to listen for
+ * @property {string} dialogFile - JSON file in /dialogs/ containing pending/success/failure texts
+ * @property {Function} validate - Returns true (success), false (failure), or null (ignore).
+ *                                If not present, event presence = success.
+ * @property {boolean} blocking - If true, prevents other tasks and restricts apps until completed
+ * @property {string[]} allowedApps - If blocking, only these apps (plus Mail) are accessible
+ * @property {string[]} unlocksTasks - Tasks to unlock on success
+ * @property {string[]} unlocksApps - Apps to unlock on success
  */
-
-/** @type {Task[]} */
 const TASKS = [
 	{
 		id: 'open-snake',
-		title: 'Lancer Snake',
-		description: 'Ouvre le jeu Snake',
 		trigger: 'app:opened',
-		condition: { appId: 'snake' },
+		dialogFile: 'open-snake.json',
+		validate: (data) => data.appId === 'snake' ? true : null,
 		unlocksTasks: ['score-snake-30'],
 		unlocksApps: [],
 	},
 	{
 		id: 'score-snake-30',
-		title: 'Marquer 30 points',
-		description: 'Atteins un score de 30 au Snake',
 		trigger: 'snake:gameOver',
-		condition: { score: 30 },
+		dialogFile: 'score-snake-30.json',
+		validate: (data) => data.score >= 30,
+		blocking: true,
+		allowedApps: ['snake'],
 		unlocksTasks: ['open-typing'],
 		unlocksApps: [],
 	},
 	{
 		id: 'open-typing',
-		title: 'Lancer Typing Speed',
-		description: 'Ouvre le test de frappe',
 		trigger: 'app:opened',
-		condition: { appId: 'typing' },
+		dialogFile: 'open-typing.json',
+		validate: (data) => data.appId === 'typing' ? true : null,
 		unlocksTasks: ['wpm-25'],
 		unlocksApps: [],
 	},
 	{
 		id: 'wpm-25',
-		title: 'Atteindre 25 WPM',
-		description: 'Tape à 25 mots par minute',
 		trigger: 'typing:finished',
-		condition: { wpm: 25 },
+		dialogFile: 'wpm-25.json',
+		validate: (data) => data.wpm >= 25,
+		unlocksTasks: ['prepare-meeting-word'],
+		unlocksApps: ['word'],
+	},
+	{
+		id: 'prepare-meeting-word',
+		trigger: 'word:finished',
+		dialogFile: 'prepare-meeting-word.json',
+		validate: (data) => false, // Always fails
 		unlocksTasks: [],
 		unlocksApps: [],
+		onFail: {
+			unlocksTasks: ['ask-ai'],
+			unlocksApps: ['chatbot']
+		}
 	},
+	{
+		id: 'ask-ai',
+		trigger: 'chatbot:interaction',
+		dialogFile: 'ask-ai.json',
+		validate: (data) => true,
+		unlocksTasks: ['make-coffee-fail'],
+		unlocksApps: ['coffee'],
+	},
+	{
+		id: 'make-coffee-fail',
+		trigger: 'coffee:water-shortage',
+		dialogFile: 'make-coffee-fail.json',
+		validate: (data) => false, // Always fails due to shortage
+		unlocksTasks: [],
+		unlocksApps: [],
+		onFail: {
+			unlocksTasks: ['prepare-meeting-libreoffice'],
+			unlocksApps: ['libreoffice']
+		}
+	},
+	{
+		id: 'prepare-meeting-libreoffice',
+		trigger: 'libreoffice:finished',
+		dialogFile: 'prepare-meeting-libreoffice.json',
+		validate: (data) => true, // Always succeeds
+		unlocksTasks: ['share-meeting-notes'],
+		unlocksApps: ['cloud'],
+	},
+	{
+		id: 'share-meeting-notes',
+		trigger: 'cloud:download-attempt',
+		dialogFile: 'share-meeting-notes.json',
+		validate: (data) => false, // The download always fails/hangs
+		unlocksTasks: [],
+		unlocksApps: [],
+		// On failure (which is immediate), we unlock the repair tool
+		// And we mark this task as blocking until fixed
+		onFail: {
+			unlocksTasks: ['repair-cloud-services'],
+			unlocksApps: ['server-shield']
+		},
+		blocking: true,
+		allowedApps: ['cloud', 'server-shield'],
+	},
+	{
+		id: 'repair-cloud-services',
+		trigger: 'server-shield:victory',
+		dialogFile: 'repair-cloud-services.json', // Needs to be created
+		validate: (data) => true,
+		unlocksTasks: [],
+		unlocksApps: [],
+		// When this completes, it also fixes the blocked task
+		fixTask: 'share-meeting-notes' 
+	}
 ];
 
-/** @type {string[]} Tasks unlocked at start */
-const INITIAL_TASKS = ['open-snake', 'open-typing', 'wpm-25', 'score-snake-30'];
-
-/** @type {string[]} Apps unlocked at start */
-const INITIAL_APPS = ['mail', 'snake', 'typing'];
-
-// =============================================================================
-// CONFIGURATION
-// =============================================================================
+const INITIAL_TASKS = ['prepare-meeting-word'];
+const INITIAL_APPS = ['mail', 'word', 'coffee', 'server-shield'];
 
 const CONFIG = {
 	window: {
@@ -111,7 +146,7 @@ const CONFIG = {
 		defaultHeight: 500,
 		minWidth: 300,
 		minHeight: 200,
-		offsetStep: 30,   // Cascade offset for new windows
+		offsetStep: 30,
 		initialX: 100,
 		initialY: 80,
 	},
@@ -125,150 +160,123 @@ const CONFIG = {
 
 document.addEventListener('alpine:init', () => {
 	Alpine.store('wm', {
-		// =====================================================================
 		// State
-		// =====================================================================
-
-		/** @type {string} Base path for URL generation */
 		basePath: '',
-
-		/** @type {App[]} All apps with computed URLs */
 		apps: [],
-
-		/** @type {Object[]} Currently open windows */
 		windows: [],
-
-		/** @type {number} Next z-index for window layering */
 		nextZIndex: CONFIG.zIndex.initial,
 
-		// =====================================================================
 		// UI State
-		// =====================================================================
-
-		/** @type {boolean} Start menu visibility */
 		showStartMenu: false,
-
-		/** @type {boolean} Search overlay visibility */
 		showSearch: false,
-
-		/** @type {string} Current search query */
 		searchQuery: '',
 
-		// =====================================================================
 		// Task State
-		// =====================================================================
-
-		/** @type {string[]} IDs of completed tasks */
-		completedTasks: [],
-
-		/** @type {string[]} IDs of unlocked (available) tasks */
+		// taskStates structure: { [taskId]: { status: 'pending'|'completed'|'failed', content: { title, description } } }
+		taskStates: {}, 
 		unlockedTasks: [...INITIAL_TASKS],
-
-		/** @type {string[]} IDs of unlocked apps */
 		unlockedApps: [...INITIAL_APPS],
-
-		/** @type {string[]} IDs of apps with pending notifications */
 		notifications: ['mail'],
+		toasts: [],
 
-		// =====================================================================
 		// Initialization
-		// =====================================================================
-
-		/**
-		 * Initialize the store
-		 * @param {string} basePath - Base path for URL generation (e.g., '/ndi')
-		 */
 		init(basePath = '') {
 			this.basePath = basePath === '/' ? '' : basePath;
-			this.apps = APPS.map(app => ({
-				...app,
-				url: this.basePath + app.route,
-			}));
+			this.apps = APPS.map(app => ({ ...app, url: this.basePath + app.route }));
 			this.loadProgress();
 			this.initMessageBus();
+			
+			// Load initial task data
+			this.unlockedTasks.forEach(taskId => this.loadTaskData(taskId));
 		},
 
-		/**
-		 * Initialize message bus listener for iframe communication
-		 */
 		initMessageBus() {
 			if (window.MessageBus) {
 				MessageBus.init((event) => this.handleEvent(event));
 			}
 		},
 
-		// =====================================================================
 		// Notification Methods
-		// =====================================================================
-
-		/**
-		 * Add a notification for an app
-		 * @param {string} appId
-		 */
 		addNotification(appId) {
-			if (!this.notifications.includes(appId)) {
-				this.notifications.push(appId);
-			}
+			if (!this.notifications.includes(appId)) this.notifications.push(appId);
 		},
-
-		/**
-		 * Remove notification for an app
-		 * @param {string} appId
-		 */
 		removeNotification(appId) {
 			this.notifications = this.notifications.filter(id => id !== appId);
 		},
 
-		// =====================================================================
-		// Task Methods
-		// =====================================================================
+		// Toast Methods
+		showToast(title, message) {
+			const id = Date.now();
+			if (this.toasts.length >= 4) {
+				this.toasts.shift(); // Remove oldest to keep max 4
+			}
+			this.toasts.push({ id, title, message });
+			setTimeout(() => this.removeToast(id), 5000); // Auto dismiss after 5s
+		},
+		removeToast(id) {
+			this.toasts = this.toasts.filter(t => t.id !== id);
+		},
 
-		/**
-		 * Get all unlocked tasks
-		 * @returns {Task[]}
-		 */
+		// Task Methods
+		async loadTaskData(taskId) {
+			if (this.taskStates[taskId] && this.taskStates[taskId].content) return;
+
+			const task = TASKS.find(t => t.id === taskId);
+			if (!task || !task.dialogFile) return;
+
+			try {
+				const url = `${this.basePath}/dialogs/${task.dialogFile}`;
+				const response = await fetch(url);
+				if (response.ok) {
+					const json = await response.json();
+					if (!this.taskStates[taskId]) {
+						this.taskStates[taskId] = { status: 'pending' };
+					}
+					this.taskStates[taskId].content = json;
+					
+					// If this task is pending (newly unlocked), show toast
+					if (this.taskStates[taskId].status === 'pending') {
+						this.showToast(json.pending.title, "Nouveau message reçu");
+					}
+					
+					this.sendTasksToMail();
+				}
+			} catch (e) {
+				console.error(`Failed to load dialog for ${taskId}`, e);
+			}
+		},
+
 		get availableTasks() {
 			return TASKS.filter(t => this.unlockedTasks.includes(t.id));
 		},
 
-		/**
-		 * Get the current (first uncompleted) task
-		 * @returns {Task|undefined}
-		 */
-		get currentTask() {
-			return this.availableTasks.find(t => !this.completedTasks.includes(t.id));
+		get activeBlockingTask() {
+			return TASKS.find(t => 
+				this.unlockedTasks.includes(t.id) && 
+				t.blocking && 
+				!this.isTaskCompleted(t.id)
+			);
 		},
 
-		/**
-		 * Check if a task is completed
-		 * @param {string} taskId
-		 * @returns {boolean}
-		 */
 		isTaskCompleted(taskId) {
-			return this.completedTasks.includes(taskId);
+			return this.taskStates[taskId]?.status === 'completed';
+		},
+		
+		isTaskFailed(taskId) {
+			return this.taskStates[taskId]?.status === 'failed';
 		},
 
-		/**
-		 * Check if an app is unlocked
-		 * @param {string} appId
-		 * @returns {boolean}
-		 */
 		isAppUnlocked(appId) {
 			return this.unlockedApps.includes(appId);
 		},
 
-		/**
-		 * Get all unlocked apps
-		 * @returns {App[]}
-		 */
 		get availableApps() {
 			return this.apps.filter(app => this.isAppUnlocked(app.id));
 		},
 
 		/**
-		 * Handle event from iframe (via message-bus)
-		 * Checks all unlocked tasks for matching trigger and conditions
-		 * @param {{type: string, data: Object}} event
+		 * Central Event Handler
+		 * Delegates logic to the task definitions themselves
 		 */
 		handleEvent(event) {
 			const { type, data } = event;
@@ -278,131 +286,215 @@ document.addEventListener('alpine:init', () => {
 				return;
 			}
 
+			if (type === 'coffee:requestState') {
+				const isCoffeeFailActive = this.unlockedTasks.includes('make-coffee-fail') && !this.isTaskCompleted('make-coffee-fail');
+				
+				// Find coffee app window
+				const coffeeWins = this.windows.filter(w => w.app.id === 'coffee');
+				coffeeWins.forEach(win => {
+					const wrapper = document.getElementById(`window-${win.id}`);
+					if (wrapper) {
+						const iframe = wrapper.querySelector('iframe');
+						if (iframe && iframe.contentWindow) {
+							iframe.contentWindow.postMessage({
+								type: 'coffee:setFailureMode',
+								value: isCoffeeFailActive
+							}, '*');
+						}
+					}
+				});
+				return;
+			}
+
+			const blockingTask = this.activeBlockingTask;
+
+			// Iterate over all active tasks to see if any respond to this event
 			TASKS.forEach(task => {
-				// Skip if already completed or not unlocked
-				if (this.completedTasks.includes(task.id)) return;
+				// Ignore locked or completed tasks
 				if (!this.unlockedTasks.includes(task.id)) return;
+				if (this.isTaskCompleted(task.id)) return;
+
+				// If system is blocked, ONLY process the blocking task
+				if (blockingTask && task.id !== blockingTask.id) return;
+
+				// Check Event Trigger
 				if (task.trigger !== type) return;
 
-				if (this.checkCondition(task.condition, data)) {
+				// Validate Condition
+				// If validate() returns true -> Success
+				// If validate() returns false -> Failure
+				// If validate() returns null -> Ignore (not relevant to this task)
+				// If no validate() -> Default Success
+				let result = true;
+				if (task.validate) {
+					result = task.validate(data);
+				}
+
+				if (result === true) {
 					this.completeTask(task.id);
+				} else if (result === false) {
+					this.failTask(task.id);
 				}
+				// if result is null, do nothing
 			});
 		},
 
-		/**
-		 * Check if event data satisfies task condition
-		 * Numbers use >= comparison, others use strict equality
-		 * @param {Object} condition - Expected values
-		 * @param {Object} data - Actual event data
-		 * @returns {boolean}
-		 */
-		checkCondition(condition, data) {
-			for (const [key, expected] of Object.entries(condition)) {
-				const actual = data[key];
-				if (typeof expected === 'number') {
-					if (actual < expected) return false;
-				} else {
-					if (actual !== expected) return false;
-				}
-			}
-			return true;
-		},
-
-		/**
-		 * Send current tasks to all open Mail app instances
-		 */
-		sendTasksToMail() {
-			// Format tasks for display
-			const tasksData = TASKS
-				.filter(t => this.unlockedTasks.includes(t.id))
-				.map(t => ({
-					...t,
-					completed: this.completedTasks.includes(t.id)
-				}))
-				.sort((a, b) => {
-					if (a.completed === b.completed) return 0;
-					return a.completed ? 1 : -1; // Completed last
-				});
-
-			// Find all iframe windows with the mail app
-			const mailWindows = this.windows.filter(w => w.app.id === 'mail');
-			mailWindows.forEach(win => {
-				const wrapper = document.getElementById(`window-${win.id}`);
-				if (wrapper) {
-					const iframe = wrapper.querySelector('iframe');
-					if (iframe && iframe.contentWindow) {
-						iframe.contentWindow.postMessage({
-							type: 'mail:updateTasks',
-							data: tasksData
-						}, '*');
+		        completeTask(taskId) {
+		            if (this.isTaskCompleted(taskId)) return;
+		
+		            			// Update status
+		            			if (!this.taskStates[taskId]) this.taskStates[taskId] = {};
+		            			this.taskStates[taskId].status = 'completed';
+		            			
+		            			// Notify user of success
+		            			this.addNotification('mail');
+		            			const content = this.taskStates[taskId].content?.success;
+		            			if (content) this.showToast(content.title, "Mission accomplie");
+		            
+		            			const task = TASKS.find(t => t.id === taskId);		            let newTasksUnlocked = false;
+			// Process unlocks defined in the task
+			if (task.unlocksTasks) {
+				task.unlocksTasks.forEach(id => {
+					if (!this.unlockedTasks.includes(id)) {
+						this.unlockedTasks.push(id);
+						this.loadTaskData(id); 
+						newTasksUnlocked = true;
 					}
-				}
-			});
-		},
+				});
+			}
 
-		/**
-		 * Mark a task as completed and unlock subsequent tasks/apps
-		 * @param {string} taskId
-		 */
-		completeTask(taskId) {
-			if (this.completedTasks.includes(taskId)) return;
-
-			const task = TASKS.find(t => t.id === taskId);
-			if (!task) return;
-
-			this.completedTasks.push(taskId);
-
-			// Unlock new tasks
-			let newTasksUnlocked = false;
-			task.unlocksTasks.forEach(id => {
-				if (!this.unlockedTasks.includes(id)) {
-					this.unlockedTasks.push(id);
-					newTasksUnlocked = true;
-				}
-			});
-
-			// Unlock new apps
+			// Unlock apps
 			task.unlocksApps.forEach(id => {
 				if (!this.unlockedApps.includes(id)) {
 					this.unlockedApps.push(id);
 				}
 			});
 
-			// Notify mail app if new tasks are unlocked
-			if (newTasksUnlocked) {
+			// Fix other tasks if specified
+			if (task.fixTask) {
+				if (!this.taskStates[task.fixTask]) this.taskStates[task.fixTask] = {};
+				this.taskStates[task.fixTask].status = 'completed';
 				this.addNotification('mail');
 			}
 
+			if (newTasksUnlocked) this.addNotification('mail');
+
 			this.saveProgress();
-			this.sendTasksToMail(); // Update UI
+			this.sendTasksToMail();
 		},
 
-		// =====================================================================
-		// Persistence (localStorage)
-		// =====================================================================
-
-		/**
-		 * Save progress to localStorage
-		 */
+		        failTask(taskId) {
+		            if (this.isTaskCompleted(taskId)) return; // Don't fail if already done
+		            if (this.isTaskFailed(taskId)) return;    // Already failed
+		
+		            if (!this.taskStates[taskId]) this.taskStates[taskId] = {};
+		            this.taskStates[taskId].status = 'failed';
+		
+		            const task = TASKS.find(t => t.id === taskId);
+		            
+		            // Handle onFail unlocks
+		            if (task.onFail) {
+		                if (task.onFail.unlocksTasks) {
+		                    task.onFail.unlocksTasks.forEach(id => {
+		                        if (!this.unlockedTasks.includes(id)) {
+		                            this.unlockedTasks.push(id);
+		                            this.loadTaskData(id);
+		                        }
+		                    });
+		                }
+		                if (task.onFail.unlocksApps) {
+		                    task.onFail.unlocksApps.forEach(id => {
+		                        if (!this.unlockedApps.includes(id)) {
+		                            this.unlockedApps.push(id);
+		                        }
+		                    });
+		                }
+		            }
+		
+		            this.addNotification('mail');
+		            const content = this.taskStates[taskId].content?.failure;
+		            if (content) this.showToast(content.title, "Mission échouée");
+		
+		            this.saveProgress();
+		            this.sendTasksToMail();
+		        },
+		        sendTasksToMail() {
+		            const blockingTask = this.activeBlockingTask;
+		
+		            // Prepare data for Mail app
+		            const tasksData = TASKS
+		                .filter(t => this.unlockedTasks.includes(t.id))
+		                .map(t => {
+		                    const state = this.taskStates[t.id] || { status: 'pending' };
+		                    const content = state.content || {};
+		                    
+		                    // Select text based on status
+		                    let textData = content.pending;
+		                    if (state.status === 'completed') textData = content.success;
+		                    if (state.status === 'failed') textData = content.failure;
+		
+		                    // Fallback if JSON not loaded yet
+		                    if (!textData) {
+		                        textData = { title: 'Chargement...', description: '...' };
+		                    }
+		
+		                    // Determine if this specific task is "blocked" by another blocking task
+		                    const isBlockedBySystem = blockingTask && t.id !== blockingTask.id && !state.status.includes('completed');
+		
+		                    return {
+		                        id: t.id,
+		                        title: textData.title,
+		                        description: textData.description,
+		                        completed: state.status === 'completed',
+		                        failed: state.status === 'failed',
+		                        blocked: isBlockedBySystem,
+		                        status: state.status, // pending, completed, failed
+		                        unlocksApps: t.unlocksApps
+		                    };
+		                })
+		                .sort((a, b) => {
+		                    // Sort: Pending/Failed first, Completed last
+		                    const scoreA = a.completed ? 2 : (a.failed ? 1 : 0);
+		                    const scoreB = b.completed ? 2 : (b.failed ? 1 : 0);
+		                    return scoreA - scoreB;
+		                });
+		
+		            // Find all iframe windows with the mail app
+		            const mailWindows = this.windows.filter(w => w.app.id === 'mail');
+		            mailWindows.forEach(win => {
+		                const wrapper = document.getElementById(`window-${win.id}`);
+		                if (wrapper) {
+		                    const iframe = wrapper.querySelector('iframe');
+		                    if (iframe && iframe.contentWindow) {
+		                        iframe.contentWindow.postMessage({
+		                            type: 'mail:updateTasks',
+		                            data: tasksData
+		                        }, '*');
+		                    }
+		                }
+		            });
+		        },
+		// Persistence
 		saveProgress() {
+			const simplifiedStates = {};
+			Object.keys(this.taskStates).forEach(key => {
+				simplifiedStates[key] = { status: this.taskStates[key].status };
+			});
+
 			const data = {
-				completedTasks: this.completedTasks,
+				taskStates: simplifiedStates,
 				unlockedTasks: this.unlockedTasks,
 				unlockedApps: this.unlockedApps,
 			};
 			localStorage.setItem(CONFIG.storageKey, JSON.stringify(data));
 		},
 
-		/**
-		 * Load progress from localStorage
-		 */
 		loadProgress() {
 			try {
 				const saved = localStorage.getItem(CONFIG.storageKey);
 				if (saved) {
 					const data = JSON.parse(saved);
-					this.completedTasks = data.completedTasks || [];
+					this.taskStates = data.taskStates || {};
 					this.unlockedTasks = data.unlockedTasks || [...INITIAL_TASKS];
 					this.unlockedApps = data.unlockedApps || [...INITIAL_APPS];
 				}
@@ -411,26 +503,18 @@ document.addEventListener('alpine:init', () => {
 			}
 		},
 
-		/**
-		 * Reset all progress to initial state
-		 */
 		resetProgress() {
-			this.completedTasks = [];
+			this.taskStates = {};
 			this.unlockedTasks = [...INITIAL_TASKS];
 			this.unlockedApps = [...INITIAL_APPS];
-			this.notifications = ['mail']; // Reset notifications
+			this.notifications = ['mail'];
 			localStorage.removeItem(CONFIG.storageKey);
+			
+			this.unlockedTasks.forEach(taskId => this.loadTaskData(taskId));
 			this.sendTasksToMail();
 		},
 
-		// =====================================================================
-		// Search
-		// =====================================================================
-
-		/**
-		 * Get apps matching search query
-		 * @returns {App[]}
-		 */
+		// Search & Window Management
 		get searchResults() {
 			if (!this.searchQuery.trim()) return [];
 			const q = this.searchQuery.toLowerCase();
@@ -440,215 +524,72 @@ document.addEventListener('alpine:init', () => {
 			);
 		},
 
-		// =====================================================================
-		// Window Management
-		// =====================================================================
-
-		/**
-		 * Open an app in a new window
-		 * @param {App} app - App to open
-		 * @returns {string|null} Window ID or null if app is locked
-		 */
 		openApp(app) {
 			if (!this.isAppUnlocked(app.id)) return null;
-
 			this.removeNotification(app.id);
-
 			const id = `win-${Date.now()}`;
 			const offset = this.windows.length * CONFIG.window.offsetStep;
-
 			this.windows.push({
-				id,
-				app,
+				id, app,
 				x: CONFIG.window.initialX + offset,
 				y: CONFIG.window.initialY + offset,
 				width: CONFIG.window.defaultWidth,
 				height: CONFIG.window.defaultHeight,
-				minimized: false,
-				maximized: false,
+				minimized: false, maximized: false,
 				zIndex: this.nextZIndex++,
-				prev: null, // Stored state for restore after maximize
+				prev: null,
 			});
-
 			this.closeMenus();
 			return id;
 		},
-
-		/**
-		 * Close a window
-		 * @param {string} id - Window ID
-		 */
-		closeWindow(id) {
-			this.windows = this.windows.filter(w => w.id !== id);
-		},
-
-		/**
-		 * Focus a window (bring to front, unminimize if needed)
-		 * @param {string} id - Window ID
-		 */
+		closeWindow(id) { this.windows = this.windows.filter(w => w.id !== id); },
 		focusWindow(id) {
 			const win = this.windows.find(w => w.id === id);
-			if (win) {
-				win.zIndex = this.nextZIndex++;
-				if (win.minimized) win.minimized = false;
-			}
+			if (win) { win.zIndex = this.nextZIndex++; if (win.minimized) win.minimized = false; }
 		},
-
-		/**
-		 * Toggle window minimized state
-		 * @param {string} id - Window ID
-		 */
-		minimizeWindow(id) {
-			const win = this.windows.find(w => w.id === id);
-			if (win) win.minimized = !win.minimized;
-		},
-
-		/**
-		 * Toggle window maximized state
-		 * @param {string} id - Window ID
-		 */
+		minimizeWindow(id) { const w = this.windows.find(w => w.id === id); if(w) w.minimized = !w.minimized; },
 		toggleMaximize(id) {
 			const win = this.windows.find(w => w.id === id);
 			if (!win) return;
-
-			if (win.maximized) {
-				// Restore previous position/size
-				if (win.prev) Object.assign(win, win.prev);
-				win.maximized = false;
-				win.prev = null;
-			} else {
-				// Save current state and maximize
-				win.prev = { x: win.x, y: win.y, width: win.width, height: win.height };
-				win.maximized = true;
-				win.x = 0;
-				win.y = 0;
-			}
+			if (win.maximized) { Object.assign(win, win.prev); win.maximized = false; win.prev = null; }
+			else { win.prev = { x: win.x, y: win.y, width: win.width, height: win.height }; win.maximized = true; win.x = 0; win.y = 0; }
 		},
-
-		// =====================================================================
-		// Drag & Resize
-		// =====================================================================
-
-		/**
-		 * Start dragging a window
-		 * @param {string} id - Window ID
-		 * @param {MouseEvent} event
-		 */
 		startDrag(id, event) {
 			const win = this.windows.find(w => w.id === id);
 			if (!win || win.maximized) return;
-
 			this.focusWindow(id);
 			const startX = event.clientX - win.x;
 			const startY = event.clientY - win.y;
-
-			const onMove = (e) => {
-				win.x = e.clientX - startX;
-				win.y = e.clientY - startY;
-			};
-
-			const onUp = () => {
-				document.removeEventListener('mousemove', onMove);
-				document.removeEventListener('mouseup', onUp);
-			};
-
+			const onMove = (e) => { win.x = e.clientX - startX; win.y = e.clientY - startY; };
+			const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
 			document.addEventListener('mousemove', onMove, { passive: true });
 			document.addEventListener('mouseup', onUp);
 		},
-
-		/**
-		 * Start resizing a window
-		 * @param {string} id - Window ID
-		 * @param {MouseEvent} event
-		 * @param {string} handle - Resize handle direction (n, s, e, w, ne, nw, se, sw)
-		 */
 		startResize(id, event, handle) {
-			event.preventDefault();
-			event.stopPropagation();
-
+			event.preventDefault(); event.stopPropagation();
 			const win = this.windows.find(w => w.id === id);
 			if (!win || win.maximized) return;
-
 			this.focusWindow(id);
-			const start = {
-				x: event.clientX,
-				y: event.clientY,
-				width: win.width,
-				height: win.height,
-				left: win.x,
-				top: win.y,
-			};
-
+			const start = { x: event.clientX, y: event.clientY, width: win.width, height: win.height, left: win.x, top: win.y };
 			const onMove = (e) => {
-				const dx = e.clientX - start.x;
-				const dy = e.clientY - start.y;
-				const minW = CONFIG.window.minWidth;
-				const minH = CONFIG.window.minHeight;
-
+				const dx = e.clientX - start.x; const dy = e.clientY - start.y;
+				const minW = CONFIG.window.minWidth; const minH = CONFIG.window.minHeight;
 				if (handle.includes('e')) win.width = Math.max(minW, start.width + dx);
-				if (handle.includes('w')) {
-					win.width = Math.max(minW, start.width - dx);
-					win.x = start.left + (start.width - win.width);
-				}
+				if (handle.includes('w')) { win.width = Math.max(minW, start.width - dx); win.x = start.left + (start.width - win.width); }
 				if (handle.includes('s')) win.height = Math.max(minH, start.height + dy);
-				if (handle.includes('n')) {
-					win.height = Math.max(minH, start.height - dy);
-					win.y = start.top + (start.height - win.height);
-				}
+				if (handle.includes('n')) { win.height = Math.max(minH, start.height - dy); win.y = start.top + (start.height - win.height); }
 			};
-
-			const onUp = () => {
-				document.removeEventListener('mousemove', onMove);
-				document.removeEventListener('mouseup', onUp);
-			};
-
+			const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
 			document.addEventListener('mousemove', onMove, { passive: false });
 			document.addEventListener('mouseup', onUp);
 		},
-
-		// =====================================================================
-		// UI Methods
-		// =====================================================================
-
-		/** Toggle start menu visibility */
-		toggleStartMenu() {
-			this.showStartMenu = !this.showStartMenu;
-			if (this.showStartMenu) this.showSearch = false;
-		},
-
-		/** Open search overlay */
-		openSearch() {
-			this.showSearch = true;
-			this.showStartMenu = false;
-		},
-
-		/** Close search overlay and clear query */
-		closeSearch() {
-			this.showSearch = false;
-			this.searchQuery = '';
-		},
-
-		/** Close all menus (start menu and search) */
-		closeMenus() {
-			this.showStartMenu = false;
-			this.closeSearch();
-		},
-
-		/**
-		 * Handle taskbar window button click
-		 * Toggles minimize or focuses window
-		 * @param {string} id - Window ID
-		 */
+		toggleStartMenu() { this.showStartMenu = !this.showStartMenu; if (this.showStartMenu) this.showSearch = false; },
+		openSearch() { this.showSearch = true; this.showStartMenu = false; },
+		closeSearch() { this.showSearch = false; this.searchQuery = ''; },
+		closeMenus() { this.showStartMenu = false; this.closeSearch(); },
 		onTaskbarClick(id) {
 			const win = this.windows.find(w => w.id === id);
-			if (win) {
-				if (win.minimized) {
-					win.minimized = false;
-					this.focusWindow(id);
-				} else {
-					win.minimized = true;
-				}
-			}
+			if (win) { if (win.minimized) { win.minimized = false; this.focusWindow(id); } else { win.minimized = true; } }
 		},
 	});
 });

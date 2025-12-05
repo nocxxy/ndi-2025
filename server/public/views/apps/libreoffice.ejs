@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibreOffice Writer</title>
+    <link rel="stylesheet" href="<%= staticUrl('/stylesheets/style.css') %>">
+    <script src="<%= staticUrl('/javascripts/message-bus.js') %>"></script>
+    <script src="<%= staticUrl('/javascripts/word-game.js') %>"></script>
+    <script defer src="<%= staticUrl('/javascripts/alpine.js') %>"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col overflow-hidden" x-data="wordGame('libreoffice')">
+
+    <!-- LibreOffice Toolbar (Light Gray/Green) -->
+    <div class="bg-gray-100 border-b border-gray-300 shadow-sm shrink-0">
+        <!-- Menubar -->
+        <div class="px-2 py-1 text-xs flex gap-4 text-gray-700 border-b border-gray-200">
+            <span>Fichier</span>
+            <span>Édition</span>
+            <span>Affichage</span>
+            <span>Insertion</span>
+            <span>Format</span>
+            <span>Outils</span>
+            <span>Aide</span>
+        </div>
+        
+        <!-- Toolbar -->
+        <div class="flex items-center justify-between px-4 py-2 bg-[#f0f0f0]">
+            <div class="flex items-center gap-4">
+                <h1 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                    <span class="text-2xl">📄</span> Sans nom 1 - LibreOffice Writer
+                </h1>
+            </div>
+            <div class="flex items-center gap-4 text-gray-700 text-sm">
+                <!-- Timer removed -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Editor Area -->
+    <div class="flex-1 bg-gray-500 p-8 overflow-auto flex justify-center">
+        <div class="bg-white shadow-xl w-full max-w-4xl h-[800px] p-12 relative rounded-sm border border-gray-300">
+            
+            <!-- Overlay Text (Colored) -->
+            <div 
+                class="absolute inset-12 text-lg leading-relaxed font-serif whitespace-pre-wrap break-words pointer-events-none select-none"
+                x-html="htmlContent"
+            ></div>
+
+            <!-- Input Area (Transparent) -->
+            <textarea 
+                x-model="userInput"
+                @input="handleInput"
+                class="absolute inset-12 w-[calc(100%-6rem)] h-[calc(100%-6rem)] text-lg leading-relaxed font-serif resize-none border-none bg-transparent focus:ring-0 p-0 text-transparent caret-black z-10 outline-none"
+                spellcheck="false"
+                autofocus
+            ></textarea>
+
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div x-show="!isGameActive && timeLeft > 0" x-cloak class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full mx-4 text-center border-t-4 border-green-500">
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 class="text-2xl font-bold text-green-600 mb-2">Félicitations !</h2>
+            <p class="text-gray-700 mb-2">Vous avez terminé le texte !</p>
+            <div class="text-sm bg-gray-100 p-3 rounded mb-4">
+                <p>Temps: <strong x-text="120 - timeLeft"></strong>s</p>
+            </div>
+            <button disabled class="btn btn-sm btn-success text-white w-full">Fermer</button>
+        </div>
+    </div>
+
+</body>
+</html>

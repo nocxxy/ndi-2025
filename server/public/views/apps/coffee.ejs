@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Machine</title>
+    <link rel="stylesheet" href="<%= staticUrl('/stylesheets/style.css') %>">
+    <script src="<%= staticUrl('/javascripts/message-bus.js') %>"></script>
+    <script src="<%= staticUrl('/javascripts/coffee-app.js') %>"></script>
+    <script defer src="<%= staticUrl('/javascripts/alpine.js') %>"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans overflow-hidden h-screen" x-data="coffeeApp">
+    <div class="relative w-full h-full">
+
+        <!-- Step 0: Initial Button -->
+        <div x-show="step === 0" x-cloak class="absolute inset-0 flex items-center justify-center">
+            <button @click="step = 1" class="bg-amber-700 hover:bg-amber-800 text-white font-bold py-4 px-8 rounded-lg text-2xl shadow-lg transform hover:scale-105 transition-transform">
+                Faire un café
+            </button>
+        </div>
+        
+        <!-- Step 1: Accept cookies? -->
+        <div x-show="step === 1" x-cloak x-transition class="absolute top-1/4 left-1/2 transform -translate-x-1/2">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <p class="text-center mb-4 text-gray-800">Acceptez-vous les cookies ?</p>
+                <div class="flex justify-center space-x-4">
+                    <button @click="cookiesAccepted = true; step = 2" class="bg-green-500 hover:bg-green-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Oui</button>
+                    <button @click="cookiesAccepted = false; step = 2" class="bg-red-500 hover:bg-red-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Non</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: First time? -->
+        <div x-show="step === 2" x-cloak x-transition class="absolute top-1/3 left-1/4">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <p class="text-center mb-4 text-gray-800">Est-ce votre première fois à la machine ?</p>
+                <div class="flex justify-center space-x-4">
+                    <button @click="firstTime = true; step = 3" class="bg-green-500 hover:bg-green-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Oui</button>
+                    <button @click="firstTime = false; step = 3" class="bg-red-500 hover:bg-red-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Non</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Make account or Insert card -->
+        <div x-show="step === 3" x-cloak x-transition class="absolute bottom-1/4 right-1/4">
+            <div x-show="firstTime">
+                <button @click="generateCard()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Créer un compte</button>
+            </div>
+            <div x-show="firstTime === false">
+                <button @click="step = 4" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Insérer votre carte de café</button>
+            </div>
+        </div>
+        
+        <!-- Step 4: Card display / input -->
+        <div x-show="step === 4" x-cloak x-transition class="absolute top-10 left-10">
+            <div x-show="card" class="bg-white p-4 rounded shadow-md">
+                <p class="text-gray-800">Votre nouvelle carte :</p>
+                <p class="font-mono bg-gray-200 p-2 rounded text-gray-900 my-2" x-text="card"></p>
+                <button @click="card = null; firstTime = false; step = 3" class="mt-2 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Continuer pour insérer la carte</button>
+            </div>
+            <div x-show="!card">
+                <div class="bg-white p-4 rounded shadow-md">
+                    <input type="text" x-model="cardInput" placeholder="Entrez le code" class="p-2 border rounded mb-2 w-full text-gray-800">
+                    <div class="flex gap-2">
+                        <button @click="if (cardInput) { cardAccepted = true; step = 5; }" class="bg-purple-500 hover:bg-purple-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Insérer</button>
+                        <button @click="reset()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Recommencer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Renew license -->
+        <div x-show="step === 5 && cardAccepted" x-cloak x-transition class="absolute top-1/2 right-1/4 transform -translate-y-1/2">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-sm" role="alert">
+                <strong class="font-bold">Alerte !</strong>
+                <span class="block sm:inline">Vous n'avez pas renouvellé votre licence machine a café !</span>
+                <button @click="licenseRenewed = true; step = 6" class="mt-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded w-full transition-all" :class="getRandomSizeClass()">Renouveller</button>
+            </div>
+        </div>
+        
+        <!-- Step 6: Grind the beans -->
+        <div x-show="step === 6 && licenseRenewed" x-cloak x-transition class="absolute bottom-10 right-10">
+             <button @click="beansGround = true; step = 7" class="bg-stone-500 hover:bg-stone-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Moudre les grains</button>
+        </div>
+
+        <!-- Step 7: Refill the beans -->
+        <div x-show="step === 7 && beansGround" x-cloak x-transition class="absolute bottom-1/3 left-1/4">
+             <button @click="beansRefilled = true; step = 8" class="bg-lime-800 hover:bg-lime-900 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Remplir le réservoir de grains</button>
+        </div>
+
+        <!-- Step 8: Heat the water -->
+        <div x-show="step === 8 && beansRefilled" x-cloak x-transition class="absolute top-1/2 left-10 transform -translate-y-1/2">
+            <button @click="waterHeated = true; step = 9" class="bg-red-700 hover:bg-red-800 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Chauffer l'eau</button>
+        </div>
+
+        <!-- Step 9: Brew the coffee -->
+        <div x-show="step === 9 && waterHeated" x-cloak x-transition class="absolute bottom-1/2 right-10 transform translate-y-1/2">
+            <button @click="brewCoffee()" class="bg-green-800 hover:bg-green-900 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Préparer le café</button>
+        </div>
+
+        <!-- Final Step: Coffee Pot Popup -->
+        <div x-show="showCoffee" x-cloak x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click="showCoffee = false; reset()">
+            <div @click.stop class="bg-white p-10 rounded-lg shadow-2xl text-center max-w-md mx-4">
+                <p class="text-6xl mb-4">☕️</p>
+                <p class="text-xl font-bold text-gray-800">Votre café est prêt !</p>
+                <button @click="reset()" class="mt-6 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded transition-all" :class="getRandomSizeClass()">Faire un autre</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

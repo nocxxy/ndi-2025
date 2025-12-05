@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Server Shield — Mini jeu</title>
+  <link rel="stylesheet" href="<%= staticUrl('/stylesheets/style.css') %>">
+  <script src="<%= staticUrl('/javascripts/message-bus.js') %>"></script>
+  <script src="<%= staticUrl('/javascripts/sound-manager.js') %>"></script>
+  <script src="<%= staticUrl('/javascripts/server-shield.js') %>"></script>
+  <script defer src="<%= staticUrl('/javascripts/alpine.js') %>"></script>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --panel:#0b1220;
+      --accent:#10b981;
+      --danger:#ef4444;
+      --muted:#94a3b8;
+      --col-width:120px;
+      --gap:12px;
+      --line-height:6px;
+    }
+
+    [x-cloak] { display: none !important; }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: monospace, monospace;
+      background:#0f1724;
+      color:#e6eef8;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+
+    .wrap{
+      display:flex;
+      gap:24px;
+      max-width:none;
+      margin:0 auto;
+      padding:18px;
+    }
+
+    .rules{
+      flex:0 0 260px;
+      background:rgba(15,23,36,0.9);
+      border-radius:12px;
+      padding:16px;
+      font-size:14px;
+      line-height:1.5;
+      box-shadow: 0 8px 20px rgba(2,6,23,0.6);
+    }
+
+    .rules h2{
+      margin-top:0;
+      font-size:16px;
+      color:var(--accent);
+    }
+
+    .rules ul{
+      padding-left:18px;
+      margin:8px 0 0 0;
+    }
+
+    .game{
+      flex:1;
+      background:#081020;
+      border-radius:12px;
+      padding:14px;
+      box-shadow: 0 12px 40px rgba(2,6,23,0.6);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      width:100%;
+      margin-bottom:10px;
+    }
+
+    h1{ font-size:18px; margin:0; letter-spacing:0.2px; font-weight:bold; }
+    .hud{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      font-size:14px;
+      color:var(--muted);
+    }
+    .badge{
+      background:rgba(255,255,255,0.03);
+      padding:6px 10px;
+      border-radius:8px;
+      min-width:64px;
+      text-align:center;
+      box-shadow: 0 6px 20px rgba(2,6,23,0.5);
+    }
+
+    .stage{
+      width: calc(var(--col-width) * 3 + var(--gap) * 2);
+      height:500px;
+      position:relative;
+      background:#020616;
+      border-radius:6px;
+      display:flex;
+      gap:var(--gap);
+      padding-bottom:40px;
+    }
+
+    .column{
+      width:var(--col-width);
+      height:100%;
+      background:#0a101f;
+      border-radius:4px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .limit-line{
+      position:absolute;
+      bottom:40px;
+      left:0;
+      width:100%;
+      display:flex;
+      gap:var(--gap);
+      z-index:5;
+    }
+
+    .limit-segment{
+      height:var(--line-height);
+      width:var(--col-width);
+      background:#333;
+      border-radius:3px;
+    }
+
+    .key-overlay {
+        position: absolute;
+        bottom: 18px; /* sous la limite */
+        display: flex;
+        gap: var(--gap);
+        width: 100%;
+        justify-content: space-between;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    .key-overlay .key {
+        width: var(--col-width);
+        text-align: center;
+        font-weight: bold;
+        color: var(--muted);
+        background: rgba(255,255,255,0.05);
+        border-radius: 4px;
+        padding: 4px 0;
+        transition: transform 0.15s ease-out, background 0.15s ease-out;
+    }
+
+    /* Animation quand la touche est pressée */
+    .key-overlay .key.active {
+        transform: scale(1.2);
+        background: var(--accent);
+        color: white;
+    }
+
+    .tile{
+      position:absolute;
+      width:100%;
+      height:40px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:bold;
+      border-radius:4px;
+      transform:translateY(-50px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      font-family: monospace;
+    }
+
+    .tile.error-4xx{ background:#0ea5e9; color:white;}
+    .tile.error-5xx{ background:#fb7185; color:white;}
+    .tile.error-3xx{ background:#f59e0b; color:white;}
+    .tile.good{ background:#34d399; color:white;}
+
+    .controls{
+      margin-top:12px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-direction:column;
+    }
+
+    button{
+      border:0;
+      background:var(--panel);
+      color:var(--muted);
+      padding:8px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:600;
+    }
+
+    .overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none;
+      z-index: 50;
+    }
+
+    .center-panel{
+      background:rgba(2,6,23,0.9);
+      padding:18px 22px;
+      border-radius:12px;
+      pointer-events:auto;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      text-align:center;
+      font-family: monospace;
+    }
+
+    .pop{
+      position:absolute;
+      font-size:12px;
+      font-weight:700;
+      padding:4px 6px;
+      border-radius:4px;
+      background:rgba(0,0,0,0.6);
+      transform:translateY(-10px);
+      pointer-events:none;
+      opacity:0;
+      transition:opacity 160ms ease-out, transform 220ms ease-out;
+      z-index: 30;
+    }
+
+    .limit-flash{
+      animation: limitFlash 200ms ease-out;
+    }
+
+    @keyframes limitFlash {
+      0% { background:lime; transform:scaleY(1.5); }
+      100% { transform:scaleY(1); background:#333; }
+    }
+
+    .tile.hit-anim{
+      animation: tilePop 280ms ease-out forwards;
+    }
+
+    @keyframes tilePop{
+      0% { transform: scale(1) translateY(var(--ty)); opacity:1; }
+      50% { transform: scale(1.2) translateY(var(--ty)); opacity:0.8; }
+      100% { transform: scale(0) translateY(var(--ty)); opacity:0; }
+    }
+
+    /* --- Animation perte de vie --- */
+    @keyframes shake {
+      0% { transform: translate(0px,0); }
+      20% { transform: translate(-4px,0); }
+      40% { transform: translate(4px,0); }
+      60% { transform: translate(-2px,0); }
+      80% { transform: translate(2px,0); }
+      100% { transform: translate(0px,0); }
+    }
+    .stage.shake { animation: shake 0.5s; }
+
+    @keyframes missFlash {
+      0% { background:#ef4444; transform:scaleY(1.5); }
+      100% { background:#333; transform:scaleY(1); }
+    }
+    .limit-segment.miss-flash { animation: missFlash 200ms ease-out; }
+
+  </style>
+</head>
+<body x-data="serverShield"
+      x-init="if(window.SoundManager) { SoundManager.register('hit', '<%= staticUrl('/sounds/hit.mp3') %>'); SoundManager.register('miss', '<%= staticUrl('/sounds/miss.mp3') %>'); }">
+<div class="wrap">
+  <div class="rules">
+    <h2>Server Shield — Mini jeu</h2>
+    <p>Cloudflare subit une avalanche d’erreurs réseau ! Vous devez protéger votre serveur en éliminant les requêtes avant qu’elles n’atteignent la limite.</p>
+    <ul>
+      <li>Score à atteindre : <strong>10000</strong></li>
+      <li>Appuyer sur une erreur la fait disparaître et augmente le score</li>
+      <li>Laisser passer une erreur fait perdre une vie</li>
+      <li>Touches : Q / S / D pour chaque colonne</li>
+    </ul>
+  </div>
+
+  <div class="game">
+    <header>
+      <h1>Server Shield</h1>
+      <div class="hud">
+        <div class="badge">Score: <span x-text="score">0</span></div>
+        <div class="badge">Vies: <span x-text="'❤️'.repeat(lives)"></span></div>
+        <div class="badge">Vitesse: <span x-text="speedMultiplier.toFixed(2) + 'x'"></span></div>
+      </div>
+    </header>
+
+    <div class="stage" id="stage" :class="{ 'shake': shake }">
+      <div class="limit-line" x-ref="limitLine">
+        <template x-for="i in COLUMNS">
+            <div class="limit-segment" :class="{ 'limit-flash': this['limitFlash' + (i-1)], 'miss-flash': this['missFlash' + (i-1)] }"></div>
+        </template>
+      </div>
+      <div class="key-overlay">
+        <div class="key" :class="{ 'active': keyActive0 }">Q</div>
+        <div class="key" :class="{ 'active': keyActive1 }">S</div>
+        <div class="key" :class="{ 'active': keyActive2 }">D</div>
+      </div>
+      
+      <!-- Columns Backgrounds (static) -->
+      <div class="column"></div>
+      <div class="column"></div>
+      <div class="column"></div>
+
+      <!-- Tiles -->
+      <template x-for="tile in tiles" :key="tile.id">
+        <div 
+            class="tile"
+            :class="[tile.severity, tile.hit ? 'hit-anim' : '']"
+            :style="{ 
+                left: (tile.colIndex * 132) + 'px', /* 120px col + 12px gap logic */
+                width: '120px',
+                top: '0px',
+                transform: 'translateY(' + tile.y + 'px)',
+                '--ty': tile.y + 'px'
+            }"
+            x-text="tile.text"
+        ></div>
+      </template>
+
+      <!-- Pop effects -->
+      <template x-for="tile in tiles.filter(t => t.popText)" :key="'pop-' + tile.id">
+          <div 
+            class="pop" 
+            style="opacity: 1; transform: translateY(-28px);"
+            :style="{
+                left: ((tile.colIndex * 132) + 60 - 30) + 'px',
+                top: (tile.y - 10) + 'px'
+            }"
+            x-text="tile.popText"
+          ></div>
+      </template>
+
+    </div>
+
+    <div class="controls">
+      <button @click="startGame()" x-show="!running">Démarrer</button>
+      <button @click="togglePause()" x-show="running" x-text="paused ? 'Reprendre' : 'Pause'">Pause</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" x-show="overlayVisible" x-transition.opacity>
+  <div class="center-panel">
+    <div x-text="overlayText"></div>
+    <div style="margin-top:12px" x-show="!running || lives <= 0 || score >= MAX_SCORE">
+      <button @click="startGame()">Recommencer</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

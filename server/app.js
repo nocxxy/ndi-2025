@@ -142,11 +142,83 @@ app.get("/javascripts/typing-test.js", (req, res) => {
 	}
 });
 
+app.get("/javascripts/mail-app.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "mail-app.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+app.get("/javascripts/word-game.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "word-game.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+app.get("/javascripts/cloud-app.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "cloud-app.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+app.get("/javascripts/coffee-app.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "coffee-app.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+app.get("/javascripts/chatbot-app.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "chatbot-app.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+app.get("/javascripts/sound-manager.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "sound-manager.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+app.get("/javascripts/server-shield.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "server-shield.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
 // Servir les fichiers statiques sur / (le load balancer a enlevé le préfixe)
 // Ordre important : routes explicites d'abord, puis middleware général
 app.use("/stylesheets", serveStaticWithMime("/stylesheets", publicCssDir, 'text/css; charset=utf-8'));
 app.use("/images", express.static(path.join(__dirname, "public", "images"), { maxAge: '1y' }));
 app.use("/javascripts", serveStaticWithMime("/javascripts", publicJsDir, 'application/javascript; charset=utf-8'));
+app.use("/dialogs", express.static(path.join(__dirname, "public", "dialogs"), { maxAge: '1y' }));
+app.use("/sounds", express.static(path.join(__dirname, "public", "sounds"), { maxAge: '1y' }));
 
 // AUSSI servir les fichiers statiques avec BASE_PATH au cas où le load balancer ne les enlèverait pas
 // (fallback pour certains cas de configuration)
@@ -213,10 +285,82 @@ if (BASE_PATH && BASE_PATH !== '/') {
 		}
 	});
 	
+	app.get(basePathNormalized + "/javascripts/mail-app.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "mail-app.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/javascripts/word-game.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "word-game.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/javascripts/cloud-app.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "cloud-app.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/javascripts/coffee-app.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "coffee-app.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/javascripts/chatbot-app.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "chatbot-app.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/javascripts/sound-manager.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "sound-manager.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
+	app.get(basePathNormalized + "/javascripts/server-shield.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "server-shield.js");
+		if (fs.existsSync(filePath)) {
+			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+			res.sendFile(filePath);
+		} else {
+			res.status(404).send('File not found');
+		}
+	});
+	
 	// Middleware général avec BASE_PATH
 	app.use(basePathNormalized + "/stylesheets", serveStaticWithMime(basePathNormalized + "/stylesheets", publicCssDir, 'text/css; charset=utf-8'));
 	app.use(basePathNormalized + "/images", express.static(path.join(__dirname, "public", "images"), { maxAge: '1y' }));
 	app.use(basePathNormalized + "/javascripts", serveStaticWithMime(basePathNormalized + "/javascripts", publicJsDir, 'application/javascript; charset=utf-8'));
+	app.use(basePathNormalized + "/dialogs", express.static(path.join(__dirname, "public", "dialogs"), { maxAge: '1y' }));
+	app.use(basePathNormalized + "/sounds", express.static(path.join(__dirname, "public", "sounds"), { maxAge: '1y' }));
 }
 
 // Monter les routes sur / (le load balancer a déjà enlevé le préfixe)

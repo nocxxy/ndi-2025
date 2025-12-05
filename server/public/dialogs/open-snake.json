@@ -1,0 +1,15 @@
+{
+    "id": "open-snake",
+    "pending": {
+        "title": "Installation : Module Snake",
+        "description": "Le système nécessite l'initialisation du module ludique de test de réflexes. Veuillez localiser l'exécutable 'Snake' dans le menu et le lancer."
+    },
+    "success": {
+        "title": "Confirmation : Snake Actif",
+        "description": "Module Snake initialisé avec succès. Les protocoles de test peuvent commencer."
+    },
+    "failure": {
+        "title": "Erreur : Snake",
+        "description": "Impossible de valider le lancement de Snake. Veuillez réessayer."
+    }
+}

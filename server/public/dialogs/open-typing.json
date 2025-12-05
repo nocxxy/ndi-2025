@@ -1,0 +1,15 @@
+{
+    "id": "open-typing",
+    "pending": {
+        "title": "Installation : Module Dactylographie",
+        "description": "Prochaine étape : analyse de l'interface chaise-clavier. Veuillez lancer l'application 'Typing Speed'."
+    },
+    "success": {
+        "title": "Confirmation : Typing Speed Actif",
+        "description": "Module de dactylographie chargé. Prêt pour l'analyse de vitesse."
+    },
+    "failure": {
+        "title": "Erreur : Typing Speed",
+        "description": "Lancement non détecté."
+    }
+}

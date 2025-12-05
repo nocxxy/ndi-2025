@@ -1,0 +1,15 @@
+{
+    "id": "make-coffee-fail",
+    "pending": {
+        "title": "Mission : Pause Café",
+        "description": "Après tout ce travail, un bon café ferait du bien. Lance l'application Café et prépare-toi une tasse."
+    },
+    "success": {
+        "title": "Succès (Impossible)",
+        "description": "Tu as réussi à faire du café ?"
+    },
+    "failure": {
+        "title": "Alerte : Pénurie d'Eau",
+        "description": "Impossible de faire du café. Il semble qu'il n'y ait plus d'eau. Le refroidissement des serveurs d'IA a tout consommé..."
+    }
+}

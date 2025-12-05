@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word</title>
+    <link rel="stylesheet" href="<%= staticUrl('/stylesheets/style.css') %>">
+    <script src="<%= staticUrl('/javascripts/message-bus.js') %>"></script>
+    <script src="<%= staticUrl('/javascripts/word-game.js') %>"></script>
+    <script defer src="<%= staticUrl('/javascripts/alpine.js') %>"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col overflow-hidden" x-data="wordGame('word')">
+
+    <!-- Word Toolbar (Blue) -->
+    <div class="bg-blue-700 border-b border-blue-800 shadow-sm shrink-0">
+        <div class="flex items-center justify-between px-4 py-2">
+            <div class="flex items-center gap-4">
+                <h1 class="text-lg font-semibold text-white flex items-center gap-2">
+                    <span>📝</span> Word
+                </h1>
+            </div>
+            <div class="flex items-center gap-4 text-white text-sm">
+                <div class="flex items-center gap-2 bg-blue-800/50 px-3 py-1 rounded">
+                    <span>⏱️ Temps:</span>
+                    <span class="font-bold text-lg w-8 text-center" x-text="timeLeft"></span>s
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Editor Area -->
+    <div class="flex-1 bg-gray-200 p-8 overflow-auto flex justify-center">
+        <div class="bg-white shadow-xl w-full max-w-4xl h-[800px] p-12 relative rounded-sm">
+            
+            <!-- Overlay Text (Colored) -->
+            <div 
+                class="absolute inset-12 text-lg leading-relaxed font-serif whitespace-pre-wrap break-words pointer-events-none select-none"
+                x-html="htmlContent"
+            ></div>
+
+            <!-- Input Area (Transparent) -->
+            <textarea 
+                x-model="userInput"
+                @input="handleInput"
+                class="absolute inset-12 w-[calc(100%-6rem)] h-[calc(100%-6rem)] text-lg leading-relaxed font-serif resize-none border-none bg-transparent focus:ring-0 p-0 text-transparent caret-black z-10 outline-none"
+                spellcheck="false"
+                autofocus
+            ></textarea>
+
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div x-show="!isGameActive && timeLeft <= 0" x-cloak class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full mx-4 text-center">
+            <div class="text-6xl mb-4">💻</div>
+            <h2 class="text-2xl font-bold text-red-600 mb-2">Microsoft Word a cessé de fonctionner</h2>
+            <p class="text-gray-600 mb-6">Le programme ne répond pas. Windows recherche une solution au problème...</p>
+            <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden mb-4">
+                <div class="bg-green-500 h-full w-2/3 animate-pulse"></div>
+            </div>
+            <button disabled class="btn btn-sm btn-disabled w-full">Fermer le programme</button>
+        </div>
+    </div>
+
+</body>
+</html>

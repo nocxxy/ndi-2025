@@ -1,0 +1,15 @@
+{
+    "id": "repair-cloud-services",
+    "pending": {
+        "title": "Mission : Réparer le Serveur",
+        "description": "Le serveur Cloudflare subit une attaque ! Utilisez l'outil 'Server Shield' pour intercepter les erreurs avant le crash total."
+    },
+    "success": {
+        "title": "Succès : Serveur Sécurisé",
+        "description": "Menace neutralisée. Les services cloud sont de nouveau opérationnels. La tâche de partage de fichiers a été validée."
+    },
+    "failure": {
+        "title": "Echec : Serveur Down",
+        "description": "Le serveur a planté. Réessayez de le protéger."
+    }
+}

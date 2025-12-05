@@ -1,0 +1,15 @@
+{
+    "id": "prepare-meeting-word",
+    "pending": {
+        "title": "Mission : Préparer la réunion",
+        "description": "Il te faut un éditeur de texte pour noter les infos de la réunion. Utilise Word. Fais ça vite :)"
+    },
+    "success": {
+        "title": "Bravo",
+        "description": "Tâche réussie (impossible)."
+    },
+    "failure": {
+        "title": "Problème technique",
+        "description": "Bon, c’est pas trop ça, je pense que tu peux faire mieux. Word semble instable. Recommence et sois juste meilleur (essaie LibreOffice)."
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "id": "share-meeting-notes",
+    "pending": {
+        "title": "Mission : Partager le compte rendu",
+        "description": "Maintenant que la réunion est passée, il faudrait partager le compte rendu à tout le monde."
+    },
+    "success": {
+        "title": "Confirmation : Services rétablis",
+        "description": "Super ! Ça a mis un peu de temps mais les services semblent de nouveaux opérationnels, merci d’avoir suivi les consignes ! Tu peux maintenant partager le fichier normalement."
+    },
+    "failure": {
+        "title": "Echec Critique",
+        "description": "Aaah mais qu’est ce que tu fais ? C’est pas le moment de faire n’importe quoi, on se concentre et on termine cette tâche !"
+    }
+}

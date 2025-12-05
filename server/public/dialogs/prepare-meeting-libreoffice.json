@@ -1,0 +1,15 @@
+{
+    "id": "prepare-meeting-libreoffice",
+    "pending": {
+        "title": "Mission : Préparer la réunion (LibreOffice)",
+        "description": "Word n'a pas fonctionné. Utilise LibreOffice. C'est open-source, plus léger et plus stable."
+    },
+    "success": {
+        "title": "Succès : Réunion prête",
+        "description": "Bravo, j’ai relu ce que tu as fait et c’est exactement ce que j’attendais ! Je t’envoie ta mission suivante !"
+    },
+    "failure": {
+        "title": "Echec",
+        "description": "Tu n'as pas assez écrit."
+    }
+}
