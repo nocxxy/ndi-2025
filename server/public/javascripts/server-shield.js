@@ -11,7 +11,7 @@ document.addEventListener('alpine:init', () => {
         SPAWN_BASE_INTERVAL: 1000,
         FALL_SPEED_BASE: 120,
         LIVES_MAX: 3,
-        MAX_SCORE: 10000,
+        MAX_SCORE: 5500,
         ERROR_CODES: ["301","302","307","308","400","401","403","404","405","408","429","500","501","502","503","504"],
         HTTP_METHODS: ["GET","POST","DELETE","PUT","PATCH"],
         HIT_WINDOW: 36,

@@ -21,19 +21,26 @@
 				background: rgba(255, 255, 255, 0.02);
 				backdrop-filter: blur(10px);
 				border: 1px solid rgba(255, 255, 255, 0.05);
-				transition: all 0.3s ease;
+				transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 			}
 			.card-glass:hover {
 				background: rgba(255, 255, 255, 0.04);
-				border-color: rgba(255, 255, 255, 0.1);
-				transform: translateY(-2px);
+				border-color: rgba(255, 255, 255, 0.12);
+				transform: translateY(-4px);
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 			}
 			.section-divider {
 				height: 1px;
-				background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+				background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+				margin: 4rem 0;
+			}
+			.section-divider-thick {
+				height: 2px;
+				background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3), transparent);
+				margin: 5rem 0;
 			}
 			.fade-in {
-				animation: fadeIn 0.6s ease-out;
+				animation: fadeIn 0.8s ease-out;
 			}
 			@keyframes fadeIn {
 				from { opacity: 0; transform: translateY(20px); }
@@ -46,7 +53,83 @@
 				from { opacity: 0; transform: translateY(30px); }
 				to { opacity: 1; transform: translateY(0); }
 			}
+			.fade-in-left {
+				opacity: 0;
+				transform: translateX(-30px);
+				transition: all 0.8s ease-out;
+			}
+			.fade-in-left.visible {
+				opacity: 1;
+				transform: translateX(0);
+			}
+			.fade-in-right {
+				opacity: 0;
+				transform: translateX(30px);
+				transition: all 0.8s ease-out;
+			}
+			.fade-in-right.visible {
+				opacity: 1;
+				transform: translateX(0);
+			}
+			.fade-in-up {
+				opacity: 0;
+				transform: translateY(40px);
+				transition: all 0.8s ease-out;
+			}
+			.fade-in-up.visible {
+				opacity: 1;
+				transform: translateY(0);
+			}
+			.section-container {
+				position: relative;
+				padding: 6rem 0;
+			}
+			.section-container::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 100px;
+				height: 1px;
+				background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+			}
+			.number-badge {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 32px;
+				height: 32px;
+				border-radius: 50%;
+				background: rgba(59, 130, 246, 0.1);
+				border: 1px solid rgba(59, 130, 246, 0.3);
+				color: #60a5fa;
+				font-size: 0.875rem;
+				font-weight: 600;
+				margin-right: 1rem;
+			}
 		</style>
+		<script>
+			// Animation au scroll
+			document.addEventListener('DOMContentLoaded', function() {
+				const observerOptions = {
+					threshold: 0.1,
+					rootMargin: '0px 0px -100px 0px'
+				};
+				
+				const observer = new IntersectionObserver(function(entries) {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							entry.target.classList.add('visible');
+						}
+					});
+				}, observerOptions);
+				
+				document.querySelectorAll('.fade-in-left, .fade-in-right, .fade-in-up').forEach(el => {
+					observer.observe(el);
+				});
+			});
+		</script>
 	</head>
 
 	<body class="text-gray-200">
@@ -88,66 +171,72 @@
 		</section>
 
 		<!-- Section: A propos de l'experience -->
-		<section id="apropos" class="py-24 px-4">
+		<section id="apropos" class="section-container px-4">
 			<div class="max-w-5xl mx-auto">
-				<div class="section-divider mb-16"></div>
+				<div class="section-divider-thick"></div>
 
-				<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
-					Pourquoi cette expérience ?
-				</h2>
-				<p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-					Découvrez les coulisses de notre quotidien numérique
-				</p>
+				<div class="fade-in-up">
+					<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
+						Pourquoi cette expérience ?
+					</h2>
+					<p class="text-gray-400 text-center mb-16 max-w-2xl mx-auto text-lg">
+						Découvrez les coulisses de notre quotidien numérique
+					</p>
+				</div>
 
-				<div class="grid md:grid-cols-2 gap-8">
-					<div class="card-glass rounded-xl p-8 slide-up">
-						<div class="mb-4">
+				<div class="grid md:grid-cols-2 gap-6">
+					<div class="card-glass rounded-xl p-8 fade-in-left">
+						<div class="flex items-center mb-4">
+							<div class="number-badge">1</div>
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
 							</svg>
 						</div>
 						<h3 class="text-xl font-bold text-white mb-3">Une simulation immersive</h3>
-						<p class="text-gray-400">
+						<p class="text-gray-400 leading-relaxed">
 							Plongez dans un environnement de bureau virtuel. Gestion de mails, utilisation d'applications,
 							résolution de problèmes... Vivez le quotidien d'un employé confronté aux réalités du numérique.
 						</p>
 					</div>
 
-					<div class="card-glass rounded-xl p-8 slide-up" style="animation-delay: 0.1s;">
-						<div class="mb-4">
+					<div class="card-glass rounded-xl p-8 fade-in-right">
+						<div class="flex items-center mb-4">
+							<div class="number-badge">2</div>
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
 							</svg>
 						</div>
 						<h3 class="text-xl font-bold text-white mb-3">Des prises de conscience</h3>
-						<p class="text-gray-400">
+						<p class="text-gray-400 leading-relaxed">
 							Au fil des tâches, découvrez les dépendances aux Big Tech, l'impact environnemental
 							de nos outils et les alternatives qui existent pour un numérique plus responsable.
 						</p>
 					</div>
 
-					<div class="card-glass rounded-xl p-8 slide-up" style="animation-delay: 0.2s;">
-						<div class="mb-4">
+					<div class="card-glass rounded-xl p-8 fade-in-left">
+						<div class="flex items-center mb-4">
+							<div class="number-badge">3</div>
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 							</svg>
 						</div>
 						<h3 class="text-xl font-bold text-white mb-3">Des situations réelles</h3>
-						<p class="text-gray-400">
+						<p class="text-gray-400 leading-relaxed">
 							Pannes de cloud, logiciels qui plantent, consommation d'énergie de l'IA...
 							Chaque incident est l'occasion de questionner nos usages et de découvrir des solutions.
 						</p>
 					</div>
 
-					<div class="card-glass rounded-xl p-8 slide-up" style="animation-delay: 0.3s;">
-						<div class="mb-4">
+					<div class="card-glass rounded-xl p-8 fade-in-right">
+						<div class="flex items-center mb-4">
+							<div class="number-badge">4</div>
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
 							</svg>
 						</div>
 						<h3 class="text-xl font-bold text-white mb-3">Vers un numérique durable</h3>
-						<p class="text-gray-400">
+						<p class="text-gray-400 leading-relaxed">
 							En fin de journée, vous aurez une vision claire des enjeux et des pistes concrètes
 							pour adopter un numérique plus inclusif, responsable et durable.
 						</p>
@@ -157,81 +246,83 @@
 		</section>
 
 		<!-- Section: NIRD -->
-		<section class="py-24 px-4">
+		<section class="section-container px-4">
 			<div class="max-w-5xl mx-auto">
-				<div class="section-divider mb-16"></div>
+				<div class="section-divider-thick"></div>
 
-				<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
-					La démarche NIRD
-				</h2>
-				<p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-					Numérique Inclusif, Responsable et Durable
-				</p>
+				<div class="fade-in-up">
+					<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
+						La démarche NIRD
+					</h2>
+					<p class="text-gray-400 text-center mb-16 max-w-2xl mx-auto text-lg">
+						Numérique Inclusif, Responsable et Durable
+					</p>
+				</div>
 
 				<div class="grid md:grid-cols-3 gap-6 mb-12">
-					<div class="card-glass rounded-xl p-6 text-center">
-						<div class="mb-4 flex justify-center">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<div class="card-glass rounded-xl p-8 text-center fade-in-up">
+						<div class="mb-6 flex justify-center">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
 							</svg>
 						</div>
-						<h3 class="text-lg font-bold text-blue-400 mb-2">Inclusif</h3>
-						<p class="text-gray-400 text-sm">
+						<h3 class="text-xl font-bold text-blue-400 mb-3">Inclusif</h3>
+						<p class="text-gray-400 leading-relaxed">
 							Un numérique accessible à tous, sans barrières techniques ou financières
 						</p>
 					</div>
 
-					<div class="card-glass rounded-xl p-6 text-center">
-						<div class="mb-4 flex justify-center">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<div class="card-glass rounded-xl p-8 text-center fade-in-up">
+						<div class="mb-6 flex justify-center">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
 							</svg>
 						</div>
-						<h3 class="text-lg font-bold text-purple-400 mb-2">Responsable</h3>
-						<p class="text-gray-400 text-sm">
+						<h3 class="text-xl font-bold text-purple-400 mb-3">Responsable</h3>
+						<p class="text-gray-400 leading-relaxed">
 							Un numérique éthique, respectueux de la vie privée et des données
 						</p>
 					</div>
 
-					<div class="card-glass rounded-xl p-6 text-center">
-						<div class="mb-4 flex justify-center">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<div class="card-glass rounded-xl p-8 text-center fade-in-up">
+						<div class="mb-6 flex justify-center">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
 							</svg>
 						</div>
-						<h3 class="text-lg font-bold text-green-400 mb-2">Durable</h3>
-						<p class="text-gray-400 text-sm">
+						<h3 class="text-xl font-bold text-green-400 mb-3">Durable</h3>
+						<p class="text-gray-400 leading-relaxed">
 							Un numérique qui lutte contre l'obsolescence et favorise le réemploi
 						</p>
 					</div>
 				</div>
 
-				<div class="card-glass rounded-2xl p-8">
-					<h3 class="text-xl font-bold text-white mb-6 text-center">Ce que NIRD propose</h3>
-					<div class="grid md:grid-cols-2 gap-4">
-						<div class="flex items-start gap-3">
-							<span class="text-blue-400">●</span>
-							<p class="text-gray-300 text-sm">Sensibiliser les equipes educatives et les eleves a la sobriete numerique</p>
+				<div class="card-glass rounded-xl p-8 fade-in-up">
+					<h3 class="text-xl font-bold text-white mb-8 text-center">Ce que NIRD propose</h3>
+					<div class="grid md:grid-cols-2 gap-6">
+						<div class="flex items-start gap-4 fade-in-left">
+							<div class="flex-shrink-0 w-2 h-2 rounded-full bg-blue-400 mt-2"></div>
+							<p class="text-gray-300 leading-relaxed">Sensibiliser les équipes éducatives et les élèves à la sobriété numérique</p>
 						</div>
-						<div class="flex items-start gap-3">
-							<span class="text-purple-400">●</span>
-							<p class="text-gray-300 text-sm">Encourager le reemploi et le reconditionnement du materiel</p>
+						<div class="flex items-start gap-4 fade-in-right">
+							<div class="flex-shrink-0 w-2 h-2 rounded-full bg-purple-400 mt-2"></div>
+							<p class="text-gray-300 leading-relaxed">Encourager le réemploi et le reconditionnement du matériel</p>
 						</div>
-						<div class="flex items-start gap-3">
-							<span class="text-green-400">●</span>
-							<p class="text-gray-300 text-sm">Promouvoir l'usage de Linux pour lutter contre l'obsolescence programmee</p>
+						<div class="flex items-start gap-4 fade-in-left">
+							<div class="flex-shrink-0 w-2 h-2 rounded-full bg-green-400 mt-2"></div>
+							<p class="text-gray-300 leading-relaxed">Promouvoir l'usage de Linux pour lutter contre l'obsolescence programmée</p>
 						</div>
-						<div class="flex items-start gap-3">
-							<span class="text-blue-400">●</span>
-							<p class="text-gray-300 text-sm">Mutualiser les ressources et outils libres via la Forge</p>
+						<div class="flex items-start gap-4 fade-in-right">
+							<div class="flex-shrink-0 w-2 h-2 rounded-full bg-blue-400 mt-2"></div>
+							<p class="text-gray-300 leading-relaxed">Mutualiser les ressources et outils libres via la Forge</p>
 						</div>
-						<div class="flex items-start gap-3">
-							<span class="text-purple-400">●</span>
-							<p class="text-gray-300 text-sm">Accompagner les etablissements dans une transition ecoresponsable</p>
+						<div class="flex items-start gap-4 fade-in-left">
+							<div class="flex-shrink-0 w-2 h-2 rounded-full bg-purple-400 mt-2"></div>
+							<p class="text-gray-300 leading-relaxed">Accompagner les établissements dans une transition écoresponsable</p>
 						</div>
-						<div class="flex items-start gap-3">
-							<span class="text-green-400">●</span>
-							<p class="text-gray-300 text-sm">Favoriser la co-construction de solutions locales et ouvertes</p>
+						<div class="flex items-start gap-4 fade-in-right">
+							<div class="flex-shrink-0 w-2 h-2 rounded-full bg-green-400 mt-2"></div>
+							<p class="text-gray-300 leading-relaxed">Favoriser la co-construction de solutions locales et ouvertes</p>
 						</div>
 					</div>
 				</div>
@@ -239,69 +330,71 @@
 		</section>
 
 		<!-- Section: Les problemes -->
-		<section class="py-24 px-4">
+		<section class="section-container px-4">
 			<div class="max-w-5xl mx-auto">
-				<div class="section-divider mb-16"></div>
+				<div class="section-divider-thick"></div>
 
-				<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
-					Le constat actuel
-				</h2>
-				<p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-					Les défis auxquels nous faisons face au quotidien
-				</p>
+				<div class="fade-in-up">
+					<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
+						Le constat actuel
+					</h2>
+					<p class="text-gray-400 text-center mb-16 max-w-2xl mx-auto text-lg">
+						Les défis auxquels nous faisons face au quotidien
+					</p>
+				</div>
 
-				<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-					<div class="card-glass rounded-xl p-6 border-red-500/20">
-						<div class="mb-3">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+					<div class="card-glass rounded-xl p-6 border-red-500/20 fade-in-up">
+						<div class="mb-4">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
 							</svg>
 						</div>
-						<h3 class="font-bold text-red-400 mb-2">Obsolescence forcée</h3>
-						<p class="text-gray-400 text-sm">Ordinateurs jetés alors qu'ils fonctionnent encore</p>
+						<h3 class="font-bold text-red-400 mb-3 text-lg">Obsolescence forcée</h3>
+						<p class="text-gray-400 leading-relaxed">Ordinateurs jetés alors qu'ils fonctionnent encore</p>
 					</div>
 
-					<div class="card-glass rounded-xl p-6 border-orange-500/20">
-						<div class="mb-3">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<div class="card-glass rounded-xl p-6 border-orange-500/20 fade-in-up">
+						<div class="mb-4">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 							</svg>
 						</div>
-						<h3 class="font-bold text-orange-400 mb-2">Coûts élevés</h3>
-						<p class="text-gray-400 text-sm">Licences et abonnements qui pèsent sur les budgets</p>
+						<h3 class="font-bold text-orange-400 mb-3 text-lg">Coûts élevés</h3>
+						<p class="text-gray-400 leading-relaxed">Licences et abonnements qui pèsent sur les budgets</p>
 					</div>
 
-					<div class="card-glass rounded-xl p-6 border-red-500/20">
-						<div class="mb-3">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<div class="card-glass rounded-xl p-6 border-red-500/20 fade-in-up">
+						<div class="mb-4">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
 							</svg>
 						</div>
-						<h3 class="font-bold text-red-400 mb-2">Données hors UE</h3>
-						<p class="text-gray-400 text-sm">Stockage de données sensibles hors Union Européenne</p>
+						<h3 class="font-bold text-red-400 mb-3 text-lg">Données hors UE</h3>
+						<p class="text-gray-400 leading-relaxed">Stockage de données sensibles hors Union Européenne</p>
 					</div>
 
-					<div class="card-glass rounded-xl p-6 border-orange-500/20">
-						<div class="mb-3">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<div class="card-glass rounded-xl p-6 border-orange-500/20 fade-in-up">
+						<div class="mb-4">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
 							</svg>
 						</div>
-						<h3 class="font-bold text-orange-400 mb-2">Écosystèmes fermés</h3>
-						<p class="text-gray-400 text-sm">Dépendance aux solutions propriétaires</p>
+						<h3 class="font-bold text-orange-400 mb-3 text-lg">Écosystèmes fermés</h3>
+						<p class="text-gray-400 leading-relaxed">Dépendance aux solutions propriétaires</p>
 					</div>
 				</div>
 
-				<div class="card-glass rounded-xl p-8 mt-8 border-red-500/10">
-					<div class="flex items-start gap-4">
+				<div class="card-glass rounded-xl p-8 mt-10 border-red-500/10 fade-in-up">
+					<div class="flex items-start gap-6">
 						<div class="flex-shrink-0">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
 							</svg>
 						</div>
 						<div>
-							<h3 class="font-bold text-white mb-2">L'exemple Windows 10</h3>
-							<p class="text-gray-400 text-sm">
+							<h3 class="font-bold text-white mb-3 text-lg">L'exemple Windows 10</h3>
+							<p class="text-gray-400 leading-relaxed">
 								La fin du support de Windows 10, c'est un peu comme si quelqu'un décidait soudainement que ta voiture
 								ne peut plus rouler parce qu'elle n'a pas le dernier modèle de tableau de bord. Du jour au lendemain,
 								des ordinateurs en parfait état se retrouvent estampillés "périmés". On pousse les utilisateurs à
@@ -314,23 +407,25 @@
 		</section>
 
 		<!-- Section: Les solutions -->
-		<section class="py-24 px-4">
+		<section class="section-container px-4">
 			<div class="max-w-5xl mx-auto">
-				<div class="section-divider mb-16"></div>
+				<div class="section-divider-thick"></div>
 
-				<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
-					Des alternatives existent
-				</h2>
-				<p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-					Les outils libres et open-source pour reprendre le contrôle
-				</p>
+				<div class="fade-in-up">
+					<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
+						Des alternatives existent
+					</h2>
+					<p class="text-gray-400 text-center mb-16 max-w-2xl mx-auto text-lg">
+						Les outils libres et open-source pour reprendre le contrôle
+					</p>
+				</div>
 
-				<div class="overflow-x-auto">
+				<div class="overflow-x-auto fade-in-up">
 					<table class="w-full">
 						<thead>
 							<tr class="border-b border-gray-700">
-								<th class="text-left py-4 px-4 text-gray-400 font-medium">Categorie</th>
-								<th class="text-left py-4 px-4 text-red-400 font-medium">Proprietaire</th>
+								<th class="text-left py-4 px-4 text-gray-400 font-medium">Catégorie</th>
+								<th class="text-left py-4 px-4 text-red-400 font-medium">Propriétaire</th>
 								<th class="text-left py-4 px-4 text-green-400 font-medium">Alternative libre</th>
 							</tr>
 						</thead>
@@ -396,17 +491,18 @@
 		</section>
 
 		<!-- Section: CTA Final -->
-		<section class="py-24 px-4">
+		<section class="section-container px-4">
 			<div class="max-w-3xl mx-auto text-center">
-				<div class="section-divider mb-16"></div>
+				<div class="section-divider-thick"></div>
 
-				<h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">
-					Prêt à vivre l'expérience ?
-				</h2>
-				<p class="text-gray-400 mb-8 max-w-xl mx-auto">
-					Découvrez par vous-même les défis et les solutions du numérique responsable
-					en vivant votre première journée de travail.
-				</p>
+				<div class="fade-in-up">
+					<h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+						Prêt à vivre l'expérience ?
+					</h2>
+					<p class="text-gray-400 mb-10 max-w-xl mx-auto text-lg leading-relaxed">
+						Découvrez par vous-même les défis et les solutions du numérique responsable
+						en vivant votre première journée de travail.
+					</p>
 
 				<a href="<%= url('/boot') %>" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-12 py-4 text-lg rounded-lg transition-all duration-300 hover:scale-105">
 					Lancer la simulation
