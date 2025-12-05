@@ -32,53 +32,6 @@ router.get('/', (req, res) => {
 	});
 });
 
-/**
- * GET /nird - NIRD presentation page
- * @route GET /nird
- * @renders nird.ejs
- */
-router.get('/nird', (req, res) => {
-	res.render('nird', {
-		basePath: res.locals.basePath || '/ndi',
-		page: 'nird',
-	});
-});
-
-/**
- * GET /solutions - Free software solutions page
- * @route GET /solutions
- * @renders solutions.ejs
- */
-router.get('/solutions', (req, res) => {
-	res.render('solutions', {
-		basePath: res.locals.basePath || '/ndi',
-		page: 'solutions',
-	});
-});
-
-/**
- * GET /simulateur - Cost simulator page
- * @route GET /simulateur
- * @renders simulateur.ejs
- */
-router.get('/simulateur', (req, res) => {
-	res.render('simulateur', {
-		basePath: res.locals.basePath || '/ndi',
-		page: 'simulateur',
-	});
-});
-
-/**
- * GET /ressources - Resources and documentation page
- * @route GET /ressources
- * @renders ressources.ejs
- */
-router.get('/ressources', (req, res) => {
-	res.render('ressources', {
-		basePath: res.locals.basePath || '/ndi',
-		page: 'ressources',
-	});
-});
 
 /**
  * GET /boot - Windows boot screen

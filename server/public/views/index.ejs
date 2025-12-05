@@ -1,459 +1,437 @@
 <!doctype html>
-<html lang="fr" data-theme="ndi">
+<html lang="fr" data-theme="dark">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>NDI 2025 - Le Village Numérique Résistant | NIRD</title>
-		<!-- Tailwind CSS + DaisyUI (compilé localement) -->
+		<title>NDI 2025 - Le Village Numérique Resistant</title>
 		<link rel="stylesheet" href="<%= staticUrl('/stylesheets/style.css') %>" />
-		<!-- Alpine.js (depuis node_modules) -->
 		<script defer src="<%= staticUrl('/javascripts/alpine.js') %>"></script>
+		<style>
+			html {
+				scroll-behavior: smooth;
+			}
+			body {
+				background: #0a0a0f;
+				min-height: 100vh;
+			}
+			.hero-gradient {
+				background: radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+			}
+			.card-glass {
+				background: rgba(255, 255, 255, 0.02);
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 255, 255, 0.05);
+				transition: all 0.3s ease;
+			}
+			.card-glass:hover {
+				background: rgba(255, 255, 255, 0.04);
+				border-color: rgba(255, 255, 255, 0.1);
+				transform: translateY(-2px);
+			}
+			.section-divider {
+				height: 1px;
+				background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+			}
+			.fade-in {
+				animation: fadeIn 0.6s ease-out;
+			}
+			@keyframes fadeIn {
+				from { opacity: 0; transform: translateY(20px); }
+				to { opacity: 1; transform: translateY(0); }
+			}
+			.slide-up {
+				animation: slideUp 0.8s ease-out;
+			}
+			@keyframes slideUp {
+				from { opacity: 0; transform: translateY(30px); }
+				to { opacity: 1; transform: translateY(0); }
+			}
+		</style>
 	</head>
 
-	<body class="min-h-screen bg-base-100">
-		<%- include('partials/navbar', { basePath, page }) %>
+	<body class="text-gray-200">
+		<!-- Hero Section - Full Screen -->
+		<section class="min-h-screen hero-gradient flex flex-col justify-center items-center relative overflow-hidden px-4">
+			<!-- Main content -->
+			<div class="text-center max-w-4xl mx-auto z-10 fade-in">
+				<h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white">
+					Votre premier jour
+				</h1>
 
-		<!-- Hero Section -->
-		<section id="accueil" class="hero min-h-[70vh] bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 relative overflow-hidden">
-			<div class="absolute inset-0 opacity-10">
-				<div class="absolute top-10 left-10 w-72 h-72 bg-primary rounded-full blur-3xl"></div>
-				<div class="absolute bottom-10 right-10 w-96 h-96 bg-accent rounded-full blur-3xl"></div>
-				<div class="absolute top-1/2 left-1/2 w-80 h-80 bg-secondary rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
+				<p class="text-xl md:text-2xl text-gray-300 mb-4 max-w-2xl mx-auto">
+					Vivez une journée de travail dans la peau d'un salarié
+				</p>
+				<p class="text-lg md:text-xl text-gray-400 mb-12 max-w-xl mx-auto">
+					Suivez vos tâches, découvrez les outils de l'entreprise et apprenez pourquoi le numérique peut être différent
+				</p>
+
+				<a href="<%= url('/boot') %>" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 text-lg rounded-lg transition-all duration-300 hover:scale-105">
+					Commencer la simulation
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+					</svg>
+				</a>
+
+				<p class="mt-8 text-sm text-gray-500">
+					Une expérience immersive pour comprendre les enjeux du numérique responsable
+				</p>
 			</div>
-			<div class="hero-content text-center relative z-10">
-				<div class="max-w-4xl">
-					<h1 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
-						Le Village Numérique Résistant
-					</h1>
-					<p class="text-2xl mb-4 font-semibold text-primary">
-						Comment les établissements scolaires peuvent tenir tête aux Big Tech ?
-					</p>
-					<p class="text-lg mb-8 opacity-80">
-						David contre Goliath, Astérix contre l'Empire numérique
-					</p>
-					<div class="flex flex-col sm:flex-row gap-4 justify-center">
-						<a href="<%= url('/simulateur') %>" class="btn btn-primary btn-lg shadow-lg transform transition-all hover:scale-105">🎮 Essayer le Simulateur</a>
-						<a href="<%= url('/nird') %>" class="btn btn-outline btn-lg shadow-lg transform transition-all hover:scale-105">Découvrir NIRD</a>
+
+			<!-- Scroll indicator -->
+			<div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+				<a href="#apropos" class="text-gray-500 hover:text-gray-300 transition-colors">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+					</svg>
+				</a>
+			</div>
+		</section>
+
+		<!-- Section: A propos de l'experience -->
+		<section id="apropos" class="py-24 px-4">
+			<div class="max-w-5xl mx-auto">
+				<div class="section-divider mb-16"></div>
+
+				<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
+					Pourquoi cette expérience ?
+				</h2>
+				<p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+					Découvrez les coulisses de notre quotidien numérique
+				</p>
+
+				<div class="grid md:grid-cols-2 gap-8">
+					<div class="card-glass rounded-xl p-8 slide-up">
+						<div class="mb-4">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+							</svg>
+						</div>
+						<h3 class="text-xl font-bold text-white mb-3">Une simulation immersive</h3>
+						<p class="text-gray-400">
+							Plongez dans un environnement de bureau virtuel. Gestion de mails, utilisation d'applications,
+							résolution de problèmes... Vivez le quotidien d'un employé confronté aux réalités du numérique.
+						</p>
+					</div>
+
+					<div class="card-glass rounded-xl p-8 slide-up" style="animation-delay: 0.1s;">
+						<div class="mb-4">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+							</svg>
+						</div>
+						<h3 class="text-xl font-bold text-white mb-3">Des prises de conscience</h3>
+						<p class="text-gray-400">
+							Au fil des tâches, découvrez les dépendances aux Big Tech, l'impact environnemental
+							de nos outils et les alternatives qui existent pour un numérique plus responsable.
+						</p>
+					</div>
+
+					<div class="card-glass rounded-xl p-8 slide-up" style="animation-delay: 0.2s;">
+						<div class="mb-4">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+							</svg>
+						</div>
+						<h3 class="text-xl font-bold text-white mb-3">Des situations réelles</h3>
+						<p class="text-gray-400">
+							Pannes de cloud, logiciels qui plantent, consommation d'énergie de l'IA...
+							Chaque incident est l'occasion de questionner nos usages et de découvrir des solutions.
+						</p>
+					</div>
+
+					<div class="card-glass rounded-xl p-8 slide-up" style="animation-delay: 0.3s;">
+						<div class="mb-4">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+							</svg>
+						</div>
+						<h3 class="text-xl font-bold text-white mb-3">Vers un numérique durable</h3>
+						<p class="text-gray-400">
+							En fin de journée, vous aurez une vision claire des enjeux et des pistes concrètes
+							pour adopter un numérique plus inclusif, responsable et durable.
+						</p>
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<!-- Section Problématique -->
-		<section class="py-20 bg-gradient-to-br from-base-200 via-base-100 to-base-200">
-			<div class="container mx-auto px-4">
-				<div class="text-center mb-16">
-					<h2 class="text-5xl font-bold mb-4">Le Défi Actuel</h2>
-					<p class="text-xl max-w-3xl mx-auto opacity-80">
-						À l'heure où la fin du support de Windows 10 met en évidence la dépendance structurelle aux Big Tech
-					</p>
-				</div>
-				
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" x-data="{ active: null }">
-					<div 
-						@mouseenter="active = 'obsolescence'"
-						@mouseleave="active = null"
-						class="card bg-gradient-to-br from-error/20 to-error/5 border-2 border-error/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-error/30"
-					>
-						<div class="card-body">
-							<h3 class="card-title text-error text-xl">
-								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-								</svg>
-								Matériel obsolète
-							</h3>
-							<p class="opacity-80">Ordinateurs rendus inutilisables alors qu'ils fonctionnent encore</p>
+		<!-- Section: NIRD -->
+		<section class="py-24 px-4">
+			<div class="max-w-5xl mx-auto">
+				<div class="section-divider mb-16"></div>
+
+				<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
+					La démarche NIRD
+				</h2>
+				<p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+					Numérique Inclusif, Responsable et Durable
+				</p>
+
+				<div class="grid md:grid-cols-3 gap-6 mb-12">
+					<div class="card-glass rounded-xl p-6 text-center">
+						<div class="mb-4 flex justify-center">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+							</svg>
 						</div>
+						<h3 class="text-lg font-bold text-blue-400 mb-2">Inclusif</h3>
+						<p class="text-gray-400 text-sm">
+							Un numérique accessible à tous, sans barrières techniques ou financières
+						</p>
 					</div>
 
-					<div 
-						@mouseenter="active = 'licences'"
-						@mouseleave="active = null"
-						class="card bg-gradient-to-br from-warning/20 to-warning/5 border-2 border-warning/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-warning/30"
-					>
-						<div class="card-body">
-							<h3 class="card-title text-warning text-xl">
-								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-								</svg>
-								Licences coûteuses
-							</h3>
-							<p class="opacity-80">Abonnements et licences qui pèsent sur les budgets</p>
+					<div class="card-glass rounded-xl p-6 text-center">
+						<div class="mb-4 flex justify-center">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+							</svg>
 						</div>
+						<h3 class="text-lg font-bold text-purple-400 mb-2">Responsable</h3>
+						<p class="text-gray-400 text-sm">
+							Un numérique éthique, respectueux de la vie privée et des données
+						</p>
 					</div>
 
-					<div 
-						@mouseenter="active = 'donnees'"
-						@mouseleave="active = null"
-						class="card bg-gradient-to-br from-error/20 to-error/5 border-2 border-error/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-error/30"
-					>
-						<div class="card-body">
-							<h3 class="card-title text-error text-xl">
-								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-								</svg>
-								Données hors UE
-							</h3>
-							<p class="opacity-80">Stockage de données sensibles hors de l'Union Européenne</p>
+					<div class="card-glass rounded-xl p-6 text-center">
+						<div class="mb-4 flex justify-center">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+							</svg>
 						</div>
-					</div>
-
-					<div 
-						@mouseenter="active = 'ecosystemes'"
-						@mouseleave="active = null"
-						class="card bg-gradient-to-br from-warning/20 to-warning/5 border-2 border-warning/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-warning/30"
-					>
-						<div class="card-body">
-							<h3 class="card-title text-warning text-xl">
-								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-								</svg>
-								Écosystèmes fermés
-							</h3>
-							<p class="opacity-80">Vendor lock-in et dépendance à des solutions propriétaires</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- Section NIRD -->
-		<section id="nird" class="py-20 bg-gradient-to-br from-base-100 via-accent/5 to-base-100">
-			<div class="container mx-auto px-4">
-				<div class="text-center mb-16">
-					<h2 class="text-5xl font-bold mb-4">La Démarche NIRD</h2>
-					<p class="text-xl max-w-3xl mx-auto opacity-80">
-						Numérique <span class="text-primary font-bold">Inclusif</span>, 
-						<span class="text-secondary font-bold">Responsable</span> et 
-						<span class="text-accent font-bold">Durable</span>
-					</p>
-				</div>
-
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12" x-data="{ active: null }">
-					<!-- Inclusion -->
-					<div 
-						@mouseenter="active = 'inclusion'"
-						@mouseleave="active = null"
-						class="card bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-primary/30"
-					>
-						<div class="card-body text-center p-8">
-							<div class="text-8xl mb-6 transform transition-transform duration-300" 
-								 :class="active === 'inclusion' ? 'scale-125 rotate-12' : ''">
-								🤝
-							</div>
-							<h3 class="card-title justify-center text-primary text-3xl mb-4">Inclusion</h3>
-							<p class="text-center opacity-80">
-								Un numérique accessible à tous, sans barrières techniques ou financières
-							</p>
-						</div>
-					</div>
-
-					<!-- Responsabilité -->
-					<div 
-						@mouseenter="active = 'responsabilite'"
-						@mouseleave="active = null"
-						class="card bg-gradient-to-br from-secondary/20 to-secondary/5 border-2 border-secondary/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-secondary/30"
-					>
-						<div class="card-body text-center p-8">
-							<div class="text-8xl mb-6 transform transition-transform duration-300"
-								 :class="active === 'responsabilite' ? 'scale-125 rotate-12' : ''">
-								🌍
-							</div>
-							<h3 class="card-title justify-center text-secondary text-3xl mb-4">Responsabilité</h3>
-							<p class="text-center opacity-80">
-								Un numérique éthique, respectueux de la vie privée et des données
-							</p>
-						</div>
-					</div>
-
-					<!-- Durabilité -->
-					<div 
-						@mouseenter="active = 'durabilite'"
-						@mouseleave="active = null"
-						class="card bg-gradient-to-br from-accent/20 to-accent/5 border-2 border-accent/30 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-accent/30"
-					>
-						<div class="card-body text-center p-8">
-							<div class="text-8xl mb-6 transform transition-transform duration-300"
-								 :class="active === 'durabilite' ? 'scale-125 rotate-12' : ''">
-								♻️
-							</div>
-							<h3 class="card-title justify-center text-accent text-3xl mb-4">Durabilité</h3>
-							<p class="text-center opacity-80">
-								Un numérique qui lutte contre l'obsolescence et favorise le réemploi
-							</p>
-						</div>
+						<h3 class="text-lg font-bold text-green-400 mb-2">Durable</h3>
+						<p class="text-gray-400 text-sm">
+							Un numérique qui lutte contre l'obsolescence et favorise le réemploi
+						</p>
 					</div>
 				</div>
 
-				<!-- Activités NIRD -->
-				<div class="card bg-gradient-to-br from-base-200 to-base-100 shadow-2xl border-2 border-primary/10">
-					<div class="card-body p-8">
-						<h3 class="card-title text-3xl mb-8">Les Activités de NIRD</h3>
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-primary/10 to-transparent hover:from-primary/20 transition-all">
-								<div class="badge badge-primary badge-lg text-lg p-4">1</div>
-								<div>
-									<h4 class="font-bold mb-2 text-lg">Sensibilisation</h4>
-									<p class="text-sm opacity-80">Sensibiliser les équipes éducatives et les élèves à la sobriété numérique</p>
-								</div>
-							</div>
-							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-secondary/10 to-transparent hover:from-secondary/20 transition-all">
-								<div class="badge badge-secondary badge-lg text-lg p-4">2</div>
-								<div>
-									<h4 class="font-bold mb-2 text-lg">Réemploi</h4>
-									<p class="text-sm opacity-80">Encourager le réemploi et le reconditionnement du matériel</p>
-								</div>
-							</div>
-							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-accent/10 to-transparent hover:from-accent/20 transition-all">
-								<div class="badge badge-accent badge-lg text-lg p-4">3</div>
-								<div>
-									<h4 class="font-bold mb-2 text-lg">Linux</h4>
-									<p class="text-sm opacity-80">Promouvoir l'usage de Linux pour lutter contre l'obsolescence programmée</p>
-								</div>
-							</div>
-							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-primary/10 to-transparent hover:from-primary/20 transition-all">
-								<div class="badge badge-primary badge-lg text-lg p-4">4</div>
-								<div>
-									<h4 class="font-bold mb-2 text-lg">Mutualisation</h4>
-									<p class="text-sm opacity-80">Mutualiser les ressources et outils libres via la Forge</p>
-								</div>
-							</div>
-							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-secondary/10 to-transparent hover:from-secondary/20 transition-all">
-								<div class="badge badge-secondary badge-lg text-lg p-4">5</div>
-								<div>
-									<h4 class="font-bold mb-2 text-lg">Accompagnement</h4>
-									<p class="text-sm opacity-80">Accompagner les établissements dans une transition écoresponsable</p>
-								</div>
-							</div>
-							<div class="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-r from-accent/10 to-transparent hover:from-accent/20 transition-all">
-								<div class="badge badge-accent badge-lg text-lg p-4">6</div>
-								<div>
-									<h4 class="font-bold mb-2 text-lg">Co-construction</h4>
-									<p class="text-sm opacity-80">Favoriser la co-construction de solutions locales et ouvertes</p>
-								</div>
-							</div>
+				<div class="card-glass rounded-2xl p-8">
+					<h3 class="text-xl font-bold text-white mb-6 text-center">Ce que NIRD propose</h3>
+					<div class="grid md:grid-cols-2 gap-4">
+						<div class="flex items-start gap-3">
+							<span class="text-blue-400">●</span>
+							<p class="text-gray-300 text-sm">Sensibiliser les equipes educatives et les eleves a la sobriete numerique</p>
+						</div>
+						<div class="flex items-start gap-3">
+							<span class="text-purple-400">●</span>
+							<p class="text-gray-300 text-sm">Encourager le reemploi et le reconditionnement du materiel</p>
+						</div>
+						<div class="flex items-start gap-3">
+							<span class="text-green-400">●</span>
+							<p class="text-gray-300 text-sm">Promouvoir l'usage de Linux pour lutter contre l'obsolescence programmee</p>
+						</div>
+						<div class="flex items-start gap-3">
+							<span class="text-blue-400">●</span>
+							<p class="text-gray-300 text-sm">Mutualiser les ressources et outils libres via la Forge</p>
+						</div>
+						<div class="flex items-start gap-3">
+							<span class="text-purple-400">●</span>
+							<p class="text-gray-300 text-sm">Accompagner les etablissements dans une transition ecoresponsable</p>
+						</div>
+						<div class="flex items-start gap-3">
+							<span class="text-green-400">●</span>
+							<p class="text-gray-300 text-sm">Favoriser la co-construction de solutions locales et ouvertes</p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<!-- Section Sujet 2025 -->
-		<section id="sujet" class="py-20 bg-gradient-to-br from-base-200 via-secondary/5 to-base-200">
-			<div class="container mx-auto px-4">
-				<div class="text-center mb-16">
-					<h2 class="text-5xl font-bold mb-4">Le Sujet NDI 2025</h2>
-					<p class="text-xl max-w-3xl mx-auto opacity-80">
-						Créez une application Web qui aide à comprendre comment un établissement peut réduire ses dépendances numériques
-					</p>
+		<!-- Section: Les problemes -->
+		<section class="py-24 px-4">
+			<div class="max-w-5xl mx-auto">
+				<div class="section-divider mb-16"></div>
+
+				<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
+					Le constat actuel
+				</h2>
+				<p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+					Les défis auxquels nous faisons face au quotidien
+				</p>
+
+				<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+					<div class="card-glass rounded-xl p-6 border-red-500/20">
+						<div class="mb-3">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+							</svg>
+						</div>
+						<h3 class="font-bold text-red-400 mb-2">Obsolescence forcée</h3>
+						<p class="text-gray-400 text-sm">Ordinateurs jetés alors qu'ils fonctionnent encore</p>
+					</div>
+
+					<div class="card-glass rounded-xl p-6 border-orange-500/20">
+						<div class="mb-3">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+							</svg>
+						</div>
+						<h3 class="font-bold text-orange-400 mb-2">Coûts élevés</h3>
+						<p class="text-gray-400 text-sm">Licences et abonnements qui pèsent sur les budgets</p>
+					</div>
+
+					<div class="card-glass rounded-xl p-6 border-red-500/20">
+						<div class="mb-3">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+							</svg>
+						</div>
+						<h3 class="font-bold text-red-400 mb-2">Données hors UE</h3>
+						<p class="text-gray-400 text-sm">Stockage de données sensibles hors Union Européenne</p>
+					</div>
+
+					<div class="card-glass rounded-xl p-6 border-orange-500/20">
+						<div class="mb-3">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+							</svg>
+						</div>
+						<h3 class="font-bold text-orange-400 mb-2">Écosystèmes fermés</h3>
+						<p class="text-gray-400 text-sm">Dépendance aux solutions propriétaires</p>
+					</div>
 				</div>
 
-				<div class="max-w-4xl mx-auto space-y-6 mb-12">
-					<div class="card bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 shadow-2xl transform transition-all hover:scale-[1.02]">
-						<div class="card-body p-8">
-							<h3 class="card-title text-primary text-2xl mb-4">🎯 L'Objectif</h3>
-							<p class="text-lg opacity-90">
-								Développer une plateforme qui permet d'animer la communauté NIRD, 
-								d'encourager la contribution, de faire la promotion de NIRD sous toutes ses formes, 
-								de faciliter la contribution au sein de la communauté et à l'extérieur, 
-								et de mettre en valeur les solutions proposées par la démarche NIRD.
-							</p>
+				<div class="card-glass rounded-xl p-8 mt-8 border-red-500/10">
+					<div class="flex items-start gap-4">
+						<div class="flex-shrink-0">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+							</svg>
 						</div>
-					</div>
-
-					<div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border-2 border-secondary/20 shadow-2xl transform transition-all hover:scale-[1.02]">
-						<div class="card-body p-8">
-							<h3 class="card-title text-secondary text-2xl mb-4">🎮 L'Expérience</h3>
-							<p class="text-lg opacity-90">
-								L'application doit proposer une expérience <strong>ludique, attractive et engageante</strong>. 
-								Il peut s'agir d'interactivité, d'illustrations, de mécaniques de choix, de petites énigmes, 
-								de défis, de scénarios, d'une ambiance humoristique... 
-								L'objectif : donner envie d'apprendre, de comprendre et d'agir.
+						<div>
+							<h3 class="font-bold text-white mb-2">L'exemple Windows 10</h3>
+							<p class="text-gray-400 text-sm">
+								La fin du support de Windows 10, c'est un peu comme si quelqu'un décidait soudainement que ta voiture
+								ne peut plus rouler parce qu'elle n'a pas le dernier modèle de tableau de bord. Du jour au lendemain,
+								des ordinateurs en parfait état se retrouvent estampillés "périmés". On pousse les utilisateurs à
+								acheter du matériel neuf alors que l'ancien fonctionne encore très bien.
 							</p>
-						</div>
-					</div>
-
-					<div class="card bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/20 shadow-2xl transform transition-all hover:scale-[1.02]">
-						<div class="card-body p-8">
-							<h3 class="card-title text-accent text-2xl mb-4">💡 Format Libre</h3>
-							<p class="text-lg opacity-90">
-								Vous êtes libres du format : outil interactif, mini-site narratif, parcours visuel, 
-								plateforme explicative, tableau de simulation, interface gamifiée, ou toute autre forme créative. 
-								L'important est de transmettre l'esprit de résistance numérique propre à NIRD.
-							</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- Compteur interactif - Exemple de gamification -->
-				<div class="max-w-4xl mx-auto card bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 shadow-2xl border-2 border-primary/30">
-					<div class="card-body text-center p-8">
-						<h3 class="text-3xl font-bold mb-6">💪 Le Village Résistant</h3>
-						<div x-data="{ resistance: 0, maxResistance: 100 }" class="space-y-6">
-							<div class="stat bg-base-100/50 rounded-lg p-6">
-								<div class="stat-value text-primary text-5xl">
-									<span x-text="resistance"></span>%
-								</div>
-								<div class="stat-desc text-lg">Niveau de résistance numérique</div>
-							</div>
-							<div class="progress progress-primary w-full h-4" :style="`--value: ${resistance}`"></div>
-							<div class="flex flex-wrap gap-3 justify-center">
-								<button @click="resistance = Math.min(resistance + 10, maxResistance)" class="btn btn-primary shadow-lg transform transition-all hover:scale-105">
-									+ Adopter Linux
-								</button>
-								<button @click="resistance = Math.min(resistance + 15, maxResistance)" class="btn btn-secondary shadow-lg transform transition-all hover:scale-105">
-									+ Réutiliser le matériel
-								</button>
-								<button @click="resistance = Math.min(resistance + 20, maxResistance)" class="btn btn-accent shadow-lg transform transition-all hover:scale-105">
-									+ Utiliser des logiciels libres
-								</button>
-								<button @click="resistance = 0" class="btn btn-outline shadow-lg transform transition-all hover:scale-105">
-									Réinitialiser
-								</button>
-							</div>
-							<div x-show="resistance >= maxResistance" x-transition class="alert alert-success mt-6 shadow-lg">
-								<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-								</svg>
-								<span class="text-lg">🎉 Félicitations ! Votre établissement est maintenant un Village Numérique Résistant !</span>
-							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<!-- Section Acteurs -->
-		<section class="py-20 bg-gradient-to-br from-base-100 via-primary/5 to-base-100">
-			<div class="container mx-auto px-4">
-				<div class="text-center mb-16">
-					<h2 class="text-5xl font-bold mb-4">Les Acteurs du Projet</h2>
-					<p class="text-xl max-w-3xl mx-auto opacity-80">
-						Un collectif d'acteurs engagés pour un numérique éducatif plus autonome
-					</p>
+		<!-- Section: Les solutions -->
+		<section class="py-24 px-4">
+			<div class="max-w-5xl mx-auto">
+				<div class="section-divider mb-16"></div>
+
+				<h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
+					Des alternatives existent
+				</h2>
+				<p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+					Les outils libres et open-source pour reprendre le contrôle
+				</p>
+
+				<div class="overflow-x-auto">
+					<table class="w-full">
+						<thead>
+							<tr class="border-b border-gray-700">
+								<th class="text-left py-4 px-4 text-gray-400 font-medium">Categorie</th>
+								<th class="text-left py-4 px-4 text-red-400 font-medium">Proprietaire</th>
+								<th class="text-left py-4 px-4 text-green-400 font-medium">Alternative libre</th>
+							</tr>
+						</thead>
+						<tbody class="text-sm">
+							<tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+								<td class="py-3 px-4 text-gray-300">Bureautique</td>
+								<td class="py-3 px-4 text-gray-400">Microsoft Office</td>
+								<td class="py-3 px-4 text-gray-300">LibreOffice, OnlyOffice</td>
+							</tr>
+							<tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+								<td class="py-3 px-4 text-gray-300">Cloud</td>
+								<td class="py-3 px-4 text-gray-400">Google Drive, OneDrive</td>
+								<td class="py-3 px-4 text-gray-300">Nextcloud, Seafile</td>
+							</tr>
+							<tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+								<td class="py-3 px-4 text-gray-300">Navigateur</td>
+								<td class="py-3 px-4 text-gray-400">Chrome</td>
+								<td class="py-3 px-4 text-gray-300">Firefox, Brave</td>
+							</tr>
+							<tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+								<td class="py-3 px-4 text-gray-300">Messagerie</td>
+								<td class="py-3 px-4 text-gray-400">Outlook, Gmail</td>
+								<td class="py-3 px-4 text-gray-300">Thunderbird, ProtonMail</td>
+							</tr>
+							<tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+								<td class="py-3 px-4 text-gray-300">Systeme</td>
+								<td class="py-3 px-4 text-gray-400">Windows, macOS</td>
+								<td class="py-3 px-4 text-gray-300">Ubuntu, Linux, Debian, Fedora</td>
+							</tr>
+							<tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+								<td class="py-3 px-4 text-gray-300">Retouche photo</td>
+								<td class="py-3 px-4 text-gray-400">Photoshop</td>
+								<td class="py-3 px-4 text-gray-300">Gimp</td>
+							</tr>
+							<tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+								<td class="py-3 px-4 text-gray-300">Design</td>
+								<td class="py-3 px-4 text-gray-400">Canva</td>
+								<td class="py-3 px-4 text-gray-300">Penpot, Photopea</td>
+							</tr>
+							<tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+								<td class="py-3 px-4 text-gray-300">Gestion de projet</td>
+								<td class="py-3 px-4 text-gray-400">Notion, Trello</td>
+								<td class="py-3 px-4 text-gray-300">OpenProject, Kanboard</td>
+							</tr>
+							<tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+								<td class="py-3 px-4 text-gray-300">IA</td>
+								<td class="py-3 px-4 text-gray-400">ChatGPT, Copilot</td>
+								<td class="py-3 px-4 text-gray-300">LM Studio, Ollama</td>
+							</tr>
+							<tr class="hover:bg-white/5 transition-colors">
+								<td class="py-3 px-4 text-gray-300">Video</td>
+								<td class="py-3 px-4 text-gray-400">YouTube, Twitch</td>
+								<td class="py-3 px-4 text-gray-300">PeerTube, Odysee, Owncast</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 
-				<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-					<div class="card bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-primary/30">
-						<div class="card-body text-center p-6">
-							<div class="text-5xl mb-3">👨‍🎓</div>
-							<p class="font-bold text-lg">Élèves</p>
-						</div>
-					</div>
-					<div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border-2 border-secondary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-secondary/30">
-						<div class="card-body text-center p-6">
-							<div class="text-5xl mb-3">👩‍🏫</div>
-							<p class="font-bold text-lg">Enseignants</p>
-						</div>
-					</div>
-					<div class="card bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-accent/30">
-						<div class="card-body text-center p-6">
-							<div class="text-5xl mb-3">🏫</div>
-							<p class="font-bold text-lg">Directions</p>
-						</div>
-					</div>
-					<div class="card bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-primary/30">
-						<div class="card-body text-center p-6">
-							<div class="text-5xl mb-3">💻</div>
-							<p class="font-bold text-lg">Techniciens</p>
-						</div>
-					</div>
-					<div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border-2 border-secondary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-secondary/30">
-						<div class="card-body text-center p-6">
-							<div class="text-5xl mb-3">🤝</div>
-							<p class="font-bold text-lg">Associations</p>
-						</div>
-					</div>
-					<div class="card bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-accent/30">
-						<div class="card-body text-center p-6">
-							<div class="text-5xl mb-3">🏛️</div>
-							<p class="font-bold text-lg">Collectivités</p>
-						</div>
-					</div>
-					<div class="card bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-primary/30">
-						<div class="card-body text-center p-6">
-							<div class="text-5xl mb-3">🎓</div>
-							<p class="font-bold text-lg">Services académiques</p>
-						</div>
-					</div>
-					<div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border-2 border-secondary/20 shadow-xl transform transition-all hover:scale-105 hover:shadow-secondary/30">
-						<div class="card-body text-center p-6">
-							<div class="text-5xl mb-3">🏛️</div>
-							<p class="font-bold text-lg">Ministère</p>
-						</div>
-					</div>
+				<p class="text-center text-gray-500 text-sm mt-6">
+					N'oubliez pas : vous avez toujours le choix !
+				</p>
+			</div>
+		</section>
+
+		<!-- Section: CTA Final -->
+		<section class="py-24 px-4">
+			<div class="max-w-3xl mx-auto text-center">
+				<div class="section-divider mb-16"></div>
+
+				<h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">
+					Prêt à vivre l'expérience ?
+				</h2>
+				<p class="text-gray-400 mb-8 max-w-xl mx-auto">
+					Découvrez par vous-même les défis et les solutions du numérique responsable
+					en vivant votre première journée de travail.
+				</p>
+
+				<a href="<%= url('/boot') %>" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-12 py-4 text-lg rounded-lg transition-all duration-300 hover:scale-105">
+					Lancer la simulation
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+				</a>
+
+				<div class="mt-16 flex justify-center gap-8 text-gray-500 text-sm">
+					<a href="https://nird.forge.apps.education.fr/" target="_blank" class="hover:text-gray-300 transition-colors">
+						Site officiel NIRD
+					</a>
+					<span>|</span>
+					<span>NDI 2025</span>
 				</div>
 			</div>
 		</section>
 
-		<!-- Section Ressources -->
-		<section id="ressources" class="py-20 bg-gradient-to-br from-base-200 via-accent/5 to-base-200">
-			<div class="container mx-auto px-4">
-				<div class="text-center mb-16">
-					<h2 class="text-5xl font-bold mb-4">Ressources & Liens</h2>
-					<p class="text-xl opacity-80">Découvrez toutes les ressources pour approfondir</p>
-				</div>
-
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-					<div class="card bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 shadow-2xl transform transition-all hover:scale-105">
-						<div class="card-body p-6">
-							<h3 class="card-title text-primary text-xl mb-4">🌐 Site Officiel</h3>
-							<p class="mb-4 opacity-80">Découvrez la démarche NIRD sur la Forge des communs numériques éducatifs</p>
-							<a href="https://nird.forge.apps.education.fr/" target="_blank" class="btn btn-primary shadow-lg">
-								Visiter le site NIRD
-							</a>
-						</div>
-					</div>
-
-					<div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border-2 border-secondary/20 shadow-2xl transform transition-all hover:scale-105">
-						<div class="card-body p-6">
-							<h3 class="card-title text-secondary text-xl mb-4">📺 Vidéos & Médias</h3>
-							<p class="mb-4 opacity-80">Reportages et témoignages sur la résistance numérique</p>
-							<a href="<%= url('/ressources') %>" class="btn btn-secondary shadow-lg">
-								Voir toutes les vidéos
-							</a>
-						</div>
-					</div>
-
-					<div class="card bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/20 shadow-2xl transform transition-all hover:scale-105">
-						<div class="card-body p-6">
-							<h3 class="card-title text-accent text-xl mb-4">📚 Articles</h3>
-							<p class="mb-4 opacity-80">En savoir plus sur le projet NIRD au lycée Carnot</p>
-							<a href="https://www.cafepedagogique.net/2025/04/27/bruay-labuissiere-voyage-au-centre-du-libre-educatif/" target="_blank" class="btn btn-accent shadow-lg">
-								Lire l'article
-							</a>
-						</div>
-					</div>
-
-					<div class="card bg-gradient-to-br from-base-100 to-base-200 border-2 border-primary/20 shadow-2xl">
-						<div class="card-body p-6">
-							<h3 class="card-title text-primary text-xl mb-4">🎯 Objectifs Importants</h3>
-							<div class="space-y-3">
-								<div class="alert alert-info shadow-md">
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-									</svg>
-									<span class="text-sm">L'application devra être en ligne à la fin de la Nuit</span>
-								</div>
-								<div class="alert alert-success shadow-md">
-									<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-									</svg>
-									<span class="text-sm">Utiliser des ressources libres de droit</span>
-								</div>
-								<div class="alert alert-warning shadow-md">
-									<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-									</svg>
-									<span class="text-sm">Production sous licence libre</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+		<!-- Footer minimal -->
+		<footer class="py-8 px-4 border-t border-gray-800">
+			<div class="max-w-5xl mx-auto text-center text-gray-500 text-sm">
+				<p>Projet realise dans le cadre de la Nuit de l'Info 2025</p>
+				<p class="mt-2">Le Village Numerique Resistant - Demarche NIRD</p>
 			</div>
-		</section>
-
-		<%- include('partials/footer', { basePath }) %>
+		</footer>
 	</body>
 </html>

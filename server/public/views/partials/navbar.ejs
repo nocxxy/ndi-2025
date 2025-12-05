@@ -8,55 +8,22 @@
 		<div class="flex-none">
 			<ul class="menu menu-horizontal px-1 gap-2">
 				<li>
-					<a 
-						href="<%= url('/') %>" 
+					<a
+						href="<%= url('/') %>"
 						class="btn btn-ghost <%= page === 'accueil' ? 'btn-active' : '' %>"
 					>
 						Accueil
 					</a>
 				</li>
 				<li>
-					<a 
-						href="<%= url('/nird') %>" 
-						class="btn btn-ghost <%= page === 'nird' ? 'btn-active' : '' %>"
+					<a
+						href="<%= url('/boot') %>"
+						class="btn btn-primary <%= page === 'windows' ? 'btn-active' : '' %>"
 					>
-						NIRD
-					</a>
-				</li>
-				<li>
-					<a 
-						href="<%= url('/solutions') %>" 
-						class="btn btn-ghost <%= page === 'solutions' ? 'btn-active' : '' %>"
-					>
-						Solutions
-					</a>
-				</li>
-				<li>
-					<a 
-						href="<%= url('/simulateur') %>" 
-						class="btn btn-ghost <%= page === 'simulateur' ? 'btn-active' : '' %>"
-					>
-						Simulateur
-					</a>
-				</li>
-				<li>
-					<a 
-						href="<%= url('/ressources') %>" 
-						class="btn btn-ghost <%= page === 'ressources' ? 'btn-active' : '' %>"
-					>
-						Ressources
-					</a>
-				</li>
-				<li>
-					<a 
-						href="<%= url('/boot') %>" 
-						class="btn btn-ghost <%= page === 'windows' ? 'btn-active' : '' %>"
-					>
-						🪟 Windows
+						Lancer la simulation
 					</a>
 				</li>
 			</ul>
 		</div>
 	</div>
 </nav>
-
