@@ -217,11 +217,16 @@ document.addEventListener('alpine:init', () => {
 
 		// Toast Methods
 		showToast(title, message) {
-			const id = Date.now();
-			if (this.toasts.length >= 4) {
-				this.toasts.shift(); // Remove oldest to keep max 4
+			const id = Date.now() + Math.random(); // Ensure unique ID
+			
+			// Clean implementation: always create a new array
+			let currentToasts = [...this.toasts];
+			if (currentToasts.length >= 4) {
+				currentToasts = currentToasts.slice(1); // Remove oldest
 			}
-			this.toasts.push({ id, title, message });
+			currentToasts.push({ id, title, message });
+			this.toasts = currentToasts;
+
 			setTimeout(() => this.removeToast(id), 5000); // Auto dismiss after 5s
 		},
 		removeToast(id) {
