@@ -1,15 +1,10 @@
 /**
  * @fileoverview Mail App - Alpine.js component
  * @description Outlook-style mail client for the NDI Windows simulation.
- *              Displays tasks as emails with "read" status and completion badges.
- *              Communicates with parent window via message-bus to sync tasks.
+ *              Displays mails with read/unread state.
  *
  * @requires Alpine.js
  * @requires message-bus.js (for parent communication)
- *
- * @example
- * // In HTML template:
- * <body x-data="mailApp">
  */
 
 document.addEventListener('alpine:init', () => {
@@ -18,11 +13,11 @@ document.addEventListener('alpine:init', () => {
 		// State
 		// ===================
 
-		/** @type {Array<{id: string, title: string, description: string, completed: boolean, unlocksApps?: string[]}>} List of tasks */
-		tasks: [],
+		/** @type {Array} List of mails */
+		mails: [],
 
-		/** @type {Object|null} Currently selected task for reading pane */
-		selectedTask: null,
+		/** @type {Object|null} Currently selected mail */
+		selectedMail: null,
 
 		// ===================
 		// Lifecycle
@@ -30,20 +25,17 @@ document.addEventListener('alpine:init', () => {
 
 		/**
 		 * Initialize the component
-		 * - Sets up message listener for task updates
-		 * - Requests initial tasks
-		 * - Notifies parent window that app is opened
 		 */
 		init() {
-			// Listen for tasks data from parent
+			// Listen for data from parent
 			window.addEventListener('message', (event) => {
-				if (event.data && event.data.type === 'mail:updateTasks') {
-					this.handleTasksUpdate(event.data.data);
+				if (event.data?.type === 'mail:updateData') {
+					this.handleDataUpdate(event.data.data);
 				}
 			});
 
-			// Request initial tasks
-			this.fetchTasks();
+			// Request initial data
+			this.fetchData();
 
 			// Notify parent that app is opened
 			if (window.emit) emit('app:opened', { appId: 'mail' });
@@ -54,46 +46,55 @@ document.addEventListener('alpine:init', () => {
 		// ===================
 
 		/**
-		 * Request latest tasks from the parent window (Window Manager)
+		 * Request latest data from the parent window
 		 */
-		fetchTasks() {
-			if (window.emit) emit('mail:requestTasks');
+		fetchData() {
+			if (window.emit) emit('mail:requestData');
 		},
 
 		/**
-		 * Process task updates from parent
-		 * Preserves selection if possible
-		 * @param {Array} newTasks - Updated list of tasks
+		 * Process data updates from parent
+		 * @param {Object} data - { mails: Array, tasks: Array }
 		 */
-		handleTasksUpdate(newTasks) {
-			this.tasks = newTasks;
+		handleDataUpdate(data) {
+			this.mails = data.mails || [];
 
-			// Handle selection logic
-			if (!this.selectedTask && this.tasks.length > 0) {
-				// Auto-select first email if nothing is selected
-				this.selectedTask = this.tasks[0];
-			} else if (this.selectedTask) {
-				// Update the currently selected task with fresh data (e.g. if status changed)
-				const updated = this.tasks.find(t => t.id === this.selectedTask.id);
-				if (updated) {
-					this.selectedTask = updated;
-				} else {
-					// If selected task no longer exists (unlikely but safe), select first
-					this.selectedTask = this.tasks.length > 0 ? this.tasks[0] : null;
-				}
+			// Handle mail selection
+			if (!this.selectedMail && this.mails.length > 0) {
+				this.selectMail(this.mails[0]);
+			} else if (this.selectedMail) {
+				const updated = this.mails.find(m => m.id === this.selectedMail.id);
+				this.selectedMail = updated || (this.mails.length > 0 ? this.mails[0] : null);
 			}
 		},
 
 		// ===================
-		// UI Actions
+		// Mail Actions
 		// ===================
 
 		/**
-		 * Select a task to view in reading pane
-		 * @param {Object} task - Task object to select
+		 * Select a mail and mark as read
+		 * @param {Object} mail - Mail object to select
 		 */
-		selectTask(task) {
-			this.selectedTask = task;
+		selectMail(mail) {
+			this.selectedMail = mail;
+
+			// Mark as read if unread
+			if (!mail.read && window.emit) {
+				emit('mail:markRead', { mailId: mail.id });
+			}
+		},
+
+		// ===================
+		// Computed Properties
+		// ===================
+
+		/**
+		 * Count of unread mails
+		 * @returns {number}
+		 */
+		get unreadMailCount() {
+			return this.mails.filter(m => !m.read).length;
 		}
 	}));
 });

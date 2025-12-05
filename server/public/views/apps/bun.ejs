@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <title>Formulaire Inscription RH</title>
+    <link rel="stylesheet" href="<%= staticUrl('/stylesheets/style.css') %>">
+    <script src="<%= staticUrl('/javascripts/message-bus.js') %>"></script>
+    <script src="<%= staticUrl('/javascripts/form-game.js') %>"></script>
+    <script defer src="<%= staticUrl('/javascripts/alpine.js') %>"></script>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Light modern background */
+            color: #333;
+            padding: 20px;
+        }
+
+        .container-form {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+            margin-top: 50px; /* Space from top */
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a202c;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        h1::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -10px;
+            width: 60px;
+            height: 4px;
+            background-color: #4f46e5; /* Indigo accent */
+            border-radius: 2px;
+        }
+
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative; /* For canvas positioning */
+        }
+
+        label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .inputgame, textarea {
+            border: 1px solid #cbd5e0;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease-in-out;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: #ffffff;
+            color: #1a202c;
+        }
+
+        .inputgame:focus, textarea:focus {
+            border-color: #4f46e5; /* Indigo */
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); /* Indigo shadow */
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-button {
+            background-color: #4f46e5; /* Indigo */
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin-top: 1.5rem;
+            align-self: flex-end; /* Align to the right */
+        }
+
+        .submit-button:hover {
+            background-color: #4338ca; /* Darker indigo */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+        }
+        
+        /* Game canvas specific styles */
+        canvas {
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-form">
+        <h1>Formulaire Inscription RH</h1>
+        <form class="formulaire" autocomplete="off">
+            <div id="nom" class="form-group gameRequired">
+                <label for="name">Nom:</label>
+                <input type="text" id="name" name="name" class="inputgame" required/>
+            </div>
+
+            <div id="email" class="form-group gameRequired">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="inputgame" required />
+            </div>
+
+            <div id="subject" class="form-group gameRequired">
+                <label for="subject">Sujet:</label>
+                <input type="text" id="subject" name="subject" class="inputgame" required />
+            </div>
+
+            <div id="message" class="form-group gameRequired">
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" class="inputgame" required></textarea>
+            </div>
+            <input type="submit" value="Envoyer le dossier" class="submit-button"/>
+        </form>
+    </div>
+</body>
+</html>

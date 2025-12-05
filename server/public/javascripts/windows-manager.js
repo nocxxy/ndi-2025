@@ -11,16 +11,76 @@
 // =============================================================================
 
 const APPS = [
-	{ id: 'snake', name: 'Snake', icon: '🐍', category: 'Jeux', route: '/apps/snake' },
 	{ id: 'word', name: 'Word', icon: '📝', category: 'Bureautique', route: '/apps/word' },
 	{ id: 'libreoffice', name: 'LibreOffice', icon: '📄', category: 'Bureautique', route: '/apps/libreoffice' },
 	{ id: 'cloud', name: 'OneDrive', icon: '☁️', category: 'Outils', route: '/apps/cloud' },
-	{ id: 'mail', name: 'Mail', icon: '📧', category: 'Outils', route: '/apps/mail' },
+	{ id: 'mail', name: 'Outlook', icon: '📧', category: 'Outils', route: '/apps/mail' },
 	{ id: 'coffee', name: 'Café', icon: '☕', category: 'Détente', route: '/apps/coffee' },
 	{ id: 'chatbot', name: 'Copilot', icon: '✨', category: 'IA', route: '/apps/chatbot' },
 	{ id: 'server-shield', name: 'Server Shield', icon: '🛡️', category: 'Outils', route: '/apps/server-shield' },
 	{ id: 'sport', name: 'Pause Sport', icon: '🏃‍♂️', category: 'Santé', route: '/apps/sport' },
+	{ id: 'bun', name: 'Inscription RH', icon: '📋', category: 'Outils', route: '/apps/bun' },
+	{ id: 'secret-snake', name: 'Snake', icon: '🐍', category: 'Secret', route: '/apps/secret-snake', secret: true },
 ];
+
+// =============================================================================
+// MAILS - Informational messages (no triggers, just content)
+// =============================================================================
+
+/**
+ * Mail Definitions - Pure informational content
+ * @property {string} id - Unique ID
+ * @property {string} dialogFile - JSON file in /dialogs/ containing title/description
+ * @property {string} sender - Display name of sender
+ * @property {string} senderIcon - Emoji icon for sender avatar
+ * @property {string} date - Display date
+ */
+const MAILS = [
+	{
+		id: 'welcome-mail-1',
+		dialogFile: 'welcome-mail-1.json',
+		sender: 'Système NDI',
+		senderIcon: '🤖',
+		date: '04 Déc 10:42',
+	},
+	{
+		id: 'eco-info-mail',
+		dialogFile: 'eco-info-mail.json',
+		sender: 'Équipe RSE',
+		senderIcon: '🌱',
+		date: '04 Déc 10:45',
+	},
+	{
+		id: 'water-shortage-mail',
+		dialogFile: 'water-shortage-mail.json',
+		sender: 'Green IT',
+		senderIcon: '🌍',
+		date: '04 Déc 11:30',
+	},
+	{
+		id: 'libreoffice-vs-word-mail',
+		dialogFile: 'libreoffice-vs-word-mail.json',
+		sender: 'Collègue Tech',
+		senderIcon: '💡',
+		date: '04 Déc 12:00',
+	},
+	{
+		id: 'onedrive-crash-mail',
+		dialogFile: 'onedrive-crash-mail.json',
+		sender: 'IT Support',
+		senderIcon: '💻',
+		date: '04 Déc 14:15',
+	},
+	{
+		id: 'end-of-day-mail',
+		dialogFile: 'end-of-day-mail.json',
+		sender: 'Direction NIRD',
+		senderIcon: '🎉',
+		date: '04 Déc 17:30',
+	},
+];
+
+const INITIAL_MAILS = ['welcome-mail-1', 'eco-info-mail'];
 
 /**
  * Task Definitions
@@ -35,22 +95,6 @@ const APPS = [
  * @property {string[]} unlocksApps - Apps to unlock on success
  */
 const TASKS = [
-	{
-		id: 'welcome-mail-1',
-		trigger: null, // Informational only
-		dialogFile: 'welcome-mail-1.json',
-		validate: null,
-		unlocksTasks: [],
-		unlocksApps: [],
-	},
-	{
-		id: 'eco-info-mail',
-		trigger: null, // Informational only
-		dialogFile: 'eco-info-mail.json',
-		validate: null,
-		unlocksTasks: [],
-		unlocksApps: [],
-	},
 	{
 		id: 'open-snake',
 		trigger: 'app:opened',
@@ -98,7 +142,8 @@ const TASKS = [
 		unlocksApps: [],
 		onFail: {
 			unlocksTasks: ['prepare-meeting-libreoffice'],
-			unlocksApps: ['libreoffice']
+			unlocksApps: ['libreoffice'],
+			unlocksMails: ['water-shortage-mail']
 		}
 	},
 	{
@@ -108,6 +153,7 @@ const TASKS = [
 		validate: (data) => true, // Always succeeds
 		unlocksTasks: ['share-meeting-notes'],
 		unlocksApps: ['cloud'],
+		unlocksMails: ['libreoffice-vs-word-mail'],
 	},
 	{
 		id: 'share-meeting-notes',
@@ -116,39 +162,45 @@ const TASKS = [
 		validate: (data) => false, // The download always fails/hangs
 		unlocksTasks: [],
 		unlocksApps: [],
-		// On failure (which is immediate), we unlock the repair tool
-		// And we mark this task as blocking until fixed
 		onFail: {
 			unlocksTasks: ['repair-cloud-services'],
-			unlocksApps: ['server-shield']
+			unlocksApps: ['server-shield'],
+			unlocksMails: ['onedrive-crash-mail']
 		},
-		blocking: true,
-		allowedApps: ['cloud', 'server-shield'],
 	},
 	{
 		id: 'repair-cloud-services',
 		trigger: 'server-shield:victory',
-		dialogFile: 'repair-cloud-services.json', // Needs to be created
+		dialogFile: 'repair-cloud-services.json',
+		validate: (data) => true,
+		unlocksTasks: ['final-inscription'],
+		unlocksApps: ['bun'],
+		blocking: true,
+		allowedApps: ['server-shield', 'mail'],
+		fixTask: 'share-meeting-notes'
+	},
+	{
+		id: 'final-inscription',
+		trigger: 'bun:finished',
+		dialogFile: 'final-inscription.json',
 		validate: (data) => true,
 		unlocksTasks: [],
 		unlocksApps: [],
-		// When this completes, it also fixes the blocked task
-		fixTask: 'share-meeting-notes' 
-	}
+		unlocksMails: ['end-of-day-mail'],
+	},
 ];
-
 const INITIAL_TASKS = ['welcome-mail-1', 'eco-info-mail', 'prepare-meeting-word'];
-const INITIAL_APPS = ['mail', 'word', 'coffee', 'sport'];
+const INITIAL_APPS = ['mail', 'word', 'coffee', 'sport', 'secret-snake'];
 
 const CONFIG = {
 	window: {
-		defaultWidth: 800,
-		defaultHeight: 500,
-		minWidth: 300,
-		minHeight: 200,
+		defaultWidth: 1000,
+		defaultHeight: 650,
+		minWidth: 400,
+		minHeight: 300,
 		offsetStep: 30,
-		initialX: 100,
-		initialY: 80,
+		initialX: 80,
+		initialY: 40,
 	},
 	zIndex: { initial: 1000 },
 	storageKey: 'ndi-progress',
@@ -173,9 +225,15 @@ document.addEventListener('alpine:init', () => {
 
 		// Task State
 		// taskStates structure: { [taskId]: { status: 'pending'|'completed'|'failed', content: { title, description } } }
-		taskStates: {}, 
+		taskStates: {},
 		unlockedTasks: [...INITIAL_TASKS],
 		unlockedApps: [...INITIAL_APPS],
+
+		// Mail State
+		// mailStates structure: { [mailId]: { read: boolean, content: { title, description } } }
+		mailStates: {},
+		unlockedMails: [...INITIAL_MAILS],
+
 		notifications: ['mail'],
 		toasts: [],
 		popups: [],
@@ -186,9 +244,10 @@ document.addEventListener('alpine:init', () => {
 			this.apps = APPS.map(app => ({ ...app, url: this.basePath + app.route }));
 			this.loadProgress();
 			this.initMessageBus();
-			
-			// Load initial task data
+
+			// Load initial task and mail data
 			this.unlockedTasks.forEach(taskId => this.loadTaskData(taskId));
+			this.unlockedMails.forEach(mailId => this.loadMailData(mailId));
 
 			// Trigger Welcome Popup (fake security alert)
 			setTimeout(() => {
@@ -217,17 +276,15 @@ document.addEventListener('alpine:init', () => {
 
 		// Toast Methods
 		showToast(title, message) {
-			const id = Date.now() + Math.random(); // Ensure unique ID
-			
-			// Clean implementation: always create a new array
+			const id = Date.now() + Math.random();
+
 			let currentToasts = [...this.toasts];
 			if (currentToasts.length >= 4) {
-				currentToasts = currentToasts.slice(1); // Remove oldest
+				currentToasts = currentToasts.slice(1);
 			}
 			currentToasts.push({ id, title, message });
 			this.toasts = currentToasts;
-
-			setTimeout(() => this.removeToast(id), 5000); // Auto dismiss after 5s
+			// No auto dismiss - user must close manually
 		},
 		removeToast(id) {
 			this.toasts = this.toasts.filter(t => t.id !== id);
@@ -245,7 +302,63 @@ document.addEventListener('alpine:init', () => {
 			this.popups = this.popups.filter(p => p.id !== id);
 		},
 
+		// ===================
+		// Mail Methods
+		// ===================
+
+		async loadMailData(mailId) {
+			if (this.mailStates[mailId]?.content) return;
+
+			const mail = MAILS.find(m => m.id === mailId);
+			if (!mail || !mail.dialogFile) return;
+
+			try {
+				const url = `${this.basePath}/dialogs/${mail.dialogFile}`;
+				const response = await fetch(url);
+				if (response.ok) {
+					const json = await response.json();
+					if (!this.mailStates[mailId]) {
+						this.mailStates[mailId] = { read: false };
+					}
+					this.mailStates[mailId].content = json;
+
+					// Show toast for new mail
+					if (!this.mailStates[mailId].read) {
+						this.showToast(json.pending?.title || json.title, "Nouveau courrier");
+					}
+
+					this.sendDataToMail();
+				}
+			} catch (e) {
+				console.error(`Failed to load mail ${mailId}`, e);
+			}
+		},
+
+		markMailAsRead(mailId) {
+			if (!this.mailStates[mailId]) {
+				this.mailStates[mailId] = { read: false };
+			}
+			this.mailStates[mailId].read = true;
+			this.saveProgress();
+			this.sendDataToMail();
+		},
+
+		isMailRead(mailId) {
+			return this.mailStates[mailId]?.read === true;
+		},
+
+		get availableMails() {
+			return MAILS.filter(m => this.unlockedMails.includes(m.id));
+		},
+
+		get unreadMailCount() {
+			return this.unlockedMails.filter(id => !this.isMailRead(id)).length;
+		},
+
+		// ===================
 		// Task Methods
+		// ===================
+
 		async loadTaskData(taskId) {
 			if (this.taskStates[taskId] && this.taskStates[taskId].content) return;
 
@@ -261,13 +374,13 @@ document.addEventListener('alpine:init', () => {
 						this.taskStates[taskId] = { status: 'pending' };
 					}
 					this.taskStates[taskId].content = json;
-					
+
 					// If this task is pending (newly unlocked), show toast
 					if (this.taskStates[taskId].status === 'pending') {
-						this.showToast(json.pending.title, "Nouveau message reçu");
+						this.showToast(json.pending.title, "Nouvelle tâche");
 					}
-					
-					this.sendTasksToMail();
+
+					this.sendDataToMail();
 				}
 			} catch (e) {
 				console.error(`Failed to load dialog for ${taskId}`, e);
@@ -278,11 +391,39 @@ document.addEventListener('alpine:init', () => {
 			return TASKS.filter(t => this.unlockedTasks.includes(t.id));
 		},
 
+		/**
+		 * Get tasks formatted for the desktop widget
+		 */
+		get widgetTasks() {
+			const blockingTask = this.activeBlockingTask;
+			return TASKS
+				.filter(t => this.unlockedTasks.includes(t.id))
+				.map(t => {
+					const state = this.taskStates[t.id] || { status: 'pending' };
+					const content = state.content || {};
+					let textData = content.pending;
+					if (state.status === 'completed') textData = content.success;
+					if (state.status === 'failed') textData = content.failure;
+					if (!textData) textData = { title: 'Chargement...', description: '...' };
+
+					return {
+						id: t.id,
+						title: textData.title,
+						description: textData.description,
+						status: state.status,
+						completed: state.status === 'completed',
+						failed: state.status === 'failed',
+						blocked: blockingTask && t.id !== blockingTask.id && state.status === 'pending',
+					};
+				});
+		},
+
 		get activeBlockingTask() {
-			return TASKS.find(t => 
-				this.unlockedTasks.includes(t.id) && 
-				t.blocking && 
-				!this.isTaskCompleted(t.id)
+			return TASKS.find(t =>
+				this.unlockedTasks.includes(t.id) &&
+				t.blocking &&
+				!this.isTaskCompleted(t.id) &&
+				!this.isTaskFailed(t.id)
 			);
 		},
 
@@ -299,7 +440,7 @@ document.addEventListener('alpine:init', () => {
 		},
 
 		get availableApps() {
-			return this.apps.filter(app => this.isAppUnlocked(app.id));
+			return this.apps.filter(app => this.isAppUnlocked(app.id) && !app.secret);
 		},
 
 		/**
@@ -309,8 +450,21 @@ document.addEventListener('alpine:init', () => {
 		handleEvent(event) {
 			const { type, data } = event;
 
+			// Mail app requests data (mails + tasks)
+			if (type === 'mail:requestData') {
+				this.sendDataToMail();
+				return;
+			}
+
+			// Legacy support
 			if (type === 'mail:requestTasks') {
-				this.sendTasksToMail();
+				this.sendDataToMail();
+				return;
+			}
+
+			// Mark mail as read
+			if (type === 'mail:markRead') {
+				this.markMailAsRead(data.mailId);
 				return;
 			}
 
@@ -367,36 +521,50 @@ document.addEventListener('alpine:init', () => {
 			});
 		},
 
-		        completeTask(taskId) {
-		            if (this.isTaskCompleted(taskId)) return;
-		
-		            			// Update status
-		            			if (!this.taskStates[taskId]) this.taskStates[taskId] = {};
-		            			this.taskStates[taskId].status = 'completed';
-		            			
-		            			// Notify user of success
-		            			this.addNotification('mail');
-		            			const content = this.taskStates[taskId].content?.success;
-		            			if (content) this.showToast(content.title, "Mission accomplie");
-		            
-		            			const task = TASKS.find(t => t.id === taskId);		            let newTasksUnlocked = false;
+		completeTask(taskId) {
+			if (this.isTaskCompleted(taskId)) return;
+
+			// Update status
+			if (!this.taskStates[taskId]) this.taskStates[taskId] = {};
+			this.taskStates[taskId].status = 'completed';
+
+			// Notify user of success
+			this.addNotification('mail');
+			const content = this.taskStates[taskId].content?.success;
+			if (content) this.showToast(content.title, "Mission accomplie");
+
+			const task = TASKS.find(t => t.id === taskId);
+			let newTasksUnlocked = false;
+
 			// Process unlocks defined in the task
 			if (task.unlocksTasks) {
 				task.unlocksTasks.forEach(id => {
 					if (!this.unlockedTasks.includes(id)) {
 						this.unlockedTasks.push(id);
-						this.loadTaskData(id); 
+						this.loadTaskData(id);
 						newTasksUnlocked = true;
 					}
 				});
 			}
 
 			// Unlock apps
-			task.unlocksApps.forEach(id => {
-				if (!this.unlockedApps.includes(id)) {
-					this.unlockedApps.push(id);
-				}
-			});
+			if (task.unlocksApps) {
+				task.unlocksApps.forEach(id => {
+					if (!this.unlockedApps.includes(id)) {
+						this.unlockedApps.push(id);
+					}
+				});
+			}
+
+			// Unlock mails on success
+			if (task.unlocksMails) {
+				task.unlocksMails.forEach(id => {
+					if (!this.unlockedMails.includes(id)) {
+						this.unlockedMails.push(id);
+						this.loadMailData(id);
+					}
+				});
+			}
 
 			// Fix other tasks if specified
 			if (task.fixTask) {
@@ -408,111 +576,149 @@ document.addEventListener('alpine:init', () => {
 			if (newTasksUnlocked) this.addNotification('mail');
 
 			this.saveProgress();
-			this.sendTasksToMail();
+			this.sendDataToMail();
 		},
 
-		        failTask(taskId) {
-		            if (this.isTaskCompleted(taskId)) return; // Don't fail if already done
-		            if (this.isTaskFailed(taskId)) return;    // Already failed
+		failTask(taskId) {
+			if (this.isTaskCompleted(taskId)) return;
+			if (this.isTaskFailed(taskId)) return;
+
+			if (!this.taskStates[taskId]) this.taskStates[taskId] = {};
+			this.taskStates[taskId].status = 'failed';
+
+			const task = TASKS.find(t => t.id === taskId);
+
+			// Handle onFail unlocks
+			if (task.onFail) {
+				if (task.onFail.unlocksTasks) {
+					task.onFail.unlocksTasks.forEach(id => {
+						if (!this.unlockedTasks.includes(id)) {
+							this.unlockedTasks.push(id);
+							this.loadTaskData(id);
+						}
+					});
+				}
+				if (task.onFail.unlocksApps) {
+					task.onFail.unlocksApps.forEach(id => {
+						if (!this.unlockedApps.includes(id)) {
+							this.unlockedApps.push(id);
+						}
+					});
+				}
+				// Unlock mails on failure
+				if (task.onFail.unlocksMails) {
+					task.onFail.unlocksMails.forEach(id => {
+						if (!this.unlockedMails.includes(id)) {
+							this.unlockedMails.push(id);
+							this.loadMailData(id);
+						}
+					});
+				}
+			}
+
+			this.addNotification('mail');
+			const content = this.taskStates[taskId].content?.failure;
+			if (content) this.showToast(content.title, "Mission échouée");
 		
-		            if (!this.taskStates[taskId]) this.taskStates[taskId] = {};
-		            this.taskStates[taskId].status = 'failed';
-		
-		            const task = TASKS.find(t => t.id === taskId);
-		            
-		            // Handle onFail unlocks
-		            if (task.onFail) {
-		                if (task.onFail.unlocksTasks) {
-		                    task.onFail.unlocksTasks.forEach(id => {
-		                        if (!this.unlockedTasks.includes(id)) {
-		                            this.unlockedTasks.push(id);
-		                            this.loadTaskData(id);
-		                        }
-		                    });
-		                }
-		                if (task.onFail.unlocksApps) {
-		                    task.onFail.unlocksApps.forEach(id => {
-		                        if (!this.unlockedApps.includes(id)) {
-		                            this.unlockedApps.push(id);
-		                        }
-		                    });
-		                }
-		            }
-		
-		            this.addNotification('mail');
-		            const content = this.taskStates[taskId].content?.failure;
-		            if (content) this.showToast(content.title, "Mission échouée");
-		
-		            this.saveProgress();
-		            this.sendTasksToMail();
-		        },
-		        sendTasksToMail() {
-		            const blockingTask = this.activeBlockingTask;
-		
-		            // Prepare data for Mail app
-		            const tasksData = TASKS
-		                .filter(t => this.unlockedTasks.includes(t.id))
-		                .map(t => {
-		                    const state = this.taskStates[t.id] || { status: 'pending' };
-		                    const content = state.content || {};
-		                    
-		                    // Select text based on status
-		                    let textData = content.pending;
-		                    if (state.status === 'completed') textData = content.success;
-		                    if (state.status === 'failed') textData = content.failure;
-		
-		                    // Fallback if JSON not loaded yet
-		                    if (!textData) {
-		                        textData = { title: 'Chargement...', description: '...' };
-		                    }
-		
-		                    // Determine if this specific task is "blocked" by another blocking task
-		                    const isBlockedBySystem = blockingTask && t.id !== blockingTask.id && !state.status.includes('completed');
-		
-		                    return {
-		                        id: t.id,
-		                        title: textData.title,
-		                        description: textData.description,
-		                        completed: state.status === 'completed',
-		                        failed: state.status === 'failed',
-		                        blocked: isBlockedBySystem,
-		                        status: state.status, // pending, completed, failed
-		                        unlocksApps: t.unlocksApps
-		                    };
-		                })
-		                .sort((a, b) => {
-		                    // Sort: Pending/Failed first, Completed last
-		                    const scoreA = a.completed ? 2 : (a.failed ? 1 : 0);
-		                    const scoreB = b.completed ? 2 : (b.failed ? 1 : 0);
-		                    return scoreA - scoreB;
-		                });
-		
-		            // Find all iframe windows with the mail app
-		            const mailWindows = this.windows.filter(w => w.app.id === 'mail');
-		            mailWindows.forEach(win => {
-		                const wrapper = document.getElementById(`window-${win.id}`);
-		                if (wrapper) {
-		                    const iframe = wrapper.querySelector('iframe');
-		                    if (iframe && iframe.contentWindow) {
-		                        iframe.contentWindow.postMessage({
-		                            type: 'mail:updateTasks',
-		                            data: tasksData
-		                        }, '*');
-		                    }
-		                }
-		            });
-		        },
+			this.saveProgress();
+			this.sendDataToMail();
+		},
+
+		/**
+		 * Send mails and tasks data to the Mail app
+		 */
+		sendDataToMail() {
+			const blockingTask = this.activeBlockingTask;
+
+			// Prepare mails data
+			const mailsData = MAILS
+				.filter(m => this.unlockedMails.includes(m.id))
+				.map(m => {
+					const state = this.mailStates[m.id] || { read: false };
+					const content = state.content?.pending || state.content || {};
+
+					return {
+						id: m.id,
+						title: content.title || 'Chargement...',
+						description: content.description || '...',
+						sender: m.sender,
+						senderIcon: m.senderIcon,
+						date: m.date,
+						read: state.read,
+					};
+				});
+
+			// Prepare tasks data
+			const tasksData = TASKS
+				.filter(t => this.unlockedTasks.includes(t.id))
+				.map(t => {
+					const state = this.taskStates[t.id] || { status: 'pending' };
+					const content = state.content || {};
+
+					// Select text based on status
+					let textData = content.pending;
+					if (state.status === 'completed') textData = content.success;
+					if (state.status === 'failed') textData = content.failure;
+
+					// Fallback if JSON not loaded yet
+					if (!textData) {
+						textData = { title: 'Chargement...', description: '...' };
+					}
+
+					// Determine if this specific task is "blocked" by another blocking task
+					const isBlockedBySystem = blockingTask && t.id !== blockingTask.id && !state.status.includes('completed');
+
+					return {
+						id: t.id,
+						title: textData.title,
+						description: textData.description,
+						completed: state.status === 'completed',
+						failed: state.status === 'failed',
+						blocked: isBlockedBySystem,
+						status: state.status,
+						unlocksApps: t.unlocksApps
+					};
+				})
+				.sort((a, b) => {
+					// Sort: Pending/Failed first, Completed last
+					const scoreA = a.completed ? 2 : (a.failed ? 1 : 0);
+					const scoreB = b.completed ? 2 : (b.failed ? 1 : 0);
+					return scoreA - scoreB;
+				});
+
+			// Find all iframe windows with the mail app
+			const mailWindows = this.windows.filter(w => w.app.id === 'mail');
+			mailWindows.forEach(win => {
+				const wrapper = document.getElementById(`window-${win.id}`);
+				if (wrapper) {
+					const iframe = wrapper.querySelector('iframe');
+					if (iframe && iframe.contentWindow) {
+						iframe.contentWindow.postMessage({
+							type: 'mail:updateData',
+							data: { mails: mailsData, tasks: tasksData }
+						}, '*');
+					}
+				}
+			});
+		},
 		// Persistence
 		saveProgress() {
-			const simplifiedStates = {};
+			const simplifiedTaskStates = {};
 			Object.keys(this.taskStates).forEach(key => {
-				simplifiedStates[key] = { status: this.taskStates[key].status };
+				simplifiedTaskStates[key] = { status: this.taskStates[key].status };
+			});
+
+			const simplifiedMailStates = {};
+			Object.keys(this.mailStates).forEach(key => {
+				simplifiedMailStates[key] = { read: this.mailStates[key].read };
 			});
 
 			const data = {
-				taskStates: simplifiedStates,
+				taskStates: simplifiedTaskStates,
 				unlockedTasks: this.unlockedTasks,
 				unlockedApps: this.unlockedApps,
+				mailStates: simplifiedMailStates,
+				unlockedMails: this.unlockedMails,
 			};
 			localStorage.setItem(CONFIG.storageKey, JSON.stringify(data));
 		},
@@ -525,6 +731,8 @@ document.addEventListener('alpine:init', () => {
 					this.taskStates = data.taskStates || {};
 					this.unlockedTasks = data.unlockedTasks || [...INITIAL_TASKS];
 					this.unlockedApps = data.unlockedApps || [...INITIAL_APPS];
+					this.mailStates = data.mailStates || {};
+					this.unlockedMails = data.unlockedMails || [...INITIAL_MAILS];
 				}
 			} catch (e) {
 				console.warn('Failed to load progress:', e);
@@ -535,26 +743,41 @@ document.addEventListener('alpine:init', () => {
 			this.taskStates = {};
 			this.unlockedTasks = [...INITIAL_TASKS];
 			this.unlockedApps = [...INITIAL_APPS];
+			this.mailStates = {};
+			this.unlockedMails = [...INITIAL_MAILS];
 			this.notifications = ['mail'];
 			localStorage.removeItem(CONFIG.storageKey);
-			
+
 			this.unlockedTasks.forEach(taskId => this.loadTaskData(taskId));
-			this.sendTasksToMail();
+			this.unlockedMails.forEach(mailId => this.loadMailData(mailId));
+			this.sendDataToMail();
 		},
 
 		// Search & Window Management
 		get searchResults() {
 			if (!this.searchQuery.trim()) return [];
 			const q = this.searchQuery.toLowerCase();
-			return this.availableApps.filter(app =>
+			
+			const results = this.availableApps.filter(app =>
 				app.name.toLowerCase().includes(q) ||
 				app.category.toLowerCase().includes(q)
 			);
+
+			if (this.searchQuery === 'Snake') {
+				const secretApp = this.apps.find(a => a.id === 'secret-snake');
+				if (secretApp) results.push(secretApp);
+			}
+
+			return results;
 		},
 
-		openApp(app) {
-			if (!this.isAppUnlocked(app.id)) return null;
-			this.removeNotification(app.id);
+				openApp(app) {
+
+					if (!this.isAppUnlocked(app.id) && !app.secret) return null;
+
+		
+
+					this.removeNotification(app.id);
 			const id = `win-${Date.now()}`;
 			const offset = this.windows.length * CONFIG.window.offsetStep;
 			this.windows.push({

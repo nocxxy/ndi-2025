@@ -210,10 +210,28 @@ router.get('/apps/sport', (req, res) => {
 });
 
 /**
+ * GET /apps/bun - Bun App (Final registration)
+ */
+router.get('/apps/bun', (req, res) => {
+	res.render('apps/bun', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
+/**
  * GET /fake-update - Fake Microsoft Update Page
  */
 router.get('/fake-update', (req, res) => {
 	res.render('fake-update', {
+		basePath: res.locals.basePath || '/ndi',
+	});
+});
+
+/**
+ * GET /apps/secret-snake - Secret Snake Game
+ */
+router.get('/apps/secret-snake', (req, res) => {
+	res.render('apps/secret-snake', {
 		basePath: res.locals.basePath || '/ndi',
 	});
 });

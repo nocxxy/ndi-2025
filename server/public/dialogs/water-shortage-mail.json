@@ -1,0 +1,7 @@
+{
+    "id": "water-shortage-mail",
+    "pending": {
+        "title": "L'IA et sa consommation énergétique",
+        "description": "Salut !\n\nTu viens d'utiliser Copilot pour t'aider, et c'est super pratique ! Mais tu sais quoi ? Derrière chaque requête à une IA, il y a une consommation d'énergie non négligeable.\n\nLes modèles d'intelligence artificielle comme ChatGPT, Copilot ou autres nécessitent des datacenters gigantesques qui tournent 24h/24. Une simple conversation avec une IA peut consommer autant d'électricité que de faire bouillir une bouilloire !\n\n💡 Quelques chiffres :\n• L'entraînement d'un modèle IA peut émettre autant de CO2 que 5 voitures pendant toute leur durée de vie\n• Les datacenters représentent déjà 1-2% de la consommation électrique mondiale\n• Ce chiffre pourrait atteindre 8% d'ici 2030\n\n🌱 Alternatives responsables :\n• LM Studio et Ollama permettent de faire tourner des modèles IA en local sur ta machine\n• Les modèles open-source sont souvent plus légers et optimisés\n• Réfléchis avant chaque requête : est-ce vraiment nécessaire ?\n\nL'IA c'est génial, mais utilisons-la intelligemment !\n\nL'équipe Green IT"
+    }
+}

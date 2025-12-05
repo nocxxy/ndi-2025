@@ -212,8 +212,31 @@ app.get("/javascripts/server-shield.js", (req, res) => {
 	}
 });
 
+app.get("/javascripts/secret-snake.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "secret-snake.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+// Servir les fichiers statiques sur / (le load balancer a enlevé le préfixe)
+// Ordre important : routes explicites d'abord, puis middleware général
+
 app.get("/javascripts/sport-app.js", (req, res) => {
 	const filePath = path.join(publicJsDir, "sport-app.js");
+	if (fs.existsSync(filePath)) {
+		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+		res.sendFile(filePath);
+	} else {
+		res.status(404).send('File not found');
+	}
+});
+
+app.get("/javascripts/form-game.js", (req, res) => {
+	const filePath = path.join(publicJsDir, "form-game.js");
 	if (fs.existsSync(filePath)) {
 		res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
 		res.sendFile(filePath);
@@ -365,8 +388,8 @@ if (BASE_PATH && BASE_PATH !== '/') {
 		}
 	});
 	
-	app.get(basePathNormalized + "/javascripts/sport-app.js", (req, res) => {
-		const filePath = path.join(publicJsDir, "sport-app.js");
+	app.get(basePathNormalized + "/javascripts/secret-snake.js", (req, res) => {
+		const filePath = path.join(publicJsDir, "secret-snake.js");
 		if (fs.existsSync(filePath)) {
 			res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
 			res.sendFile(filePath);

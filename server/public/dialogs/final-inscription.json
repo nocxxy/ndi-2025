@@ -1,0 +1,15 @@
+{
+    "id": "final-inscription",
+    "pending": {
+        "title": "Mission Finale : Inscription",
+        "description": "Tous les services sont rétablis. Il ne reste plus qu'à valider votre inscription administrative pour officialiser votre arrivée. Utilisez l'application 'Inscription RH' (Bun)."
+    },
+    "success": {
+        "title": "Bienvenue à bord !",
+        "description": "Inscription validée. Vous faites officiellement partie de l'équipe. Bon courage pour la suite !"
+    },
+    "failure": {
+        "title": "Echec",
+        "description": "..."
+    }
+}

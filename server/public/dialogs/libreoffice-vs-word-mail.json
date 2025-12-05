@@ -1,0 +1,7 @@
+{
+    "id": "libreoffice-vs-word-mail",
+    "pending": {
+        "title": "LibreOffice vs Word : Petit comparatif",
+        "description": "Voilà un petit comparatif rapide entre LibreOffice et Microsoft Word pour t'aider à voir ce qui te conviendrait le mieux !\n\n• LibreOffice est gratuit et open-source, parfait si tu veux quelque chose de flexible, respectueux des standards ouverts et qui consomme moins d'énergie. Pas de cloud, donc tes données restent sur ta machine, et il est accessible à tous, même à ceux qui ont un budget limité. Parfait si tu veux contrôler les choses et participer à l'évolution de la communauté !\n\n• Microsoft Word, lui, c'est plus complet côté outils de collaboration en ligne avec OneDrive et Teams, mais c'est payant et ça dépend un peu trop du cloud, ce qui a un impact plus élevé sur la consommation énergétique. En termes d'accessibilité, il propose des fonctionnalités pratiques, mais il reste propriétaire, donc on a moins de contrôle sur les données et très dépendant du format .docx.\n\nEn gros, LibreOffice est top si tu cherches un logiciel durable, gratuit et respectueux des données, tandis que Word brille si tu as besoin d'une collaboration fluide et d'un ensemble d'outils hyper intégrés (trop parfois) même si ça demande un abonnement."
+    }
+}
