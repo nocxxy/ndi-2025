@@ -195,7 +195,7 @@ const INITIAL_APPS = ['mail', 'word', 'coffee', 'sport', 'secret-snake'];
 const CONFIG = {
 	window: {
 		defaultWidth: 1500,
-		defaultHeight: 1200,
+		defaultHeight: 900,
 		minWidth: 400,
 		minHeight: 300,
 		offsetStep: 30,
