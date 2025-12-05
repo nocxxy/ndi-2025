@@ -38,8 +38,13 @@
             this.color = '#4ecdc4';
 
             // Load sprite images
+            // Utiliser BASE_PATH si disponible (pour la production)
+            const basePath = (window.BASE_PATH && window.BASE_PATH !== '/') ? window.BASE_PATH : '';
             this.images = [];
-            this.imagesSrc = ['/images/bun/player1.png', '/images/bun/player2.png'];
+            this.imagesSrc = [
+                basePath + '/images/bun/player1.png',
+                basePath + '/images/bun/player2.png'
+            ];
             this.imagesLoaded = [];
             this.currentFrame = 0;
             this.frameTimer = 0;
@@ -49,6 +54,9 @@
                 this.images[i].src = this.imagesSrc[i];
                 this.imagesLoaded.push(false);
                 this.images[i].onload = () => { this.imagesLoaded[i] = true; };
+                this.images[i].onerror = () => { 
+                    console.error('Failed to load image:', this.imagesSrc[i]);
+                };
             }
         }
 
@@ -100,11 +108,16 @@
             this.color = '#ff6b6b';
 
             // Load rock image based on type
+            // Utiliser BASE_PATH si disponible (pour la production)
+            const basePath = (window.BASE_PATH && window.BASE_PATH !== '/') ? window.BASE_PATH : '';
             const imgIndex = type === 'small' ? 1 : 2;
             this.image = new Image();
-            this.image.src = `/images/bun/rock${imgIndex}.png`;
+            this.image.src = basePath + `/images/bun/rock${imgIndex}.png`;
             this.imageLoaded = false;
             this.image.onload = () => { this.imageLoaded = true; };
+            this.image.onerror = () => { 
+                console.error('Failed to load image:', this.image.src);
+            };
         }
 
         update() {

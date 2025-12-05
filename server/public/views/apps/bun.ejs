@@ -9,6 +9,10 @@
     <title>Formulaire Inscription RH</title>
     <link rel="stylesheet" href="<%= staticUrl('/stylesheets/style.css') %>">
     <script src="<%= staticUrl('/javascripts/message-bus.js') %>"></script>
+    <script>
+        // Passer le BASE_PATH au JavaScript
+        window.BASE_PATH = '<%= basePath || "" %>';
+    </script>
     <script src="<%= staticUrl('/javascripts/form-game.js') %>"></script>
     <script defer src="<%= staticUrl('/javascripts/alpine.js') %>"></script>
     <style>

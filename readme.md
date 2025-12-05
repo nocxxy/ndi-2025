@@ -116,9 +116,3 @@ cd server
 ```bash
 docker-compose up -d
 ```
-
-## 👥 Équipe
-
-- [Nom membre 1]
-- [Nom membre 2]
-- [Nom membre 3]
